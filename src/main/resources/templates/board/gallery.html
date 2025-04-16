@@ -9,10 +9,10 @@
 <link rel="stylesheet" href="/css/gallery.css">
     <main class="gallery-container">
         <h1 class="gallery-title">갤러리</h1>
-
         <div class="gallery">
-            <div class="card">
-                <a href="detail.html?id=1" class="card-link">
+
+            <div class="card" th:each="">
+                <a href="#" class="card-link">
                     <img src="./img/road.png" alt="자연풍경 사진">
                     <div class="card-text">
                         <h3>만화방초 길</h3>
@@ -21,6 +21,8 @@
                     </div>
                 </a>
             </div>
+
+
             <div class="card">
                 <a href="detail.html?id=1" class="card-link">
                     <img src="./img/box office.png" alt="도시 사진">

@@ -4,6 +4,7 @@ import com.example.mhbc.dto.BoardDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "BOARD")
@@ -61,4 +62,6 @@ public class BoardEntity {
             .memberIdx(member != null ? member.getIdx() : null)
             .build();
     }
+
+
 }
