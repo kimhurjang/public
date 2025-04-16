@@ -26,4 +26,16 @@ public class MemberController {
     return  "member/findidpw";
   }
 
+  @RequestMapping("/adminuser")
+  public String adminuser(){
+    System.out.println(">>>>>>>>>>adminuser page<<<<<<<<<<");
+    return  "member/adminuser";
+  }
+
+  @RequestMapping("/adminuserinfo")
+  public String adminuserinfo(){
+    System.out.println(">>>>>>>>>>adminuserinfo page<<<<<<<<<<");
+    return  "member/adminuserinfo";
+  }
+
 }
