@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<section layout:fragment="content" id="content" class="content ">
+  <!--<link rel="stylesheet" href="(연결할 css)">--->
+
+  <div class="main event">
+    <div class="event header"><h2>이벤트</h2></div>
+
+      <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/eventview(groupIdx=3, idx=${board.idx})}" class="event board">
+        <div th:text="${board.title}"></div>
+      </a>
+
+    </div>
+
+
+</section>
+</body>
+</html>

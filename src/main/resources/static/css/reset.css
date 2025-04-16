@@ -16,15 +16,6 @@ blockquote, pre, code, b, strong, i, em, mark, small {font-family:"Pretendard Va
 h1, h2, h3, h4, h5, h6, blockquote, pre, code, b, strong, i, em, mark, small {font-size:revert; font-weight: revert;}
 mark {background-color: revert};
 
-/*
-blockquote: 인용문 텍스트.
-pre: 미리 지정된 텍스트를 스타일링.
-code: 코드 스타일링에 적합한 요소.
-강조 및 특수 텍스트 태그
-b: 굵은 텍스트.
-strong: 의미적으로 중요한 굵은 텍스트.
-i: 기울임꼴 텍스트.
-em: 강조된 기울임꼴 텍스트.
-mark: 강조 표시된 텍스트.
-small: 작은 크기의 텍스트.
-*/
+.align_start {align-items: flex-start !important;}
+
+.mt20 {margin-top:20px;}
