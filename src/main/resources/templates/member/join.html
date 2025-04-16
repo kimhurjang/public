@@ -1,10 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Join</title>
+    <title>회원가입 폼</title>
+    <link rel="stylesheet" href="/css/joinStyle.css">
 </head>
 <body>
- 회원가입 페이지
+
+<section class="form_section">
+    <h2 class="section_title">회원가입</h2>
+    <p class="section_title_sub"><span class="required">*</span> 필수 입력 항목</p>
+
+    <form action="#" method="post">
+
+        <input type="hidden" name="create_at" value="create_at">
+        <!--수정날짜&마지막 로그인 시간은 서버에서 처리-->
+
+        <input type="hidden" name="idx" value="idx">
+
+        <input type="hidden" name="grade" value="1">
+        <!--grade 0 == 비회원 / 1 == 일반 회원 / 5 == 매니저 /  10 == 관리자(임의)-->
+
+        <input type="hidden" name="status" value="정상">
+        <!--정상 / 정지 / 탈퇴-->
+
+        <!-- 이름 -->
+        <div class="form_group">
+            <label for="name">이름 <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="form_group">
+            <label for="email">이메일 <span class="required">*</span></label>
+            <input type="text" id="email" name="email" required>
+        </div>
+
+        <!-- 아이디 -->
+        <div class="form_group">
+            <label for="userid">아이디 <span class="required">*</span></label>
+            <input type="text" id="userid" name="userid" required>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form_group">
+            <label for="password">비밀번호 <span class="required">*</span></label>
+            <input type="password" id="password" name="pwd" required>
+        </div>
+
+        <!-- 생년월일 -->
+        <div class="form_group">
+            <label for="birthdate">생년월일</label>
+            <input type="date" id="birthdate" name="birthdate">
+        </div>
+
+        <!-- 연락처 -->
+        <div class="form_group mobile">
+            <label for="mobile">연락처</label>
+            <input type="text" name="mobile1" maxlength="3" placeholder="010">
+            <input type="text" name="mobile2" maxlength="4">
+            <input type="text" name="mobile3" maxlength="4">
+        </div>
+
+        <!-- 성별 -->
+        <div class="form_group">
+            <label>통신사</label>
+            <div class="hall">
+                <label><input type="radio" name="telecom" value="skt"> SKT</label>
+                <label><input type="radio" name="telecom" value="kt"> KT</label>
+                <label><input type="radio" name="telecom" value="lg"> LG</label>
+            </div>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <button type="submit" id="final_submit">가입하기</button>
+    </form>
+</section>
+
 </body>
 </html>
