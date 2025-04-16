@@ -14,4 +14,16 @@ public class MemberController {
     return "member/login";
   }
 
+  @RequestMapping("/join")
+  public String join(){
+    System.out.println(">>>>>>>>>>join page<<<<<<<<<<");
+    return  "member/join";
+  }
+
+  @RequestMapping("/findidpw")
+  public String findidpw(){
+    System.out.println(">>>>>>>>>>findidpw page<<<<<<<<<<");
+    return  "member/findidpw";
+  }
+
 }
