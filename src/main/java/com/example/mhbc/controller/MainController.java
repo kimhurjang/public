@@ -13,26 +13,18 @@ public class MainController {
         model.addAttribute("title", "만화방초");//페이지별 타이틀 설정.(디폴트값==기본 제목)
         return "index";
     }
-    @RequestMapping("/login")
-    public String login(){
-        System.out.println(">>>>>>>>>>login page<<<<<<<<<<");
-        return "login";
-    }
+
     @RequestMapping("/admin")
     public String admin(){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
-    @RequestMapping("/wedding")
-    public String wedding(){
-        System.out.println(">>>>>>>>>>wedding page<<<<<<<<<<");
-        return "wedding";
+    @RequestMapping("/gallery")
+    public String gallery(){
+        System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
+        return "board/gallery";
     }
-    @RequestMapping("/booking")
-    public String booking(){
-        System.out.println(">>>>>>>>>>booking page<<<<<<<<<<");
-        return "booking";
-    }
+
 
 
 }
