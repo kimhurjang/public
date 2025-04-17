@@ -60,7 +60,11 @@ public class BoardController {
         System.out.println(">>>>>>>>>>eventView page<<<<<<<<<<");
 
         BoardEntity board = boardRepository.findByIdx(idx);
-        System.out.println("--------board"+board);
+
+        int viewCnt = board.getViewCnt();
+        board.setViewCnt(viewCnt + 1); // ← 여기서 board 객체에 다시 넣고
+        boardRepository.save(board);  // ← DB에 저장해야 실제 반영됨
+        System.out.println("-----------------------보드"+board.toString());
 
         model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
