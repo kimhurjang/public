@@ -3,17 +3,24 @@ package com.example.mhbc.controller;
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.entity.MemberEntity;
+import com.example.mhbc.repository.BoardGroupRepository;
+import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.BoardService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -23,6 +30,8 @@ public class BoardController {
 
     private final BoardService boardService;
     private MemberRepository memberRepository;
+    private BoardGroupRepository boardGroupRepository;
+    private BoardRepository boardRepository;
 
     /*갤러리*/
     @RequestMapping("/gallery")
@@ -135,28 +144,58 @@ public class BoardController {
 
 
     /*1대1문의*/
-    @RequestMapping("/personalquestionpage")
+    @RequestMapping("/personalquestion")
     public String personalquestionpage(Model model) {
         System.out.println(">>>>>>>>>>personalquestionpage page<<<<<<<<<<");
 
-        BoardEntity board = new BoardEntity();
+        int boardType = 2;
+        int groupIdx = 6;
 
-        model.addAttribute("board", board);
+        return "redirect:/board/personalquestionpage?board_type="+boardType+"&group_idx="+groupIdx;
+    }
+    @RequestMapping("/personalquestionpage")
+    public String personalquestionpage(@RequestParam("board_type") int boardType,
+                                        @RequestParam("group_idx") int groupIdx,
+                                         Model model) {
 
-        return "/board/personalquestionpage";
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardList", boardList);
+
+        return "board/personalquestionpage";
     }
     @PostMapping("/pq_proc")
-    public String handleForm(BoardDTO boardDTO , MemberDTO memberDTO) {
+    public ResponseEntity<Map<String, String>> handleForm(@RequestParam("board_type") int boardType,
+                             @RequestParam("group_idx") int groupIdx,
+                             @ModelAttribute BoardDTO boardDTO , @ModelAttribute MemberDTO memberDTO) {
 
-        Optional<MemberEntity> optionalMember = memberRepository.findByNameAndEmail(memberDTO.getName(), memberDTO.getEmail());
-        System.out.println("제목: " + boardDTO.getTitle());
-        System.out.println("내용: " + boardDTO.getContent());
-        System.out.println("작성 날짜: " + boardDTO.getCreatedAt());
+        //1. 회원 정보 조회
+        Optional<MemberEntity> optionalMember = memberRepository.findByNameAndEmail(memberDTO.getName().trim(), memberDTO.getEmail().trim());
+        System.out.println("-------------요청받은 이름: [" + memberDTO.getName() + "]");
+        System.out.println("-------------요청받은 이메일: [" + memberDTO.getEmail() + "]");
+        MemberEntity member = optionalMember.orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
 
-        // 처리 로직
+        // 2. 게시판 그룹 조회 (필요 시)
+        Optional<BoardGroupEntity> optionalGroup = boardGroupRepository.findById((long) groupIdx);
+        BoardGroupEntity group = optionalGroup.orElse(null); // 그룹이 없으면 null로 처리하거나 기본 그룹 처리
+
+        // 3. DTO → Entity 변환
+        BoardEntity board = boardDTO.toEntity(member, group);
+        board.setCreatedAt(boardDTO.getCreatedAt()); // createdAt 수동 설정 시 필요
+        board.setViewCnt(0); // 기본 조회수 0
 
 
-        return "redirect:/thank-you";
+        // 4. 저장
+        boardRepository.save(board);
+
+
+        // 응답 데이터 준비
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "질문을 성공적으로 보냈습니다!");
+
+        return ResponseEntity.ok(response);  // 성공적인 응답 반환
     }
 
 

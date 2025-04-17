@@ -4,6 +4,9 @@ import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.entity.MemberEntity;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -14,7 +17,10 @@ public class BoardDTO {
     private String title;
     private String content;
     private Integer viewCnt;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
+
     private Long groupIdx;
     private Long memberIdx;
 

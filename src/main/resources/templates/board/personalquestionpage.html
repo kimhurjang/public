@@ -7,7 +7,9 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <h1>1 대 1 문의</h1>
   <div id="content" class="content">
-<form name="persocalquestion" method="post" action="pq_proc">
+<form name="persocalquestion" method="post" action="pq_proc" onsubmit="submitQuestion();">
+  <input type="hidden" name="board_type" th:value="${boardType}">
+  <input type="hidden" name="group_idx" th:value="${groupIdx}">
     <table>
       <tr>
         <td>성명</td>
@@ -65,6 +67,32 @@
       title.value = `[${category}] ${titleInput}`;
     });
   });
+
+
+    function submitQuestion() {
+        var boardType = $('#boardType').val();
+        var groupIdx = $('#groupIdx').val();
+        var name = $('#name').val();
+        var email = $('#email').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/pq_proc',
+            data: {
+                board_type: boardType,
+                group_idx: groupIdx,
+                name: name,
+                email: email
+            },
+            success: function(response) {
+                alert(response.message);
+            },
+            error: function(xhr, status, error) {
+                alert("문제가 발생했습니다: " + error);
+            }
+        });
+    }
+
 </script>
 
 </body>

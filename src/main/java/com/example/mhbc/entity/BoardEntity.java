@@ -3,6 +3,9 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.BoardDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class BoardEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt; // 작성일
 
     @Temporal(TemporalType.TIMESTAMP)
