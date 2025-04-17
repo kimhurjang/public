@@ -16,7 +16,6 @@ public class MemberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx; // 회원번호
-
     private String userid; // 회원아이디
     private String pwd; // 패스워드
     private String name; // 회원이름
@@ -25,9 +24,11 @@ public class MemberEntity {
     private String email; // 이메일
 
     @Builder.Default
+    @Column(name = "GRADE")
     private Integer grade = 0; // 등급
 
     @Builder.Default
+    @Column(name = "STATUS")
     private String status = "ACTIVE"; // 회원상태
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,12 +57,12 @@ public class MemberEntity {
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
-            .userid(userid)
-            .name(name)
-            .email(email)
-            .mobile(mobile)
-            .grade(grade)
-            .status(status)
-            .build();
+                .userid(userid)
+                .name(name)
+                .email(email)
+                .mobile(mobile)
+                .grade(grade)
+                .status(status)
+                .build();
     }
 }
