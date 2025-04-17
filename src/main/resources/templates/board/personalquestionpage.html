@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>1 대 1 문의</h1>
+  <div id="content" class="content">
+<form name="persocalquestion" method="post" action="pq_proc">
+    <table>
+      <tr>
+        <td>성명</td>
+        <td>
+          <input type="text" name="name" value="">
+        </td>
+      </tr>
+      <tr>
+        <td>이메일</td>
+        <td><input type="text" name="email" value=""></td>
+      </tr>
+      <tr>
+        <td>문의 사유</td>
+        <td>
+          <select name="category">
+            <option selected>선택 해주세요</option>
+            <option value="웨딩/예약">웨딩 / 예약</option>
+            <option value="시설이용문의">시설 이용 문의</option>
+            <option value="버그 신고">버그 신고</option>
+            <option value="건의 사항">건의 사항</option>
+            <option value="기타">기타</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>작성 날짜</td>
+        <td><input type="date" name="createdAt"></td>
+      </tr>
+      <tr>
+        <td>제목</td>
+        <td><textarea name="titleInput" cols="70" rows="1"></textarea>
+            <input type="hidden" name="title" id="title">
+        </td>
+      </tr>
+      <tr>
+        <td>메시지</td>
+        <td><textarea name="content" cols="70" rows="5">문제 발생 날짜 및 시각 :
+        </textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button type="submit">보내기</button> <button type="reset">다시 쓰기</button></td>
+      </tr>
+
+    </table>
+</form>
+  </div><!--E content-->
+</section><!--E container-->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.forms['personalquestion'];
+    form.addEventListener('submit', function (e) {
+      const category = document.getElementById('category').value;
+      const titleInput = document.getElementById('titleInput').value;
+      const title = document.getElementById('title');
+      title.value = `[${category}] ${titleInput}`;
+    });
+  });
+</script>
+
+</body>
+</html>

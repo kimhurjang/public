@@ -15,4 +15,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     public List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") int groupIdx);
 
     public BoardEntity findByIdx(long idx);
+
+    public List<BoardEntity> findByTitle(String title);
 }

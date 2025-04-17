@@ -28,6 +28,7 @@ public class BoardEntity {
 
     private String title; // 타이틀
     private String content; // 내용
+    private Integer re; // 질문 답변 구분용
 
     @Builder.Default
     private Integer viewCnt = 0; // 조회수

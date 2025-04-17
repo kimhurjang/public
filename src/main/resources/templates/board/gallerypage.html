@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{fragment/layout}">
+
+<body>
+<section layout:fragment="content">
+<link rel="stylesheet" href="/css/gallery.css">
+    <main class="gallery-container">
+        <h1 class="gallery-title">갤러리</h1>
+        <div class="gallery">
+
+            <a th:href="@{/board/galleryview(idx=${board.idx}, group_idx=${groupIdx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
+
+                    <img src="./img/road.png" alt="자연풍경 사진">
+                    <div class="card-text">
+                        <h3 th:text="${board.title}"></h3>
+                        <p th:text="${board.content}"></p>
+                        <div th:text="'조회수 : ' + ${board.viewCnt}"></div>
+                    </div>
+
+                </a>
+
+        </div>
+    </main>
+
+</section>
+</body>
+</html><!--E contents-->
