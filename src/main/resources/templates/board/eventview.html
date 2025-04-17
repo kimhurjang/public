@@ -7,6 +7,13 @@
   <!--<link rel="stylesheet" href="(연결할 css)">--->
   <h1>event view</h1>
 
+  <div th:if="${groupIdx == 3 and board.idx == idx}">
+    <div class="event header"><h2 th:text="${board.title}"></h2></div>
+    <div th:text="${board.content}"></div>
+    <div th:text="${board.viewCnt}"></div>
+    <div th:text="${board.createdAt}"></div>
+  </div>
+
 </section>
 </body>
 </html>

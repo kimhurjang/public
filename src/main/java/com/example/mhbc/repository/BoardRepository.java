@@ -10,7 +10,9 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
-    public BoardEntity findByGroup_GroupIdx(int groupIdx);
+
     @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
-    List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") int groupIdx);
+    public List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") int groupIdx);
+
+    public BoardEntity findByIdx(long idx);
 }
