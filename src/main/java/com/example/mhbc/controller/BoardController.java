@@ -10,6 +10,7 @@ import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.BoardService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +162,9 @@ public class BoardController {
                                          Model model) {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        model.addAttribute("today", today);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardList", boardList);
@@ -171,32 +176,65 @@ public class BoardController {
                              @RequestParam("group_idx") int groupIdx,
                              @ModelAttribute BoardDTO boardDTO , @ModelAttribute MemberDTO memberDTO) {
 
-        //1. 회원 정보 조회
-        Optional<MemberEntity> optionalMember = memberRepository.findByNameAndEmail(memberDTO.getName().trim(), memberDTO.getEmail().trim());
-        System.out.println("-------------요청받은 이름: [" + memberDTO.getName() + "]");
-        System.out.println("-------------요청받은 이메일: [" + memberDTO.getEmail() + "]");
-        MemberEntity member = optionalMember.orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
+        try {
+            // 서비스 호출
+            boardService.processBoardForm(groupIdx, boardDTO, memberDTO);
 
-        // 2. 게시판 그룹 조회 (필요 시)
-        Optional<BoardGroupEntity> optionalGroup = boardGroupRepository.findById((long) groupIdx);
-        BoardGroupEntity group = optionalGroup.orElse(null); // 그룹이 없으면 null로 처리하거나 기본 그룹 처리
+            // 응답 데이터 준비
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "질문을 성공적으로 보냈습니다!");
 
-        // 3. DTO → Entity 변환
-        BoardEntity board = boardDTO.toEntity(member, group);
-        board.setCreatedAt(boardDTO.getCreatedAt()); // createdAt 수동 설정 시 필요
-        board.setViewCnt(0); // 기본 조회수 0
+            return ResponseEntity.ok(response);  // 성공적인 응답 반환
+        } catch (IllegalArgumentException e) {
+            // 예외 처리
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
 
-
-        // 4. 저장
-        boardRepository.save(board);
-
-
-        // 응답 데이터 준비
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "질문을 성공적으로 보냈습니다!");
-
-        return ResponseEntity.ok(response);  // 성공적인 응답 반환
     }
+
+
+    /*공지사항*/
+    @RequestMapping("/notice")
+    public String notice(){
+        System.out.println(">>>>>>>>>>notice page<<<<<<<<<<");
+
+        int groupIdx = 1;
+        int boardType = 0;
+
+        return "redirect:/board/noticepage?board_type="+boardType+"&group_idx="+groupIdx;
+    }
+    @RequestMapping("/noticepage")
+    public String noticepage(Model model,
+                             @RequestParam("group_idx") int groupIdx,
+                             @RequestParam("board_type") int boardType){
+        System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
+
+        List<BoardEntity> boardList = boardRepository.findBoardsByGroupIdx(groupIdx);
+
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        return "/board/noticepage";
+    }
+    @RequestMapping("/noticeview")
+    public String noticeview(Model model,
+                             @RequestParam("group_idx") int groupIdx,
+                             @RequestParam("board_type") int boardType,
+                             @RequestParam("idx") int idx){
+        System.out.println(">>>>>>>>>>noticeview page<<<<<<<<<<");
+
+        BoardEntity board = boardRepository.findByIdx(idx);
+
+        model.addAttribute("board", board);
+        model.addAttribute("idx", idx);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+
+        return"/board/noticeview";
+    }
+
 
 
 

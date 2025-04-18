@@ -7,7 +7,7 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <h1>1 대 1 문의</h1>
   <div id="content" class="content">
-<form name="persocalquestion" method="post" action="pq_proc" onsubmit="submitQuestion();">
+<form name="personalquestion" method="post" action="pq_proc" onsubmit="submitQuestion();">
   <input type="hidden" name="board_type" th:value="${boardType}">
   <input type="hidden" name="group_idx" th:value="${groupIdx}">
     <table>
@@ -24,7 +24,7 @@
       <tr>
         <td>문의 사유</td>
         <td>
-          <select name="category">
+          <select name="category" id="category">
             <option selected>선택 해주세요</option>
             <option value="웨딩/예약">웨딩 / 예약</option>
             <option value="시설이용문의">시설 이용 문의</option>
@@ -36,11 +36,11 @@
       </tr>
       <tr>
         <td>작성 날짜</td>
-        <td><input type="date" name="createdAt"></td>
+        <td><input type="date" name="createdAt" id="createdAt" th:value="${today}" readonly></td>
       </tr>
       <tr>
         <td>제목</td>
-        <td><textarea name="titleInput" cols="70" rows="1"></textarea>
+        <td><textarea name="titleInput" id="titleInput" cols="70" rows="1"></textarea>
             <input type="hidden" name="title" id="title">
         </td>
       </tr>
@@ -58,7 +58,8 @@
   </div><!--E content-->
 </section><!--E container-->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  window.onload = function () {
+
     const form = document.forms['personalquestion'];
     form.addEventListener('submit', function (e) {
       const category = document.getElementById('category').value;
@@ -66,32 +67,32 @@
       const title = document.getElementById('title');
       title.value = `[${category}] ${titleInput}`;
     });
-  });
+  }
 
 
-    function submitQuestion() {
-        var boardType = $('#boardType').val();
-        var groupIdx = $('#groupIdx').val();
-        var name = $('#name').val();
-        var email = $('#email').val();
+  function submitQuestion() {
+      var boardType = $('#boardType').val();
+      var groupIdx = $('#groupIdx').val();
+      var name = $('#name').val();
+      var email = $('#email').val();
 
-        $.ajax({
-            type: 'POST',
-            url: '/pq_proc',
-            data: {
-                board_type: boardType,
-                group_idx: groupIdx,
-                name: name,
-                email: email
-            },
-            success: function(response) {
-                alert(response.message);
-            },
-            error: function(xhr, status, error) {
-                alert("문제가 발생했습니다: " + error);
-            }
-        });
-    }
+      $.ajax({
+          type: 'POST',
+          url: '/pq_proc',
+          data: {
+              board_type: boardType,
+              group_idx: groupIdx,
+              name: name,
+              email: email
+          },
+          success: function(response) {
+              alert(response.message);
+          },
+          error: function(xhr, status, error) {
+              alert("문제가 발생했습니다: " + error);
+          }
+      });
+  }
 
 </script>
 
