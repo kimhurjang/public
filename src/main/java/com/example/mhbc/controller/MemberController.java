@@ -3,9 +3,9 @@ package com.example.mhbc.controller;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.KakaoService;
-import com.example.mhbc.service.SocialUserInfo;
+import com.example.mhbc.dto.SocialUserInfo;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,35 +44,31 @@ public class MemberController {
     return "member/login";
   }
 
-  @RequestMapping("/sociallogin")
-  public String sociallogin(@RequestParam("code") String code, Model model) {
-    System.out.println("🔍 받은 인가 코드: " + code);
+  @PostMapping("/sociallogin")
+  public String kakaoCallback(@RequestParam String code, HttpSession session) {
+    // 1. 액세스 토큰 받기
     String accessToken = kakaoService.getKakaoAccessToken(code);
+
+    // 2. 사용자 정보 가져오기
     SocialUserInfo userInfo = kakaoService.getUserNickname(accessToken);
 
+    // 3. DB에 유저 저장 or 조회
+    MemberEntity member = memberRepository.findByEmail(userInfo.getEmail())
+            .orElseGet(() -> {
+              MemberEntity newMember = new MemberEntity();
+              newMember.setEmail(userInfo.getEmail());
+              newMember.setName(userInfo.getNickname());
+              return memberRepository.save(newMember);
+            });
 
-    if (userInfo == null || userInfo.getEmail() == null) {
-      System.out.println("사용자 정보를 가져오지 못했습니다.");
-      return "redirect:/member/login";  // 또는 에러페이지로 리디렉션
-    }
+    // ✅ 4. 세션에 memberIdx 저장
+    session.setAttribute("memberIdx", member.getIdx());
 
-    // 예시: 사용자 이메일로 회원가입 또는 로그인 처리
-    Optional<MemberEntity> existingMember = memberRepository.findByEmail(userInfo.getEmail());
-    if (existingMember.isEmpty()) {
-      // 새로운 사용자 등록
-      MemberEntity newMember = new MemberEntity();
-      newMember.setName(userInfo.getNickname());
-      newMember.setUserid(userInfo.getId()); // 또는 카카오 ID로 아이디 설정
-      newMember.setPwd("default_password");  // 기본 비밀번호 설정 (필요시)
-      memberRepository.save(newMember);
+    // 필요하면 nickname도 저장 가능
+    session.setAttribute("nickname", member.getName());
 
-
-      // 모델에 사용자 정보 추가
-      model.addAttribute("userInfo", userInfo);
-    } else {
-      System.out.println("사용자 정보를 가져오는 데 실패했습니다.");
-    }
-    return "redirect:/";
+    // 5. 리다이렉트
+    return "redirect:/"; // 원하는 곳으로 보내면 됨
   }
 }
 

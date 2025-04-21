@@ -8,7 +8,10 @@
     <h1>커뮤니티</h1>
     <div id="content" class="content">
         <form name="comment" method="post" action="/board/cmctproc">
-            <input type="hidden" name="idx" th:value="${board.idx}">
+            <input type="hidden" name="boardIdx" th:value="${board.idx}">
+            <input type="hidden" name="member" th:value="${board.member.idx}">
+            <input type="hidden" name="groupIdx" th:value="${groupIdx}">
+
             <table>
                 <tr>
                     <td>제목</td>

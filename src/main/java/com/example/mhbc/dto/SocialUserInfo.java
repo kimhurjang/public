@@ -1,4 +1,4 @@
-package com.example.mhbc.service;
+package com.example.mhbc.dto;
 
 
 public class SocialUserInfo {

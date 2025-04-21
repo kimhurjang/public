@@ -286,17 +286,16 @@ public class BoardController {
     @PostMapping("/cmctproc")
     public String cmctproc(@ModelAttribute CommentsDTO dto, HttpSession session){
         Long memberIdx = (Long) session.getAttribute("memberIdx");
-
-        //if (memberIdx == null) {
-           // return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
-        //}
+        if (memberIdx == null) {
+            return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
+        }
 
         commentsService.saveComment(dto, memberIdx);
 
-        return "redirect:/board/cmctview/" + dto.getBoardIdx(); // 댓글 달린 글로 리다이렉트
+        return "redirect:/board/view/" + dto.getBoardIdx(); // 댓글 달린 글로 리다이렉트
     }
 
 
-    }
+}
 
 

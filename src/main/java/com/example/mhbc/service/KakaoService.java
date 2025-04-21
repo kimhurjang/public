@@ -1,5 +1,6 @@
 package com.example.mhbc.service;
 
+import com.example.mhbc.dto.SocialUserInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -66,7 +67,7 @@ public class KakaoService {
             String email = jsonNode.path("kakao_account").path("email").asText();
 
             SocialUserInfo userInfo = new SocialUserInfo();
-            userInfo.setId("k" + String.valueOf(id));
+            userInfo.setId(String.valueOf(id));
             userInfo.setNickname(nickname);
             userInfo.setEmail(email);
             return userInfo;
