@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <h1>커뮤니티</h1>
+    <div id="content" class="content">
+        <table>
+            <tr>
+                <td>제목</td>
+                <td th:text="${board.title}"></td>
+            </tr>
+            <tr>
+                <td>작성 날짜</td>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd')}"></td>
+            </tr>
+            <tr>
+                <td colspan="2" th:text="${board.content}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">댓글</td>
+            </tr>
+            <form name="comment" method="post" action="/board/cmctproc">
+            <tr>
+                <td><textarea cols="50" rows="3"></textarea></td>
+                <td><button type="submit">등록</button></td>
+            </tr>
+            </form>
+            <tr th:each="comments : ${commentsList}">
+                <td th:text="${comments.content}"></td>
+                <td th:text="${comments.member.name}, ${#dates.format(commnents.createAt, 'yyyy-MM-dd')}"></td>
+            </tr>
+        </table>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

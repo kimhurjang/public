@@ -17,4 +17,5 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     public BoardEntity findByIdx(long idx);
 
     public List<BoardEntity> findByTitle(String title);
+
 }

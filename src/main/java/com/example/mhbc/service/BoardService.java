@@ -8,6 +8,7 @@ import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.repository.BoardGroupRepository;
 import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,15 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private BoardGroupRepository boardGroupRepository;
-    private MemberRepository memberRepository;
+    private final BoardGroupRepository boardGroupRepository;
+    private final MemberRepository memberRepository;
 
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
 
     // 게시글 조회 및 조회수 증가
     @Transactional
@@ -74,4 +73,7 @@ public class BoardService {
         // 4. 저장
         boardRepository.save(board);
     }
+
+
+
 }
