@@ -286,9 +286,10 @@ public class BoardController {
     @PostMapping("/cmctproc")
     public String cmctproc(@ModelAttribute CommentsDTO dto, HttpSession session){
         Long memberIdx = (Long) session.getAttribute("memberIdx");
-        if (memberIdx == null) {
-            return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
-        }
+
+        //if (memberIdx == null) {
+           // return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
+        //}
 
         commentsService.saveComment(dto, memberIdx);
 
