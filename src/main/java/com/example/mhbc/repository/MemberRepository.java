@@ -15,5 +15,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     @Query("SELECT m FROM MemberEntity m WHERE LOWER(m.name) = LOWER(:name) AND LOWER(m.email) = LOWER(:email)")
     public Optional<MemberEntity> findByNameAndEmail(@Param("name") String name, @Param("email") String email);
 
+    public Optional<MemberEntity> findByEmail(String email);
+
 
 }

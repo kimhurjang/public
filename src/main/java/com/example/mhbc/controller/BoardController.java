@@ -1,6 +1,7 @@
 package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.BoardDTO;
+import com.example.mhbc.dto.CommentsDTO;
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.BoardGroupEntity;
@@ -11,6 +12,8 @@ import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.repository.CommentsRepository;
 import com.example.mhbc.repository.MemberRepository;
 import com.example.mhbc.service.BoardService;
+import com.example.mhbc.service.CommentsService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,7 @@ import java.util.Optional;
 public class BoardController {
 
     private final BoardService boardService;
+    private CommentsService commentsService;
     private MemberRepository memberRepository;
     private BoardGroupRepository boardGroupRepository;
     private BoardRepository boardRepository;
@@ -280,9 +284,18 @@ public class BoardController {
         return "/board/cmctview";
     }
     @PostMapping("/cmctproc")
-    public String cmctproc(){
+    public String cmctproc(@ModelAttribute CommentsDTO dto, HttpSession session){
+        Long memberIdx = (Long) session.getAttribute("memberIdx");
+        if (memberIdx == null) {
+            return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
+        }
 
-        return"/board/cmctview";
+        commentsService.saveComment(dto, memberIdx);
+
+        return "redirect:/board/cmctview/" + dto.getBoardIdx(); // 댓글 달린 글로 리다이렉트
     }
 
-}
+
+    }
+
+
