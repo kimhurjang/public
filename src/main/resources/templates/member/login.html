@@ -26,25 +26,19 @@
         <!-- 로그인 폼 끝 -->
 
         <div class="links">
-            <a href="/member/findidpw#tab1">아이디 찾기</a> |
-            <a href="/member/findidpw#tab2">비밀번호 찾기</a> |
-            <a href="/member/join">회원가입</a>
+            <a href="/api/member/findidpw#tab1">아이디 찾기</a> |
+            <a href="/api/member/findidpw#tab2">비밀번호 찾기</a> |
+            <a href="/api/member/join">회원가입</a>
         </div>
 
         <span class="text">다른 계정으로 로그인</span>
 
-        <!-- SNS 로그인 아이콘들 -->
-        <div class="sns-icons">
-            <a href="https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/" target="_blank">
-                <img src="/img/nv.png" alt="네이버 로그인">
-            </a>
-            <a href="https://accounts.kakao.com/login/?continue=https%3A%2F%2Faccounts.kakao.com%2Fweblogin%2Faccount#login" target="_blank">
-                <img src="/img/ka.png" alt="카카오톡 로그인">
-            </a>
-            <a href="https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fwww.google.com%2F&ec=GAZAmgQ&hl=ko&passive=true&ifkv=AXH0vVsI8Y-98tqiW2rLzpSvrMWS3cCW4utmDef4AyWPkAacEtm6iM2aztSg_OMsaNvLEE9xXm3VMA&ddm=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin" target="_blank">
-                <img src="/img/gg.png" alt="구글 로그인">
 
-</div><!--E contents-->
+        <div class="sns-icons">
+            <a href="https://kauth.kakao.com/oauth/authorize?client_id=3a729b684852129622871e6b959a97e6&redirect_uri=http://localhost:8090/api/member/login&response_type=code">
+                카카오로 로그인
+            </a>
+        </div>
 
 
 </body>
