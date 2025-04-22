@@ -12,7 +12,7 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
-    public List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") int groupIdx);
+    public List<BoardEntity> findBoardsByGroupIdx(@Param("groupIdx") long groupIdx);
 
     public BoardEntity findByIdx(long idx);
 

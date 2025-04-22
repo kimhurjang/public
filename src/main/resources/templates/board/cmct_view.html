@@ -7,7 +7,7 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
     <h1>커뮤니티</h1>
     <div id="content" class="content">
-        <form name="comment" method="post" action="/board/cmctproc">
+        <form name="comment" method="post" action="/board/cmct_proc">
             <input type="hidden" name="boardIdx" th:value="${board.idx}">
             <input type="hidden" name="member" th:value="${board.member.idx}">
             <input type="hidden" name="groupIdx" th:value="${groupIdx}">

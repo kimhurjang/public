@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "BOARD")
@@ -35,6 +33,10 @@ public class BoardEntity {
 
     @Builder.Default
     private Integer viewCnt = 0; // 조회수
+
+    @OneToOne(mappedBy = "board")
+    private AttachmentEntity attachment;
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")

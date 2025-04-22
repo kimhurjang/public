@@ -43,7 +43,7 @@ public class BoardService {
     }
 
     // 그룹별 게시글 목록 조회
-    public List<BoardEntity> getBoardListByGroupIdx(int groupIdx) {
+    public List<BoardEntity> getBoardListByGroupIdx(long groupIdx) {
 
         return boardRepository.findBoardsByGroupIdx(groupIdx);
     }
@@ -53,7 +53,7 @@ public class BoardService {
         return boardRepository.findByTitle(title);
     }
 
-    public void processBoardForm(int groupIdx, BoardDTO boardDTO, MemberDTO memberDTO) {
+    public void processBoardForm(long groupIdx, BoardDTO boardDTO, MemberDTO memberDTO) {
         // 1. 회원 정보 조회
         Optional<MemberEntity> optionalMember = memberRepository.findByNameAndEmail(memberDTO.getName().trim(), memberDTO.getEmail().trim());
         if (optionalMember.isEmpty()) {
