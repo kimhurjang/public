@@ -50,24 +50,18 @@ public class BoardController {
     }
     @RequestMapping("/gallery_page")
     public String gallery_page(@RequestParam("board_type") long boardType,
-                            @RequestParam("group_idx") long groupIdx,
-                            Model model) {
+                               @RequestParam("group_idx") long groupIdx,
+                               Model model) {
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        List<BoardDTO> boardList = boardService.getBoardDTOListByGroupIdx(groupIdx);
 
-        for (BoardEntity board : boardList) {
-            AttachmentEntity attachment = attachmentRepository.findByBoard(board);
-            board.setAttachment(attachment); // BoardEntity에 Attachment 필드 추가
-        }
         model.addAttribute("boardList", boardList);
-
-
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
-        model.addAttribute("boardList", boardList);
 
         return "board/gallery_page";
     }
+
     @RequestMapping("/gallery_view")
     public String gallery_iew(@RequestParam("idx") long idx,
                             @RequestParam("group_idx") long groupIdx,
@@ -124,6 +118,8 @@ public class BoardController {
                 // 엔티티에 저장할 정보 설정
                 attachmentEntity.setFilePath("/data/" + uuidFileName); // DB에는 상대 경로 저장
                 attachmentEntity.setFileName(file.getOriginalFilename()); // 원본 파일명 저장
+                attachmentEntity.setFileType(file.getContentType());
+                attachmentEntity.setFileSize((int) file.getSize());
 
                 // 게시판 그룹 설정
                 BoardGroupEntity group = new BoardGroupEntity();
@@ -353,21 +349,78 @@ public class BoardController {
     }
     @PostMapping("/cmct_proc")
     public String cmct_proc(@ModelAttribute CommentsDTO dto, HttpSession session){
-        Long memberIdx = (Long) session.getAttribute("memberIdx");
+        //Long memberIdx = (Long) session.getAttribute("memberIdx");
+        Long memberIdx = 1L;
 
-        if (memberIdx == null) {
-            return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
-        }
+        //        if (memberIdx == null) {
+        //  return "redirect:/member/login"; // 로그인 안 되어 있으면 로그인 페이지로
+        //}
 
         commentsService.saveComment(dto, memberIdx);
 
         return "redirect:/board/cmct_view/" + dto.getBoardIdx(); // 댓글 달린 글로 리다이렉트
     }
     @RequestMapping("/cmct_write")
-    public String cmct_write(){
+    public String cmct_write(Model model){
+        //로그인 구현 후 수정
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        return;
+        model.addAttribute("today", today);
+        return "board/cmct_write";
     }
+    @PostMapping("/cmct_write_proc")
+    public String cmct_write_proc(@ModelAttribute BoardEntity board,
+                                  @RequestParam("attachment") MultipartFile attachment,
+                                  @RequestParam("group_idx") long groupIdx,
+                                  @RequestParam("board_type") long boardType,
+                                  RedirectAttributes redirectAttributes,
+                                  Model model) {
+
+        if (!attachment.isEmpty()) {
+            try {
+
+                AttachmentEntity attachmentEntity = new AttachmentEntity();
+
+                // 업로드 디렉토리 설정
+                String uploadDir = "D:/SpringProject/data";
+                File directory = new File(uploadDir);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 고유 파일명 생성
+                String uuidFileName = UUID.randomUUID().toString() + "." + attachment.getOriginalFilename();
+                String savedPath = uploadDir + File.separator + uuidFileName;
+                File destination = new File(savedPath);
+
+                // 파일 저장
+                attachment.transferTo(destination);
+
+                // 엔티티에 저장할 정보 설정
+                attachmentEntity.setFilePath("/data/" + uuidFileName); // DB에는 상대 경로 저장
+                attachmentEntity.setFileName(attachment.getOriginalFilename()); // 원본 파일명 저장
+                attachmentEntity.setFileType(attachment.getContentType());
+                attachmentEntity.setFileSize((int) attachment.getSize());
+
+                // 게시글 저장 후 파일 저장 (외래키 연관이 필요하면 board 먼저 저장)
+                BoardEntity savedBoard = boardRepository.save(board);
+                attachmentEntity.setBoard(savedBoard); // 예: 연관관계 매핑용
+                attachmentRepository.save(attachmentEntity);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
+                return "redirect:/board/cmct_write";
+            }
+        } else {
+            boardRepository.save(board);
+        }
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        return "redirect:/board/cmct_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+    }
+
 
 }
 

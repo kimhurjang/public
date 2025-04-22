@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>커뮤니티 글쓰기</h1>
+  <div id="content" class="content">
+    <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <table>
+        <tr>
+          <td>작성자</td>
+          <td><input type="text" name="name" value="익명" readonly></td>
+          <!--로그인 기능 구현 후 수정-->
+        </tr>
+        <tr>
+          <td>제목</td>
+          <td><input type="text" name="title"></td>
+        </tr>
+        <tr>
+          <td>작성 날짜</td>
+          <td><input type="date" name="createdAt" id="createdAt" th:value="${today}" readonly></td>
+        </tr>
+        <tr>
+          <td>본문</td>
+          <td><textarea name="content" cols="70" rows="10"></textarea></td>
+        </tr>
+        <tr>
+          <td>첨부 파일</td>
+          <td><input type="file" name="attachment"></td>
+        </tr>
+        <tr>
+          <td colspan="2"><button type="submit">작성 하기</button> <button type="reset">다시 쓰기</button></td>
+        </tr>
+      </table>
+    </form>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

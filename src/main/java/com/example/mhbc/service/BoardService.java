@@ -1,10 +1,13 @@
 package com.example.mhbc.service;
 
+import com.example.mhbc.dto.AttachmentDTO;
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.dto.MemberDTO;
+import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
 import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.entity.MemberEntity;
+import com.example.mhbc.repository.AttachmentRepository;
 import com.example.mhbc.repository.BoardGroupRepository;
 import com.example.mhbc.repository.BoardRepository;
 import com.example.mhbc.repository.MemberRepository;
@@ -12,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +26,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardGroupRepository boardGroupRepository;
     private final MemberRepository memberRepository;
+    private final AttachmentRepository attachmentRepository;
 
 
     // 게시글 조회 및 조회수 증가
@@ -72,6 +77,31 @@ public class BoardService {
 
         // 4. 저장
         boardRepository.save(board);
+    }
+
+
+    /*DTO 변환*/
+    public List<BoardDTO> getBoardDTOListByGroupIdx(Long groupIdx) {
+        List<BoardEntity> boardEntities = boardRepository.findBoardsByGroupIdx(groupIdx);
+        List<BoardDTO> dtoList = new ArrayList<>();
+        AttachmentDTO ATdto = new AttachmentDTO();
+
+        for (BoardEntity board : boardEntities) {
+            BoardDTO dto = new BoardDTO();
+            dto.setTitle(board.getTitle());
+            dto.setContent(board.getContent());
+            dto.setCreatedAt(board.getCreatedAt());
+
+            AttachmentEntity attachment = attachmentRepository.findByBoard(board);
+            if (attachment != null) {
+                ATdto.setFileName(attachment.getFileName());
+                ATdto.setFilePath(attachment.getFilePath());
+            }
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
 

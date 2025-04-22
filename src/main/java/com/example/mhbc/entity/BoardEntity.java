@@ -34,9 +34,10 @@ public class BoardEntity {
     @Builder.Default
     private Integer viewCnt = 0; // 조회수
 
+/*
     @OneToOne(mappedBy = "board")
     private AttachmentEntity attachment;
-
+*/
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
