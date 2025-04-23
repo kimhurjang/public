@@ -188,6 +188,70 @@ public class BoardController {
 
         return "board/event_view";
     }
+    @RequestMapping("/event_write")
+    public String event_write(@RequestParam("group_idx") long groupIdx,
+                              @RequestParam("board_type") long boardType,
+                              Model model){
+
+        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+
+        model.addAttribute("boardList",boardList);
+        model.addAttribute("groupIdx",groupIdx);
+        model.addAttribute("boardType",boardType);
+
+        return "board/event_write";
+    }
+    @PostMapping("/event_proc")
+    public String event_proc(@ModelAttribute BoardEntity board,
+                             @ModelAttribute AttachmentEntity attachmentEntity,
+                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("group_idx") long groupIdx,
+                             @RequestParam("board_type") long boardType,
+                             RedirectAttributes redirectAttributes){
+        attachmentEntity.setCreatedAt(new Date());
+        board.setCreatedAt(new Date());
+        attachmentEntity.setBoard(board); // 첨부파일이 어떤 게시글에 속하는지 연결
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                // 업로드 디렉토리 설정
+                String uploadDir = "D:/SpringProject/data";
+                File directory = new File(uploadDir);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 고유 파일명 생성
+                String uuidFileName = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
+                String savedPath = uploadDir + File.separator + uuidFileName;
+                File destination = new File(savedPath);
+
+                // 파일 저장
+                file.transferTo(destination);
+
+                // 엔티티에 저장할 정보 설정
+                attachmentEntity.setFilePath("/data/" + uuidFileName); // DB에는 상대 경로 저장
+                attachmentEntity.setFileName(file.getOriginalFilename()); // 원본 파일명 저장
+
+                // 게시판 그룹 설정
+                BoardGroupEntity group = new BoardGroupEntity();
+                group.setGroupIdx(groupIdx);
+                board.setGroup(group);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
+                return "redirect:/board/event_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+            }
+        }
+
+        // 게시글과 파일 정보를 데이터베이스에 저장
+        boardRepository.save(board);
+        attachmentRepository.save(attachmentEntity);
+
+        // 게시글 저장 및 리다이렉트 로직 추가되어야 함 (예: boardRepository.save(board), 등)
+        return "redirect:/board/gallery_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+    }
 
 
 
