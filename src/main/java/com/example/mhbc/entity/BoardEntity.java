@@ -1,3 +1,4 @@
+
 package com.example.mhbc.entity;
 
 import com.example.mhbc.dto.BoardDTO;
@@ -34,10 +35,9 @@ public class BoardEntity {
     @Builder.Default
     private Integer viewCnt = 0; // 조회수
 
-/*
     @OneToOne(mappedBy = "board")
     private AttachmentEntity attachment;
-*/
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
@@ -62,13 +62,13 @@ public class BoardEntity {
 
     public BoardDTO toDTO() {
         return BoardDTO.builder()
-            .title(title)
-            .content(content)
-            .viewCnt(viewCnt)
-            .createdAt(createdAt)
-            .groupIdx(group != null ? group.getGroupIdx() : null)
-            .memberIdx(member != null ? member.getIdx() : null)
-            .build();
+                .title(title)
+                .content(content)
+                .viewCnt(viewCnt)
+                .createdAt(createdAt)
+                .groupIdx(group != null ? group.getGroupIdx() : null)
+                .memberIdx(member != null ? member.getIdx() : null)
+                .build();
     }
 
 

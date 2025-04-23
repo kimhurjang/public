@@ -6,7 +6,7 @@
 
 <body>
 <section layout:fragment="content">
-<link rel="stylesheet" href="/css/gallery.css">
+    <link rel="stylesheet" href="/css/gallery.css">
     <main class="gallery-container">
         <h1 class="gallery-title">갤러리</h1>
         <!--<a href="/admin" sec:authorize="hasRole('ADMIN')"></a>-->
@@ -15,18 +15,17 @@
 
             <a th:href="@{/board/gallery_view(idx=${board.idx}, group_idx=${groupIdx})}" th:if="${groupIdx == 4}" th:each="board : ${boardList}" class="card" >
 
-                
                 <div th:if="${board.attachment != null}">
                     <img th:src="@{${board.attachment.filePath}}" alt="첨부 이미지" class="card-img"/>
                 </div>
 
                 <div class="card-text">
-                        <h3 th:text="${board.title}"></h3>
-                        <p th:text="${board.content}"></p>
-                        <div th:text="'조회수 : ' + ${board.viewCnt}"></div>
-                    </div>
+                    <h3 th:text="${board.title}"></h3>
+                    <p th:text="${board.content}"></p>
+                    <div th:text="'조회수 : ' + ${board.viewCnt}"></div>
+                </div>
 
-                </a>
+            </a>
 
         </div>
     </main>

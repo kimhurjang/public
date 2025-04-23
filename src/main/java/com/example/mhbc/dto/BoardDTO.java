@@ -26,11 +26,11 @@ public class BoardDTO {
 
     public BoardEntity toEntity(MemberEntity member, BoardGroupEntity group) {
         return BoardEntity.builder()
-            .title(title)
-            .content(content)
-            .viewCnt(viewCnt)
-            .member(member)
-            .group(group)
-            .build();
+                .title(title)
+                .content(content)
+                .viewCnt(viewCnt)
+                .member(member)
+                .group(group)
+                .build();
     }
 }

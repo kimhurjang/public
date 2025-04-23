@@ -7,7 +7,7 @@
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <h1>커뮤니티</h1>
   <div id="content" class="content">
-    <a th:href="@{/board/cmct_write(group_idx=${groupIdx})}"><button>글쓰기</button></a>
+    <a th:href="@{/board/cmct_write(group_idx=${groupIdx},board_type=${boardType})}"><button>글쓰기</button></a>
     <table>
       <tr th:each=" board : ${boardList}">
         <td><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx})}" th:text="${board.title}"></a></td>
