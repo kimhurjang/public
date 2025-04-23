@@ -18,4 +18,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     public List<BoardEntity> findByTitle(String title);
 
+
+    // 작성자 기준으로 전체 게시글 조회
+    List<BoardEntity> findByMemberIdx(Long memberIdx);
+
 }

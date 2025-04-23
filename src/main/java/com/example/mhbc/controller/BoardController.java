@@ -319,6 +319,23 @@ public class BoardController {
 
         return "board/personalquestion_page";
     }
+    @RequestMapping("myboard_page")
+    public String myboard_page(@RequestParam("board_type") long boardType,
+                                      @RequestParam("group_idx") long groupIdx,
+                                      @RequestParam("member") long memberIdx,
+                                      Model model){
+
+        Optional<MemberEntity> member = memberRepository.findById(1L);
+        List<BoardEntity> boardList = boardRepository.findByMemberIdx(1L);
+
+
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("member", member.get());
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("groupIdx", groupIdx);
+
+        return "board/myboard_page";
+    }
     @PostMapping("/pq_proc")
     public ResponseEntity<Map<String, String>> handleForm(@RequestParam("board_type") long boardType,
                                                           @RequestParam("group_idx") long groupIdx,
@@ -484,6 +501,9 @@ public class BoardController {
                         "attachment; filename=\"" + encodedFilename + "\"")
                 .body(resource);
     }
+
+
+
 
 
 

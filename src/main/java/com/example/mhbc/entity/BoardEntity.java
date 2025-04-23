@@ -2,6 +2,7 @@
 package com.example.mhbc.entity;
 
 import com.example.mhbc.dto.BoardDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +27,7 @@ public class BoardEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_IDX")
+    @JsonIgnore
     private MemberEntity member; // 작성자
 
     private String title; // 타이틀
