@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AttachmentRepository extends JpaRepository<AttachmentEntity, Long> {
     public AttachmentEntity findByBoard (BoardEntity Board);
+
+    public AttachmentEntity findByIdx(long idx);
 }

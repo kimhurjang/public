@@ -9,6 +9,9 @@ import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -375,49 +380,8 @@ public class BoardController {
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
 
-        board.setRe(1); // 댓글기능 사용 여부
-        BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
-        board.setGroup(group);
-        board.setMember(memberRepository.findByIdx(1L)); // 로그인 중인 사용자 idx
-
         try {
-            if (!attachment.isEmpty()) {
-                // 고유한 파일명 생성
-                String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
-
-                // 저장할 경로 설정
-                String uploadDir = "D:/SpringProject/data";
-                File directory = new File(uploadDir);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
-
-                // 파일 저장
-                File destination = new File(uploadDir, uuidFileName);
-                attachment.transferTo(destination);
-
-                // 첨부파일 엔티티 생성
-                AttachmentEntity attachmentEntity = new AttachmentEntity();
-                attachmentEntity.setFilePath("/data/" + uuidFileName); // 상대 경로 저장
-                attachmentEntity.setFileName(attachment.getOriginalFilename());
-                attachmentEntity.setFileType(attachment.getContentType());
-                attachmentEntity.setFileSize((int) attachment.getSize());
-
-                // 게시글 저장 (ID 생성을 위해 먼저 저장)
-                boardRepository.save(board);
-
-                // 첨부파일 → 게시글 연결
-                attachmentEntity.setBoard(board);
-                attachmentRepository.save(attachmentEntity);
-
-                // BoardEntity에도 첨부파일 연결 (양방향이라면 필요)
-                board.setAttachment(attachmentEntity);
-                boardRepository.save(board); // 다시 저장 (연결 정보 반영)
-            } else {
-                // 첨부파일 없으면 게시글만 저장
-                boardRepository.save(board);
-            }
-
+            boardService.saveBoardWithAttachment(board, attachment, groupIdx);
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
@@ -428,6 +392,33 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
 
         return "redirect:/board/cmct_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+    }
+
+
+
+
+    /*파일 다운로드*/
+    @GetMapping("/file/download/{idx}")
+    public ResponseEntity<Resource> filedownload(@PathVariable("idx") Long idx){
+
+        AttachmentEntity attachment = attachmentRepository.findByIdx(idx);
+
+        if (attachment.getFilePath() == null || attachment.getFilePath().isEmpty()) {
+            throw new RuntimeException("파일 경로가 존재하지 않습니다: " + attachment);
+        }
+
+        Resource resource = new FileSystemResource(attachment.getFilePath());
+        String encodedFilename;
+        try {
+            encodedFilename = URLEncoder.encode(attachment.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("파일명 인코딩 중 오류 발생", e);
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + encodedFilename + "\"")
+                .body(resource);
     }
 
 

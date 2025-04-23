@@ -14,10 +14,14 @@ import com.example.mhbc.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -104,6 +108,47 @@ public class BoardService {
         return dtoList;
     }
 
+
+
+
+    /*파일 업로드*/
+    public void saveBoardWithAttachment(BoardEntity board, MultipartFile attachment, long groupIdx) throws IOException {
+        board.setRe(1);
+        BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
+        board.setGroup(group);
+
+        // 임시: 로그인 사용자
+        board.setMember(memberRepository.findByIdx(1L));
+
+        // 파일 업로드 처리
+        if (!attachment.isEmpty()) {
+            String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
+            String uploadDir = "D:/SpringProject/data/";
+
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File destination = new File(uploadDir, uuidFileName);
+            attachment.transferTo(destination);
+
+            AttachmentEntity attachmentEntity = new AttachmentEntity();
+            attachmentEntity.setFilePath(uploadDir + uuidFileName);
+            attachmentEntity.setFileName(attachment.getOriginalFilename());
+            attachmentEntity.setFileType(attachment.getContentType());
+            attachmentEntity.setFileSize((int) attachment.getSize());
+
+            boardRepository.save(board); // 게시글 먼저 저장
+            attachmentEntity.setBoard(board);
+            attachmentRepository.save(attachmentEntity);
+
+            board.setAttachment(attachmentEntity);
+            boardRepository.save(board); // 연결 정보 반영
+        } else {
+            boardRepository.save(board); // 첨부파일 없을 때
+        }
+    }
 
 
 }
