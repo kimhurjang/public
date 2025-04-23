@@ -365,7 +365,7 @@ public class BoardController {
         model.addAttribute("boardList", boardList);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
-        return "/board/noticepage";
+        return "/board/notice_page";
     }
     @RequestMapping("/notice_view")
     public String notice_view(Model model,
@@ -381,7 +381,7 @@ public class BoardController {
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
 
-        return"/board/noticeview";
+        return"/board/notice_view";
     }
 
 
