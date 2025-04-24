@@ -26,6 +26,7 @@ public class SnsEntity {
     private String snsEmail; // SNS 계정 이메일
     private String snsName; // SNS 닉네임 또는 이름
     private String snsProfileImg; // SNS 프로필 이미지 URL
+    private String snsMobile;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CONNECTED_AT")

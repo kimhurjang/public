@@ -3,9 +3,10 @@ package com.example.mhbc.controller;
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.dto.SocialUserInfoDTO;
 import com.example.mhbc.entity.MemberEntity;
+import com.example.mhbc.entity.SnsEntity;
 import com.example.mhbc.repository.MemberRepository;
+import com.example.mhbc.repository.SnsRepository;  // SnsRepository import 추가
 import com.example.mhbc.service.KakaoService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ public class MemberController {
 
   private final MemberRepository memberRepository;
   private final KakaoService kakaoService;
+  private final SnsRepository snsRepository;  // SnsRepository 주입
 
   // 일반 로그인 페이지
   @RequestMapping("/login")
@@ -29,7 +31,7 @@ public class MemberController {
   }
 
   // 카카오 로그인 처리 (인가 코드 받는 엔드포인트)
-  @GetMapping("/kakao") // 경로 수정
+  @GetMapping("/kakao")
   public String sociallogin(@RequestParam("code") String code, Model model) {
     System.out.println("받은 인가 코드: " + code);
     String accessToken = kakaoService.getKakaoAccessToken(code);
@@ -40,22 +42,28 @@ public class MemberController {
       return "redirect:/api/member/login";  // 로그인 페이지로 리디렉션
     }
 
-    // 중복 체크를 existsByUserid로 변경
-    if (!memberRepository.existsByUserid(userInfo.getUserid())) {
-      // 새로운 회원 정보 저장
-      MemberEntity newMember = new MemberEntity();
-      newMember.setName(userInfo.getNickname());
-      newMember.setUserid(userInfo.getUserid());
-      newMember.setPwd("default_password");  // 카카오는 비밀번호가 없으므로 기본값 설정
-      newMember.setEmail(userInfo.getEmail());
-      memberRepository.save(newMember);
-      model.addAttribute("userInfo", userInfo);
+    // SNS 정보가 이미 존재하는지 체크 (SNS ID로만 중복 체크)
+    Optional<SnsEntity> existingSnsUser = snsRepository.findBySnsId(userInfo.getUserid());
+
+    if (existingSnsUser.isEmpty()) {
+      // SNS 테이블에 저장 (중복되지 않으면 저장)
+      SnsEntity snsUser = new SnsEntity();
+      snsUser.setSnsType("KAKAO");
+      snsUser.setSnsId(userInfo.getUserid());
+      snsUser.setSnsEmail(userInfo.getEmail());
+      snsUser.setSnsName(userInfo.getNickname());
+      snsUser.setConnectedAt(new java.sql.Timestamp(System.currentTimeMillis()));
+      snsRepository.save(snsUser);
+      model.addAttribute("userInfo", userInfo);  // userInfo 모델에 추가 (필요시 사용)
     } else {
       System.out.println("이미 가입된 사용자입니다.");
     }
 
-    return "redirect:/";  // 로그인 후 메인 페이지로 리디렉션
+    // 메인 페이지로 리디렉션
+    return "redirect:/";  // 메인 페이지로 리디렉션
   }
+
+
 
   // 회원가입 페이지
   @RequestMapping("/join")
