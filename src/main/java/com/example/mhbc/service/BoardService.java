@@ -2,15 +2,10 @@ package com.example.mhbc.service;
 
 import com.example.mhbc.dto.AttachmentDTO;
 import com.example.mhbc.dto.BoardDTO;
+import com.example.mhbc.dto.CommentsDTO;
 import com.example.mhbc.dto.MemberDTO;
-import com.example.mhbc.entity.AttachmentEntity;
-import com.example.mhbc.entity.BoardEntity;
-import com.example.mhbc.entity.BoardGroupEntity;
-import com.example.mhbc.entity.MemberEntity;
-import com.example.mhbc.repository.AttachmentRepository;
-import com.example.mhbc.repository.BoardGroupRepository;
-import com.example.mhbc.repository.BoardRepository;
-import com.example.mhbc.repository.MemberRepository;
+import com.example.mhbc.entity.*;
+import com.example.mhbc.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +26,7 @@ public class BoardService {
     private final BoardGroupRepository boardGroupRepository;
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
+    private final CommentsRepository commentsRepository;
 
 
     // 게시글 조회 및 조회수 증가
@@ -111,7 +107,7 @@ public class BoardService {
 
 
 
-    /*파일 업로드*/
+    /*파일 업로드 서비스*/
     public void saveBoardWithAttachment(BoardEntity board, MultipartFile attachment, long groupIdx) throws IOException {
         board.setRe(1);
         BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
@@ -133,8 +129,11 @@ public class BoardService {
             File destination = new File(uploadDir, uuidFileName);
             attachment.transferTo(destination);
 
+            // 상대 경로만 DB에 저장
+            String relativePath = "/data/" + uuidFileName;
+
             AttachmentEntity attachmentEntity = new AttachmentEntity();
-            attachmentEntity.setFilePath(uploadDir + uuidFileName);
+            attachmentEntity.setFilePath(relativePath); // ✅ 상대 경로로 설정
             attachmentEntity.setFileName(attachment.getOriginalFilename());
             attachmentEntity.setFileType(attachment.getContentType());
             attachmentEntity.setFileSize((int) attachment.getSize());
@@ -150,5 +149,22 @@ public class BoardService {
         }
     }
 
+
+
+    /*댓글 저장*/
+    public void saveComment(CommentsDTO dto) {
+        BoardEntity board = boardRepository.findById(dto.getBoardIdx())
+                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+
+        MemberEntity member = memberRepository.findByIdx(dto.getMemberIdx());
+
+        CommentsEntity comment = new CommentsEntity();
+        comment.setBoard(board);
+        comment.setMember(member);
+        comment.setContent(dto.getContent());
+
+
+        commentsRepository.save(comment);
+    }
 
 }

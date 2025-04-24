@@ -4,6 +4,7 @@ package com.example.mhbc.entity;
 import com.example.mhbc.dto.BoardDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,8 +31,13 @@ public class BoardEntity {
     @JsonIgnore
     private MemberEntity member; // 작성자
 
+    @NotBlank(message = "제목은 필수 입력 항목입니다.")
     private String title; // 타이틀
+
+    @NotBlank(message = "본문은 필수 입력 항목입니다.")
     private String content; // 내용
+
+
     private Integer re; // 질문 답변 구분용
 
     @Builder.Default

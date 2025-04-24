@@ -12,7 +12,7 @@
                 <td th:text="${board.title}"></td>
             </tr>
             <tr>
-                <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></td>
             </tr>
             <tr>
                 <td th:text="${board.content}"></td>

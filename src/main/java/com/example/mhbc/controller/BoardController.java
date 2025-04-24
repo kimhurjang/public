@@ -2,12 +2,14 @@ package com.example.mhbc.controller;
 
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.dto.CommentsDTO;
+import com.example.mhbc.dto.CommonForm;
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -95,6 +98,7 @@ public class BoardController {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
 
+        model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardList", boardList);
@@ -102,12 +106,21 @@ public class BoardController {
         return "board/gallery_write";
     }
     @PostMapping("/gallery_proc")
-    public String gallery_proc(@ModelAttribute BoardEntity board,
+    public String gallery_proc(@Valid CommonForm form,
+                               BindingResult result,
+                               Model model,
+                               @ModelAttribute BoardEntity board,
                                @ModelAttribute AttachmentEntity attachmentEntity,
                                @RequestParam("file") MultipartFile file,
                                @RequestParam("group_idx") long groupIdx,
                                @RequestParam("board_type") long boardType,
                                RedirectAttributes redirectAttributes) {
+
+        /*유효성 검사*/
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/board/gallery_write";
+        }
 
         attachmentEntity.setCreatedAt(new Date());
         board.setCreatedAt(new Date());
@@ -115,29 +128,8 @@ public class BoardController {
 
         if (file != null && !file.isEmpty()) {
             try {
-                // 업로드 디렉토리 설정
-                String uploadDir = "D:/SpringProject/data";
-                File directory = new File(uploadDir);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
 
-                // 고유 파일명 생성
-                String uuidFileName = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-                String savedPath = uploadDir + File.separator + uuidFileName;
-                File destination = new File(savedPath);
-
-                // 파일 저장
-                file.transferTo(destination);
-
-                // 엔티티에 저장할 정보 설정
-                attachmentEntity.setFilePath("/data/" + uuidFileName); // DB에는 상대 경로 저장
-                attachmentEntity.setFileName(file.getOriginalFilename()); // 원본 파일명 저장
-
-                // 게시판 그룹 설정
-                BoardGroupEntity group = new BoardGroupEntity();
-                group.setGroupIdx(groupIdx);
-                board.setGroup(group);
+                boardService.saveBoardWithAttachment(board, file, groupIdx);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -145,10 +137,6 @@ public class BoardController {
                 return "redirect:/board/gallery_page?board_type=" + boardType + "&group_idx=" + groupIdx;
             }
         }
-
-        // 게시글과 파일 정보를 데이터베이스에 저장
-        boardRepository.save(board);
-        attachmentRepository.save(attachmentEntity);
 
         // 게시글 저장 및 리다이렉트 로직 추가되어야 함 (예: boardRepository.save(board), 등)
         return "redirect:/board/gallery_page?board_type=" + boardType + "&group_idx=" + groupIdx;
@@ -195,6 +183,7 @@ public class BoardController {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
 
+        model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardList",boardList);
         model.addAttribute("groupIdx",groupIdx);
         model.addAttribute("boardType",boardType);
@@ -202,41 +191,29 @@ public class BoardController {
         return "board/event_write";
     }
     @PostMapping("/event_proc")
-    public String event_proc(@ModelAttribute BoardEntity board,
+    public String event_proc(@Valid CommonForm form,
+                             BindingResult result,
+                             Model model,
+                             @ModelAttribute BoardEntity board,
                              @ModelAttribute AttachmentEntity attachmentEntity,
                              @RequestParam("file") MultipartFile file,
                              @RequestParam("group_idx") long groupIdx,
                              @RequestParam("board_type") long boardType,
                              RedirectAttributes redirectAttributes){
+
+        /*유효성 검사*/
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/board/event_write";
+        }
         attachmentEntity.setCreatedAt(new Date());
         board.setCreatedAt(new Date());
         attachmentEntity.setBoard(board); // 첨부파일이 어떤 게시글에 속하는지 연결
 
         if (file != null && !file.isEmpty()) {
             try {
-                // 업로드 디렉토리 설정
-                String uploadDir = "D:/SpringProject/data";
-                File directory = new File(uploadDir);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
 
-                // 고유 파일명 생성
-                String uuidFileName = UUID.randomUUID().toString() + "." + file.getOriginalFilename();
-                String savedPath = uploadDir + File.separator + uuidFileName;
-                File destination = new File(savedPath);
-
-                // 파일 저장
-                file.transferTo(destination);
-
-                // 엔티티에 저장할 정보 설정
-                attachmentEntity.setFilePath("/data/" + uuidFileName); // DB에는 상대 경로 저장
-                attachmentEntity.setFileName(file.getOriginalFilename()); // 원본 파일명 저장
-
-                // 게시판 그룹 설정
-                BoardGroupEntity group = new BoardGroupEntity();
-                group.setGroupIdx(groupIdx);
-                board.setGroup(group);
+                boardService.saveBoardWithAttachment(board, file, groupIdx);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -245,12 +222,9 @@ public class BoardController {
             }
         }
 
-        // 게시글과 파일 정보를 데이터베이스에 저장
-        boardRepository.save(board);
-        attachmentRepository.save(attachmentEntity);
 
         // 게시글 저장 및 리다이렉트 로직 추가되어야 함 (예: boardRepository.save(board), 등)
-        return "redirect:/board/gallery_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+        return "redirect:/board/event_page?board_type=" + boardType + "&group_idx=" + groupIdx;
     }
 
 
@@ -312,6 +286,7 @@ public class BoardController {
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("today", today);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
@@ -337,28 +312,33 @@ public class BoardController {
         return "board/myboard_page";
     }
     @PostMapping("/pq_proc")
-    public ResponseEntity<Map<String, String>> handleForm(@RequestParam("board_type") long boardType,
-                                                          @RequestParam("group_idx") long groupIdx,
-                                                          @ModelAttribute BoardDTO boardDTO,
-                                                          @ModelAttribute MemberDTO memberDTO) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            // 서비스 호출
-            boardService.processBoardForm(groupIdx, boardDTO, memberDTO);
+    public String handleForm(@Valid CommonForm form,
+                             BindingResult result,
+                             Model model,
+                             @RequestParam("board_type") long boardType,
+                             @RequestParam("group_idx") long groupIdx,
+                             @ModelAttribute BoardDTO boardDTO,
+                             @ModelAttribute MemberDTO memberDTO,
+                             RedirectAttributes redirectAttributes) {
 
-            // 응답 데이터 준비
-            response.put("message", "질문을 성공적으로 보냈습니다!");
-            return ResponseEntity.ok(response);  // 성공적인 응답 반환
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", result.getAllErrors());
+            return "redirect:/board/personalquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+
+        try {
+            boardService.processBoardForm(groupIdx, boardDTO, memberDTO);
+            model.addAttribute("message", "질문을 성공적으로 보냈습니다!");
+            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx; // 템플릿 렌더링
         } catch (IllegalArgumentException e) {
-            // 예외 처리
-            response.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
         } catch (Exception e) {
-            // 기타 예외 처리
-            response.put("error", "서버에 문제가 발생했습니다. 다시 시도해주세요.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            model.addAttribute("error", "서버에 문제가 발생했습니다. 다시 시도해주세요.");
+            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
         }
     }
+
 
 
     /*공지사항*/
@@ -400,6 +380,47 @@ public class BoardController {
 
         return"/board/notice_view";
     }
+    @RequestMapping("/notice_write")
+    public String notice_write(Model model,
+                               @RequestParam("group_idx")long groupIdx,
+                               @RequestParam("board_type")long boardType){
+        //로그인 구현 후 수정
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        model.addAttribute("commonForm", new CommonForm());
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("today", today);
+        return "board/notice_write";
+    }
+    @PostMapping("notice_proc")
+    public String notice_proc(@Valid CommonForm form,
+                              @ModelAttribute BoardEntity board,
+                              BindingResult result,
+                              @RequestParam("attachment") MultipartFile attachment,
+                              @RequestParam("group_idx") long groupIdx,
+                              @RequestParam("board_type") long boardType,
+                              RedirectAttributes redirectAttributes,
+                              Model model){
+        /*유효성 검사*/
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/board/cmct_write";
+        }
+
+        try {
+            boardService.saveBoardWithAttachment(board, attachment, groupIdx);
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
+            return "redirect:/board/cmct_write";
+        }
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+
+        return "redirect:/board/notice_page?board_type="+boardType+"&group_idx="+groupIdx;
+    }
 
 
 
@@ -426,17 +447,22 @@ public class BoardController {
     }
     @RequestMapping("/cmct_view")
     public String cmct_view(@RequestParam("group_idx") long groupIdx,
+                            @RequestParam("board_type") long boardType,
                             @RequestParam("idx") long idx,
                             @RequestParam("member") long memberIdx,
                             Model model){
 
         MemberEntity member = memberRepository.findById(memberIdx).orElse(null);
         BoardEntity board = boardRepository.findByIdx(idx);
-        List<CommentsEntity> commentsList = commentsRepository.findByBoard_idx(idx);
+        List<CommentsEntity> commentsList = commentsRepository.findByBoard_idxWithMember(idx);
+
+        /*정렬*/
+        commentsList.sort((c1, c2) -> c2.getCreatedAt().compareTo(c1.getCreatedAt()));
 
         model.addAttribute("commentsList", commentsList);
         model.addAttribute("board", board);
         model.addAttribute("member", member);
+        model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
         return "/board/cmct_view";
@@ -448,18 +474,27 @@ public class BoardController {
         //로그인 구현 후 수정
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("today", today);
         return "board/cmct_write";
     }
     @PostMapping("/cmct_write_proc")
-    public String cmct_write_proc(@ModelAttribute BoardEntity board,
+    public String cmct_write_proc(@Valid CommonForm form,
+                                  @ModelAttribute BoardEntity board,
+                                  BindingResult result,
                                   @RequestParam("attachment") MultipartFile attachment,
-                                  @RequestParam("group_idx") long groupIdx,
-                                  @RequestParam("board_type") long boardType,
+                                  @RequestParam("groupIdx") long groupIdx,
+                                  @RequestParam("boardType") long boardType,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
+
+        /*유효성 검사*/
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "redirect:/board/cmct_write";
+        }
 
         try {
             boardService.saveBoardWithAttachment(board, attachment, groupIdx);
@@ -474,7 +509,24 @@ public class BoardController {
 
         return "redirect:/board/cmct_page?board_type=" + boardType + "&group_idx=" + groupIdx;
     }
+@PostMapping("cmct_comment_proc")
+public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
+                           RedirectAttributes redirectAttributes,
+                           @RequestParam("groupIdx") long groupIdx,
+                           @RequestParam("boardIdx") long idx,
+                           Model model,
+                           @RequestParam(value = "boardType", required = false) long boardType){
 
+
+    boardService.saveComment(commentsDTO);
+
+    Long memberIdx = commentsDTO.getMemberIdx();
+
+    redirectAttributes.addAttribute("idx", commentsDTO.getBoardIdx());
+    model.addAttribute("groupIdx", groupIdx);
+    model.addAttribute("boardType", boardType);
+    return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+idx+"&member="+memberIdx;
+}
 
 
 
