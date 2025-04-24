@@ -7,6 +7,7 @@ import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -27,6 +28,7 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final AttachmentRepository attachmentRepository;
     private final CommentsRepository commentsRepository;
+    private String uploadDir = "D:/SpringProject/data/";
 
 
     // 게시글 조회 및 조회수 증가
@@ -119,7 +121,7 @@ public class BoardService {
         // 파일 업로드 처리
         if (!attachment.isEmpty()) {
             String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
-            String uploadDir = "D:/SpringProject/data/";
+            //uploadDir = "D:/SpringProject/data/";
 
             File directory = new File(uploadDir);
             if (!directory.exists()) {
@@ -130,7 +132,7 @@ public class BoardService {
             attachment.transferTo(destination);
 
             // 상대 경로만 DB에 저장
-            String relativePath = "/data/" + uuidFileName;
+            String relativePath = uuidFileName;
 
             AttachmentEntity attachmentEntity = new AttachmentEntity();
             attachmentEntity.setFilePath(relativePath); // ✅ 상대 경로로 설정

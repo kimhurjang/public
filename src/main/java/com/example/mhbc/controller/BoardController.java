@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -405,7 +406,7 @@ public class BoardController {
         /*유효성 검사*/
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
-            return "redirect:/board/cmct_write";
+            return "redirect:/board/notice_write";
         }
 
         try {
@@ -413,7 +414,7 @@ public class BoardController {
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
-            return "redirect:/board/cmct_write";
+            return "redirect:/board/notice_write";
         }
 
         model.addAttribute("groupIdx", groupIdx);
@@ -532,15 +533,21 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
 
     /*파일 다운로드*/
     @GetMapping("/file/download/{idx}")
-    public ResponseEntity<Resource> filedownload(@PathVariable("idx") Long idx){
+    public ResponseEntity<Resource> filedownload(@PathVariable("idx") Long idx) throws FileNotFoundException {
 
         AttachmentEntity attachment = attachmentRepository.findByIdx(idx);
 
         if (attachment.getFilePath() == null || attachment.getFilePath().isEmpty()) {
             throw new RuntimeException("파일 경로가 존재하지 않습니다: " + attachment);
         }
+        String uploadDir = "D:/SpringProject";
+        Resource resource = new FileSystemResource(uploadDir + attachment.getFilePath());
 
-        Resource resource = new FileSystemResource(attachment.getFilePath());
+
+        if (!resource.exists()) {
+            throw new FileNotFoundException("파일을 찾을 수 없습니다: " + attachment.getFilePath());
+        }
+
         String encodedFilename;
         try {
             encodedFilename = URLEncoder.encode(attachment.getFileName(), "UTF-8").replaceAll("\\+", "%20");
@@ -554,8 +561,13 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                 .body(resource);
     }
 
+    /*삭제*/
+    @RequestMapping("/delete")
+    public String delete(){
 
 
+        return "";
+    }
 
 
 

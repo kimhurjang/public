@@ -14,7 +14,7 @@
     </div>
     <div th:text="${board.content}"></div>
     <div th:text="${board.viewCnt}"></div>
-    <div>작성일 : <div th:text="${{#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></div></div>
+    <div>작성일 : <div th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></div></div>
 
   </div><!--E content-->
 </section><!--E container-->
