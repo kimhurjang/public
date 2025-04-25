@@ -77,9 +77,8 @@ public class BoardController {
             AttachmentEntity attachment = attachmentRepository.findByBoard(board);
             board.setAttachment(attachment); // BoardEntity에 Attachment 필드 추가
         }
+        model.addAttribute("webtitle", "만화방초 | 갤러리");
         model.addAttribute("boardList", boardList);
-
-
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardList", boardList);
@@ -167,6 +166,7 @@ public class BoardController {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
 
+        model.addAttribute("webtitle", "만화방초 | 이벤트");
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardList", boardList);
@@ -255,6 +255,7 @@ public class BoardController {
 
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
 
+        model.addAttribute("webtitle", "만화방초 | 자주 묻는 질문");
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardList", boardList);
@@ -298,6 +299,7 @@ public class BoardController {
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        model.addAttribute("webtitle", "만화방초 | 1대1 질문");
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("today", today);
         model.addAttribute("boardType", boardType);
@@ -315,7 +317,7 @@ public class BoardController {
         Optional<MemberEntity> member = memberRepository.findById(1L);
         List<BoardEntity> boardList = boardRepository.findByMemberIdx(1L);
 
-
+        model.addAttribute("webtitle", "만화방초 | 내가 작성한 게시글");
         model.addAttribute("boardList", boardList);
         model.addAttribute("member", member.get());
         model.addAttribute("boardType", boardType);
@@ -376,6 +378,7 @@ public class BoardController {
 
         String link = "/board/notice_page";
 
+        model.addAttribute("webtitle", "만화방초 | 공지 사항");
         model.addAttribute("link", link);
         model.addAttribute("paging", paging);
         model.addAttribute("groupIdx", groupIdx);
@@ -444,11 +447,12 @@ public class BoardController {
 
     /*커뮤니티*/
     @RequestMapping("/cmct")
-    public String cmct(){
+    public String cmct(Model model){
 
         long boardType = 0;
         long groupIdx = 2;
         int page = 0;
+
         return "redirect:/board/cmct_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/cmct_page")
@@ -462,6 +466,7 @@ public class BoardController {
 
         String link = "/board/cmct_page";
 
+        model.addAttribute("webtitle", "만화방초 | 커뮤니티");
         model.addAttribute("link", link);
         model.addAttribute("paging", paging);
         model.addAttribute("boardType", boardType);
