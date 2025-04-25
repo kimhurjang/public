@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,9 +36,9 @@ public class MemberController {
   public String sociallogin(@RequestParam("code") String code, Model model) {
     System.out.println("받은 인가 코드: " + code);
     String accessToken = kakaoService.getKakaoAccessToken(code);
-    SocialUserInfoDTO userInfo = kakaoService.getUserNickname(accessToken);
+    SocialUserInfoDTO userInfo = kakaoService.getUserInfoFromKakao(accessToken);  // 카카오에서 받은 사용자 정보
 
-    if (userInfo == null || userInfo.getEmail() == null) {
+    if (userInfo == null || userInfo.getSnsEmail() == null) {
       System.out.println("사용자 정보를 가져오지 못했습니다.");
       return "redirect:/api/member/login";  // 로그인 페이지로 리디렉션
     }
@@ -50,10 +51,13 @@ public class MemberController {
       SnsEntity snsUser = new SnsEntity();
       snsUser.setSnsType("KAKAO");
       snsUser.setSnsId(userInfo.getUserid());
-      snsUser.setSnsEmail(userInfo.getEmail());
-      snsUser.setSnsName(userInfo.getNickname());
-      snsUser.setConnectedAt(new java.sql.Timestamp(System.currentTimeMillis()));
-      snsRepository.save(snsUser);
+      snsUser.setSnsEmail(userInfo.getSnsEmail());  // 이메일
+      snsUser.setSnsName(userInfo.getSnsName());  // 이름
+
+      // LocalDateTime으로 연결 시간 설정
+      snsUser.setConnectedAt(LocalDateTime.now());  // LocalDateTime 사용
+
+      snsRepository.save(snsUser);  // SNS 정보 저장
       model.addAttribute("userInfo", userInfo);  // userInfo 모델에 추가 (필요시 사용)
     } else {
       System.out.println("이미 가입된 사용자입니다.");
@@ -62,7 +66,6 @@ public class MemberController {
     // 메인 페이지로 리디렉션
     return "redirect:/";  // 메인 페이지로 리디렉션
   }
-
 
 
   // 회원가입 페이지

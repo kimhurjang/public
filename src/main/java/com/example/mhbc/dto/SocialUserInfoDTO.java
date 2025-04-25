@@ -1,16 +1,24 @@
 package com.example.mhbc.dto;
 
+import java.time.LocalDateTime;
+
 public class SocialUserInfoDTO {
     private String userid;
-    private String email;
-    private String nickname;
+    private String snsName;  // sns_name (nickname 대체)
+    private String snsEmail; // sns_email
+    private String snsType;  // sns_type 추가
+    private LocalDateTime connectedAt; // 연결 시간 추가 (String으로 유지)
 
-    public SocialUserInfoDTO(String userid, String email, String nickname) {
+    // 새 생성자 (모든 필드를 초기화)
+    public SocialUserInfoDTO(String userid, String snsEmail, String snsName, String snsType, LocalDateTime connectedAt) {
         this.userid = userid;
-        this.email = email;
-        this.nickname = nickname;
+        this.snsEmail = snsEmail;
+        this.snsName = snsName;
+        this.snsType = snsType;
+        this.connectedAt = connectedAt;
     }
 
+    // 기본 생성자
     public SocialUserInfoDTO() {
     }
 
@@ -19,24 +27,40 @@ public class SocialUserInfoDTO {
         return userid;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSnsEmail() {
+        return snsEmail;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getSnsName() {
+        return snsName;
     }
 
-    // Setter
+    public String getSnsType() {
+        return snsType;
+    }
+
+    public LocalDateTime getConnectedAt() {
+        return connectedAt;
+    }
+
+    // setter들 추가
     public void setUserid(String userid) {
         this.userid = userid;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSnsEmail(String snsEmail) {
+        this.snsEmail = snsEmail;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setSnsName(String snsName) {
+        this.snsName = snsName;
+    }
+
+    public void setSnsType(String snsType) {
+        this.snsType = snsType;
+    }
+
+    public void setConnectedAt(LocalDateTime connectedAt) {
+        this.connectedAt = connectedAt;
     }
 }

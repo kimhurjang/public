@@ -8,8 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SnsRepository extends JpaRepository<SnsEntity, Long> {
-
-    boolean existsBySnsId(String snsId);
-
     Optional<SnsEntity> findBySnsId(String snsId);
 }

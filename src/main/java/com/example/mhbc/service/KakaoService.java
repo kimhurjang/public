@@ -5,26 +5,26 @@ import com.example.mhbc.entity.SnsEntity;
 import com.example.mhbc.repository.SnsRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
 public class KakaoService {
 
-    private final SnsRepository snsRepository; // 🔥 SNS 저장용 Repository 주입
+    private final SnsRepository snsRepository;
+
+    public KakaoService(SnsRepository snsRepository) {
+        this.snsRepository = snsRepository;
+    }
 
     public String getKakaoAccessToken(String code) {
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://kauth.kakao.com")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .defaultHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
 
         String response = webClient.post()
@@ -32,13 +32,10 @@ public class KakaoService {
                 .body(BodyInserters.fromFormData("grant_type", "authorization_code")
                         .with("client_id", "3a729b684852129622871e6b959a97e6")
                         .with("redirect_uri", "http://localhost:8090/api/member/kakao")
-                        .with("code", code)
-                )
+                        .with("code", code))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        System.out.println("📦 카카오 토큰 응답: " + response);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -50,8 +47,7 @@ public class KakaoService {
         }
     }
 
-    // 사용자 정보 요청
-    public SocialUserInfoDTO getUserNickname(String accessToken) {
+    public SocialUserInfoDTO getUserInfoFromKakao(String accessToken) {
         String response = WebClient.create()
                 .get()
                 .uri("https://kapi.kakao.com/v2/user/me")
@@ -60,44 +56,55 @@ public class KakaoService {
                 .bodyToMono(String.class)
                 .block();
 
-        System.out.println("👤 사용자 정보 응답: " + response);
+// 응답 데이터 로그 출력
+        System.out.println("카카오 응답: " + response);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response);
-            Long id = jsonNode.get("id").asLong();
-            String nickname = jsonNode.path("properties").path("nickname").asText();
-            String email = jsonNode.path("kakao_account").path("email").asText();
 
+            // 실제 데이터 구조 확인
+            String snsId = "k" + jsonNode.get("id").asText();
+            String snsName = jsonNode.path("properties").path("nickname").asText(); // 여기서 nickname 값을 확인
+
+            // 확인을 위한 로그 추가
+            System.out.println("SNS Name: " + snsName);
+
+            String snsEmail = jsonNode.path("kakao_account").path("email").asText();
+
+            // SNS 정보를 담을 DTO 객체 반환
             SocialUserInfoDTO userInfo = new SocialUserInfoDTO();
-            userInfo.setUserid("k" + id);
-            userInfo.setNickname(nickname);
-            userInfo.setEmail(email);
+            userInfo.setUserid(snsId);
+            userInfo.setSnsName(snsName);
+            userInfo.setSnsEmail(snsEmail);
+            userInfo.setSnsType("KAKAO");
+            userInfo.setConnectedAt(LocalDateTime.now()); // LocalDateTime으로 변환하여 저장
+
             return userInfo;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+
     }
 
-    // 🔥 SNS 테이블에 저장하는 메서드 추가
+
     public void saveUserInfoToSns(String accessToken) {
-        SocialUserInfoDTO userInfo = getUserNickname(accessToken);
-        if (userInfo != null && userInfo.getUserid() != null) {
-            SnsEntity sns = SnsEntity.builder()
-                    .snsType("kakao")
+        SocialUserInfoDTO userInfo = getUserInfoFromKakao(accessToken);
+
+        if (userInfo != null) {
+            SnsEntity snsEntity = SnsEntity.builder()
+                    .snsType(userInfo.getSnsType())
                     .snsId(userInfo.getUserid())
-                    .snsEmail(userInfo.getEmail())
-                    .snsName(userInfo.getNickname())
-                    //.snsProfileImg(userInfo.getProfileImage())
-                    //.snsMobile(userInfo.getMobile())
-                    .connectedAt(new Date())
+                    .snsEmail(userInfo.getSnsEmail())
+                    .snsName(userInfo.getSnsName())
+                    .connectedAt(userInfo.getConnectedAt()) // LocalDateTime 그대로 사용
                     .build();
 
-            snsRepository.save(sns);
-            System.out.println("✅ SNS 테이블에 저장 완료: " + userInfo.getNickname());
+            snsRepository.save(snsEntity);
+            System.out.println("✅ SNS 테이블에 저장 완료: " + userInfo.getSnsName());
         } else {
-            System.out.println("❌ 사용자 정보가 없어서 저장 실패");
+            System.out.println("❌ SNS 테이블에 저장 실패");
         }
     }
 }
