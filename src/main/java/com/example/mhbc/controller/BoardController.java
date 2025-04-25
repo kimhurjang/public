@@ -14,6 +14,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -356,18 +360,24 @@ public class BoardController {
 
         long groupIdx = 1;
         long boardType = 0;
+        int page = 0;
 
-        return "redirect:/board/notice_page?board_type="+boardType+"&group_idx="+groupIdx;
+        return "redirect:/board/notice_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/notice_page")
     public String notice_page(Model model,
                               @RequestParam("group_idx") long groupIdx,
-                              @RequestParam("board_type") long boardType){
+                              @RequestParam("board_type") long boardType,
+                              @RequestParam("page") int page){
         System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
 
-        List<BoardEntity> boardList = boardRepository.findBoardsByGroupIdx(groupIdx);
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "idx"));//페이징+정렬
+        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
-        model.addAttribute("boardList", boardList);
+        String link = "/board/notice_page";
+
+        model.addAttribute("link", link);
+        model.addAttribute("paging", paging);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
         return "/board/notice_page";
@@ -438,16 +448,22 @@ public class BoardController {
 
         long boardType = 0;
         long groupIdx = 2;
-        return "redirect:/board/cmct_page?board_type="+boardType+"&group_idx="+groupIdx;
+        int page = 0;
+        return "redirect:/board/cmct_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/cmct_page")
     public String cmct_page(@RequestParam("board_type") long boardType,
                             @RequestParam("group_idx") long groupIdx,
+                            @RequestParam("page") int page,
                             Model model){
 
-        List<BoardEntity> boardList = boardRepository.findBoardsByGroupIdx(groupIdx);
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "idx"));//페이징+정렬
+        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
-        model.addAttribute("boardList", boardList);
+        String link = "/board/cmct_page";
+
+        model.addAttribute("link", link);
+        model.addAttribute("paging", paging);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 

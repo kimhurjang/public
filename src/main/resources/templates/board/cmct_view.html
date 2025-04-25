@@ -19,7 +19,7 @@
                 </tr>
                 <tr>
                     <td>작성 날짜</td>
-                    <td th:text="${#dates.format(board.createdAt, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></td>
                 </tr>
                 <tr>
                     <td colspan="2" th:text="${board.content}"></td>

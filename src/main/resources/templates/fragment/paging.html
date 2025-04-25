@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="paging">
+  <div th:if="${!paging.isEmpty()}">
+
+    <!--
+        사용하실 파일(컨트롤러,레포지토리)에서 임폴트해주세요(레포지토리는 자동 임폴트 안 뜸)
+        import org.springframework.data.domain.Page;
+        import org.springframework.data.domain.PageRequest;
+        import org.springframework.data.domain.Pageable;
+
+         컨트롤러 예시 입니다.
+        @RequestMapping("/notice_page")
+        public String notice_page(Model model,
+                              @RequestParam("group_idx") long groupIdx,
+                              @RequestParam("board_type") long boardType,
+                              @RequestParam(value = "page", defaultValue = "0") int page){
+        System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
+
+        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "idx"));//페이징+정렬
+        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
+         html에 th:each부분도 맞춰서 수정 해주셔야 합니다. 예)th:each="board : ${paging}"
+         변수 명 paging에서 다른거로 변경하실 경우 아래 코드에 paging으로 된 부분 다 맞춰서 바꿔주셔야 합니다.
+
+        String link = "/board/notice_page";
+
+        model.addAttribute("link", link);
+        model.addAttribute("paging", paging);
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        return "/board/notice_page";
+
+        레포지토리 예시 입니다.
+         @Query("SELECT b FROM BoardEntity b WHERE b.group.groupIdx = :groupIdx")
+        Page<BoardEntity> findByGroupIdx(@Param("groupIdx") long groupIdx, Pageable pageable);
+
+         사용 하실 때 아래 코드 쓰시면 됩니다.
+         <div th:replace="~{fragment/paging :: paging}"></div>
+     -->
+    <ul>
+      <!-- 이전 버튼 -->
+      <li th:if="${paging.number > 0}">
+        <a th:href="@{|${link}?page=${(paging.number - 1)}&board_type=${boardType}&group_idx=${groupIdx}|}">&lt;</a>
+      </li>
+
+      <!-- 페이지 번호 -->
+      <li th:each="page : ${#numbers.sequence(((paging.number / 5) * 5) + 1,
+                           T(java.lang.Math).min(((paging.number / 5) * 5) + 5, paging.totalPages))}"
+          th:classappend="${page == paging.number + 1} ? 'active'">
+        <a th:text="${page}"
+           th:href="@{|${link}?page=${page - 1}&board_type=${boardType}&group_idx=${groupIdx}|}"></a>
+      </li>
+
+      <!-- 다음 버튼 -->
+      <li th:if="${paging.number + 1 < paging.totalPages}">
+        <a th:href="@{|${link}?page=${(paging.number + 1)}&board_type=${boardType}&group_idx=${groupIdx}|}">&gt;</a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+</body>
+</html>
