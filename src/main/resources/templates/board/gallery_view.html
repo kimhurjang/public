@@ -10,7 +10,7 @@
 
     <div><h2 th:text="${board.title}"></h2></div>
     <div th:if="${board.attachment != null}">
-      <img th:src="@{${board.attachment.filePath}}" alt="첨부 이미지" class="card-img"/>
+      <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-img"/>
     </div>
     <div th:text="${board.content}"></div>
     <div th:text="${board.viewCnt}"></div>

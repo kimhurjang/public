@@ -589,7 +589,7 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         else if(groupIdx == 3 && boardType == 1){
             redirectUrl = "event_page?board_type="+boardType+"&group_idx="+groupIdx;
         }
-        else if(groupIdx == 4 && boardType == 0){
+        else if(groupIdx == 4 && boardType == 1){
             redirectUrl = "gallery_page?board_type="+boardType+"&group_idx="+groupIdx;
         }
         else if(groupIdx == 5 && boardType == 2){
