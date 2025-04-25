@@ -1,7 +1,9 @@
 package com.example.mhbc.repository;
 
 import com.example.mhbc.entity.BoardEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,7 +21,15 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
     public List<BoardEntity> findByTitle(String title);
 
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM BoardEntity b WHERE b.idx = :idx")
+    void deleteByIdx(@Param("idx") long idx);
+
+
     // 작성자 기준으로 전체 게시글 조회
     List<BoardEntity> findByMemberIdx(Long memberIdx);
+
+
 
 }

@@ -34,6 +34,11 @@
                     </td>
                 </tr>
                 <tr>
+                    <td colspan="2" th:if="${member == board.member.idx || grade == 10}">
+                        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}"><button type="button">삭제</button></a>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2">댓글</td>
                 </tr>
 

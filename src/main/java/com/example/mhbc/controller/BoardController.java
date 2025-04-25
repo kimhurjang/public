@@ -9,6 +9,7 @@ import com.example.mhbc.repository.*;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
@@ -84,9 +85,11 @@ public class BoardController {
     @RequestMapping("/gallery_view")
     public String gallery_iew(@RequestParam("idx") long idx,
                               @RequestParam("group_idx") long groupIdx,
+                              @RequestParam("board_type") long boardType,
                               Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
+        model.addAttribute("boardType", boardType);
         model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
 
@@ -169,10 +172,12 @@ public class BoardController {
     @RequestMapping("/event_view")
     public String event_view(@RequestParam("idx") long idx,
                              @RequestParam("group_idx") long groupIdx,
+                             @RequestParam("board_type") long boardType,
                              Model model) {
 
         BoardEntity board = boardService.getBoardByIdx(idx);
         model.addAttribute("board", board);
+        model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
         return "board/event_view";
@@ -255,12 +260,14 @@ public class BoardController {
     @RequestMapping("/oftenquestion_view")
     public String oftenquestion_view(@RequestParam("idx") long idx,
                                      @RequestParam("title") String title,
+                                     @RequestParam("board_type") long boardType,
                                      @RequestParam("group_idx") long groupIdx,
                                      Model model) {
 
         List<BoardEntity> boardList = boardService.getBoardListByTitle(title);
 
         model.addAttribute("boardList", boardList);
+        model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("idx", idx);
         model.addAttribute("title", title);
@@ -487,7 +494,7 @@ public class BoardController {
                                   BindingResult result,
                                   @RequestParam("attachment") MultipartFile attachment,
                                   @RequestParam("groupIdx") long groupIdx,
-                                  @RequestParam("boardType") long boardType,
+                                  @RequestParam("board_type") long boardType,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
 
@@ -562,11 +569,38 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
     }
 
     /*삭제*/
+
     @RequestMapping("/delete")
-    public String delete(){
+    public String delete(BoardEntity board,
+                         MemberEntity member,
+                         AttachmentEntity attachment,
+                         @RequestParam("group_idx") long groupIdx,
+                         @RequestParam("board_type") long boardType,
+                         @RequestParam("idx") long boardIdx){
 
+        String redirectUrl = "";
 
-        return "";
+        if(groupIdx == 1 && boardType == 0){
+            redirectUrl = "notice_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+        else if(groupIdx == 2 && boardType == 0){
+            redirectUrl = "cmct_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+        else if(groupIdx == 3 && boardType == 1){
+            redirectUrl = "event_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+        else if(groupIdx == 4 && boardType == 0){
+            redirectUrl = "gallery_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+        else if(groupIdx == 5 && boardType == 2){
+            redirectUrl = "oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+        }
+
+        if(boardIdx >= 1) {
+            boardService.deleteBoardWithAttachments(boardIdx);
+        }
+
+        return "redirect:/board/"+redirectUrl;
     }
 
 

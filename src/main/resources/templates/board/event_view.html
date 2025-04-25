@@ -15,6 +15,8 @@
     <div th:text="${board.content}"></div>
     <div th:text="${board.viewCnt}"></div>
     <div>작성일 : <div th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></div></div>
+    <a th:href="@{/board/delete(groupIdx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}"><button>[관리자]삭제</button></a>
+    <!--sec:authorize="hasRole('ADMIN')"-->
 
   </div><!--E content-->
 </section><!--E container-->

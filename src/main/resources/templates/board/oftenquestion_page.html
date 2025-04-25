@@ -10,7 +10,7 @@
 
         <table class="">
             <tr th:each="board : ${boardList}" th:if="${groupIdx == 5 and board.re == 0}">
-                <td><a th:href="@{/board/oftenquestion_view(group_idx=${groupIdx}, title=${board.title}, idx=${board.idx})}" th:text="${board.title}"></a></td>
+                <td><a th:href="@{/board/oftenquestion_view(group_idx=${groupIdx}, board_type=${boardType}, title=${board.title}, idx=${board.idx})}" th:text="${board.title}"></a></td>
             </tr>
         </table>
     </div><!--E content-->
