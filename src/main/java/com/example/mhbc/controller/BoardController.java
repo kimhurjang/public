@@ -371,7 +371,7 @@ public class BoardController {
                               @RequestParam("page") int page){
         System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
 
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "idx"));//페이징+정렬
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));//페이징+정렬
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         String link = "/board/notice_page";
@@ -457,7 +457,7 @@ public class BoardController {
                             @RequestParam("page") int page,
                             Model model){
 
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "idx"));//페이징+정렬
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));//페이징+정렬
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
 
         String link = "/board/cmct_page";
