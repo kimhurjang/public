@@ -52,7 +52,7 @@ nav:hover .sub_nav_layer { display:flex; position:absolute; top:70px; left:0; ba
     #user #content {margin:0;}
 }
 
-/* ----------------- admin class ------------------*/
+/* ----------------- admin 전체틀 ------------------*/
 #admin {display:flex; height:100vh; margin:0; padding:0;}
 #admin > #wrapper {min-width:1200px; padding:20px; flex-grow:1; height:100vh; overflow-y:auto; background-color:#fff;}
 #admin > #wrapper #content {padding:30px; background:#fafafa; }
@@ -76,8 +76,7 @@ nav:hover .sub_nav_layer { display:flex; position:absolute; top:70px; left:0; ba
 .tbl_admin th, .tbl_admin td {border-width:0; padding:10px 7px; }
 
 /*기본 가운데정렬을 왼쪽 정렬 */
-.tl_th th,
-.tl_td td {text-align:left;}
+.tl_th th, .tl_td td {text-align:left;}
 
 /* 테이블 기본 스타일*/
 .tbl_type01 { border-width:2px 0 1px;}
@@ -127,6 +126,7 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 .disabled2 {opacity: 0.9; background:#ededed;}
 .disabled2:hover {opacity: 1; }
 
+/* 4글짜 넓이 고정 버튼 */
 .status_btn {width:64px;}
 
 /* ----------------- form class ------------------*/
@@ -143,11 +143,8 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 .form_group.row > * {flex-shrink:1}
 
 /* select/input 크기 조정 */
-.form_group select,
-.form_group input[type="text"],
-.form_group input[type="date"]{flex:1;min-width:120px;}
-
-.wauto input[type="text"] {width:auto;}
+.form_group select, .form_group input[type="text"], .form_group input[type="date"]{flex:1;min-width:120px;max-width:450px;}
+.wauto input[type="text"] {width:auto;max-width:revert !important;}
 
 /* ----------------- flex class ------------------
 .col_2_flex {flex:flex}
@@ -175,5 +172,6 @@ button:disabled:hover, .disabled:hover {opacity: 0.65; }
 
 .red {color:red;}
 
+/* 말줄임 */
 .ellipsis { width: 70%;white-space: nowrap; text-overflow: ellipsis; text-align: left;display: inline-block; overflow: hidden; }
 
