@@ -10,14 +10,21 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
+
+    // 아이디로 회원 찾기
     public MemberEntity findByUserid(String userid);
+
+    // 이메일로 회원 찾기
+    Optional<MemberEntity> findByEmail(String email);
+
+    // 아이디 존재 여부 확인
+    boolean existsByUserid(String userid);  // 여기 추가
+
 
     @Query("SELECT m FROM MemberEntity m WHERE LOWER(m.name) = LOWER(:name) AND LOWER(m.email) = LOWER(:email)")
     public Optional<MemberEntity> findByNameAndEmail(@Param("name") String name, @Param("email") String email);
 
-    public Optional<MemberEntity> findByEmail(String email);
 
     public MemberEntity findByIdx(Long member);
-
 
 }

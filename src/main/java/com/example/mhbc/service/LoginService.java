@@ -17,7 +17,7 @@ public class LoginService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public MemberEntity login(String userid, String pwd) {
-        Optional<MemberEntity> memberOpt = memberRepository.findByUserid(userid);
+        Optional<MemberEntity> memberOpt = Optional.ofNullable(memberRepository.findByUserid(userid));
 
         if (memberOpt.isPresent()) {
             MemberEntity member = memberOpt.get();

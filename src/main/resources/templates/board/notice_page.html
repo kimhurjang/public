@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{fragment/layout}">
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
   <a th:href="@{/board/notice}"><h1>공지 사항</h1></a>
   <div id="content" class="content">
-  <a th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
+  <a sec:authorize="hasRole('ADMIN')" th:href="@{/board/notice_write(group_idx=${groupIdx}, board_type=${boardType})}"><button>[관리자]글쓰기</button></a>
     <table th:if="${groupIdx == 1}">
       <tr th:each="board : ${paging}">
         <td>

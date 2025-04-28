@@ -29,12 +29,12 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         //일반 유저 권한
-        if(member.getGrade().equals("1")){
+        if(member.getGrade() == 1){
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
         // grade == > 0 == 비회원 /  1 == 일반 회원(user) / 10 == admin
         //관리자 권한
-        if(member.getGrade().equals("10")){
+        if(member.getGrade() == 10){
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
