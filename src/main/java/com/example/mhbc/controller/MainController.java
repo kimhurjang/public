@@ -36,6 +36,11 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
+    @RequestMapping("/gallery")
+    public String gallery(){
+        System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
+        return "board/gallery";
+    }
 
 
 

@@ -1,32 +1,45 @@
 package com.example.mhbc.entity;
 
+import com.example.mhbc.dto.SnsDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "sns")
+@Table(name = "SNS")
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SnsEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private Long idx; // SNS 연동 고유 번호
 
-    @Column(name = "sns_type")
-    private String snsType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_IDX")
+    private MemberEntity member; // 회원
 
-    @Column(name = "sns_id")
-    private String snsId;
+    private String snsType; // 플랫폼 유형
+    private String snsId; // SNS 고유 사용자 ID
+    private String snsEmail; // SNS 계정 이메일
+    private String snsName; // SNS 닉네임 또는 이름
+    private String snsProfileImg; // SNS 프로필 이미지 URL
 
-    @Column(name = "sns_email")
-    private String snsEmail;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CONNECTED_AT")
+    private Date connectedAt; // SNS 연동 시점
 
-    @Column(name = "sns_name")
-    private String snsName;
-
-    @Column(name = "connected_at")
-    private LocalDateTime connectedAt;  // LocalDateTime을 사용하면 JPA가 자동으로 처리
+    public SnsDTO toDTO() {
+        return SnsDTO.builder()
+            .snsType(snsType)
+            .snsId(snsId)
+            .snsEmail(snsEmail)
+            .snsName(snsName)
+            .snsProfileImg(snsProfileImg)
+            .connectedAt(connectedAt)
+            .memberIdx(member != null ? member.getIdx() : null)
+            .build();
+    }
 }

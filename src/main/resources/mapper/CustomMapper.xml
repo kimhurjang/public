@@ -4,6 +4,7 @@
 
 <mapper namespace="com.example.mhbc.mapper.CustomMapper">
 
+
     <select id="selectAll" resultType="MemberEntity">
         select *
         from member
@@ -20,6 +21,7 @@
             </otherwise>
         </choose>
     </select>
+
 
 
 
