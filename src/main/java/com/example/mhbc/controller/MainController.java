@@ -36,36 +36,6 @@ public class MainController {
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
     }
-    @RequestMapping("/gallery")
-    public String gallery(){
-        System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
-        return "board/gallery";
-    }
-    @RequestMapping("/event")
-    public String event(){
-        System.out.println(">>>>>>>>>>event page<<<<<<<<<<");
-        BoardGroupEntity bg = new BoardGroupEntity();
-        int boardType = 1;
-        int groupIdx = 3;
-
-        return "redirect:board/eventpage?board_type=" + boardType + "&group_idx=" + groupIdx;
-    }
-    // '/board/eventpage' 요청을 처리하는 메소드
-    @RequestMapping("/board/eventpage")
-    public String eventPage(@RequestParam("board_type") int boardType,
-                            @RequestParam("group_idx") int groupIdx,
-                            Model model) {
-        List<BoardEntity> boardList = boardRepository.findBoardsByGroupIdx(groupIdx);
-        System.out.println("----------------------board"+boardList);
-
-        // model에 데이터를 추가하여 뷰에 전달
-        model.addAttribute("boardType", boardType);
-        model.addAttribute("groupIdx", groupIdx);
-        model.addAttribute("boardList", boardList);
-
-        return "board/eventpage";  // eventpage.html을 반환
-    }
-
 
 
 

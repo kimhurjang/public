@@ -5,12 +5,25 @@
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
-    <h1>로그인</h1>
-    <div id="content" class="content">
-        <form method="post" action="/loginproc">
-            <a href="https://kauth.kakao.com/oauth/authorize?client_id=c9bb56960e98eceddc4418dc3243c916&redirect_uri=http://localhost:8090/member/sociallogin&response_type=code">카카오 로그인</a>
-        </form>
-    </div><!--E content-->
+  <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+  <div id="content" class="content">
+
+    <div th:each="board : ${boardList}">
+
+      <div th:if="${board.re == 0}">
+        <div th:text="${board.title}"></div>
+        <div th:text="${board.content}"></div>
+      </div>
+
+      <div th:if="${board.re == 1}">
+        <div th:text="${board.title}"></div>
+        <div th:text="${board.content}"></div>
+      </div>
+
+    </div>
+
+  </div>
+
 </section><!--E container-->
 </body>
 </html>

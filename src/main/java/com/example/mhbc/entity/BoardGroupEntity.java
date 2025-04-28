@@ -23,10 +23,10 @@ public class BoardGroupEntity {
 
     public BoardGroupDTO toDTO() {
         return BoardGroupDTO.builder()
-            .boardType(boardType)
-            .name(name)
-            .orderNo(orderNo)
-            .role(role)
-            .build();
+                .boardType(boardType)
+                .name(name)
+                .orderNo(orderNo)
+                .role(role)
+                .build();
     }
 }
