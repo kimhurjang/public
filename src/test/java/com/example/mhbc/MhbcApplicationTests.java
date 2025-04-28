@@ -1,5 +1,6 @@
 package com.example.mhbc;
 
+
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.mapper.CustomMapper;
@@ -19,7 +20,6 @@ class MhbcApplicationTests {
 	@Autowired
 	CustomMapper customMapper;
 
-
 	@Test
 	void test(){
 		List<MemberEntity> List = customMapper.selectName("a");
@@ -36,3 +36,4 @@ class MhbcApplicationTests {
 	}
 
 }
+

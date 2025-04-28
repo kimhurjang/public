@@ -1,16 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragment/layout}">
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
 <body>
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
-<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
-    <h1>로그인</h1>
-    <div id="content" class="content">
-        <form method="post" action="/loginproc">
-            <a href="https://kauth.kakao.com/oauth/authorize?client_id=c9bb56960e98eceddc4418dc3243c916&redirect_uri=http://localhost:8090/member/sociallogin&response_type=code">카카오 로그인</a>
+<div class="container">
+    <div class="login_box">
+        <h1>회원 로그인</h1>
+
+        <!-- 로그인 폼 시작 -->
+        <form action="/api/member/loginProc" method="POST">
+        <div class="input_group">
+                <label for="userid">아이디</label>
+                <input type="text" id="userid" name="userid" placeholder="아이디" required>
+            </div>
+            <div class="input_group">
+                <label for="pwd">비밀번호</label>
+                <input type="password" id="pwd" name="pwd" placeholder="비밀번호" required>
+            </div>
+            <button type="submit" class="login_button">로그인</button>
         </form>
-    </div><!--E content-->
-</section><!--E container-->
+
+        <div class="links">
+            <a href="/api/member/findidpw#tab1">아이디 찾기</a> |
+            <a href="/api/member/findidpw#tab2">비밀번호 찾기</a> |
+            <a href="/api/member/join">회원가입</a>
+        </div>
+
+        <span class="text">다른 계정으로 로그인</span>
+
+        <div class="sns-icons">
+            <a href="https://kauth.kakao.com/oauth/authorize?client_id=3a729b684852129622871e6b959a97e6&redirect_uri=http://localhost:8090/api/member/kakao&response_type=code">
+                카카오로 로그인
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>
