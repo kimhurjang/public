@@ -8,9 +8,13 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
-    boolean existsByUserid(String userid);
 
+    // 아이디로 회원 찾기
+    Optional<MemberEntity> findByUserid(String userid);
+
+    // 이메일로 회원 찾기
     Optional<MemberEntity> findByEmail(String email);
 
-    Optional<MemberEntity> findByUserid(String userid);
+    // 아이디 존재 여부 확인
+    boolean existsByUserid(String userid);  // 여기 추가
 }

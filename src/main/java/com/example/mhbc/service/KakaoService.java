@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-
 import java.time.LocalDateTime;
 
 @Service
@@ -50,25 +49,21 @@ public class KakaoService {
     public SocialUserInfoDTO getUserInfoFromKakao(String accessToken) {
         String response = WebClient.create()
                 .get()
-                .uri("https://kapi.kakao.com/v2/user/me")
+                .uri("https://kapi.kakao.com/v2/user/me") // 프로필 이미지와 이메일 제외
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
-// 응답 데이터 로그 출력
         System.out.println("카카오 응답: " + response);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response);
 
-            // 실제 데이터 구조 확인
+            // 카카오 ID 가져오기 (SNS ID)
             String snsId = "k" + jsonNode.get("id").asText();
-            String snsName = jsonNode.path("properties").path("nickname").asText(); // 여기서 nickname 값을 확인
-
-            // 확인을 위한 로그 추가
-            System.out.println("SNS Name: " + snsName);
+            String snsName = jsonNode.path("properties").path("nickname").asText("카카오사용자");  // 닉네임
 
             String snsEmail = jsonNode.path("kakao_account").path("email").asText();
 
@@ -87,7 +82,6 @@ public class KakaoService {
         }
 
     }
-
 
     public void saveUserInfoToSns(String accessToken) {
         SocialUserInfoDTO userInfo = getUserInfoFromKakao(accessToken);
