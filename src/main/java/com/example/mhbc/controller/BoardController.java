@@ -1,5 +1,6 @@
 package com.example.mhbc.controller;
 
+import com.example.mhbc.Util.Utility;
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.dto.CommentsDTO;
 import com.example.mhbc.dto.CommonForm;
@@ -11,7 +12,9 @@ import com.example.mhbc.service.CommentsService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -41,16 +44,17 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/board")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
-    private CommentsService commentsService;
-    private MemberRepository memberRepository;
-    private BoardGroupRepository boardGroupRepository;
-    private BoardRepository boardRepository;
-    private CommentsRepository commentsRepository;
-    private AttachmentRepository attachmentRepository;
+    private final CommentsService commentsService;
+    private final MemberRepository memberRepository;
+    private final BoardGroupRepository boardGroupRepository;
+    private final BoardRepository boardRepository;
+    private final CommentsRepository commentsRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final Utility utility;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -118,7 +122,7 @@ public class BoardController {
                                Model model,
                                @ModelAttribute BoardEntity board,
                                @ModelAttribute AttachmentEntity attachmentEntity,
-                               @RequestParam("file") MultipartFile file,
+                               @RequestParam("attachment") MultipartFile attachment,
                                @RequestParam("group_idx") long groupIdx,
                                @RequestParam("board_type") long boardType,
                                RedirectAttributes redirectAttributes) {
@@ -133,10 +137,10 @@ public class BoardController {
         board.setCreatedAt(new Date());
         attachmentEntity.setBoard(board); // 첨부파일이 어떤 게시글에 속하는지 연결
 
-        if (file != null && !file.isEmpty()) {
+        if (attachment != null && !attachment.isEmpty()) {
             try {
-
-                boardService.saveBoardWithAttachment(board, file, groupIdx);
+                boardService.saveBoard(board,groupIdx);
+                utility.saveAttachment(attachment,board);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -206,7 +210,7 @@ public class BoardController {
                              Model model,
                              @ModelAttribute BoardEntity board,
                              @ModelAttribute AttachmentEntity attachmentEntity,
-                             @RequestParam("file") MultipartFile file,
+                             @RequestParam("attachment") MultipartFile attachment,
                              @RequestParam("group_idx") long groupIdx,
                              @RequestParam("board_type") long boardType,
                              RedirectAttributes redirectAttributes){
@@ -220,10 +224,10 @@ public class BoardController {
         board.setCreatedAt(new Date());
         attachmentEntity.setBoard(board); // 첨부파일이 어떤 게시글에 속하는지 연결
 
-        if (file != null && !file.isEmpty()) {
+        if (attachment != null && !attachment.isEmpty()) {
             try {
-
-                boardService.saveBoardWithAttachment(board, file, groupIdx);
+                boardService.saveBoard(board,groupIdx);
+                utility.saveAttachment(attachment,board);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -246,19 +250,33 @@ public class BoardController {
         System.out.println(">>>>>>>>>>oftenquestion page<<<<<<<<<<");
         long boardType = 2;
         long groupIdx = 5;
-        return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+        int page = 1;
+        return "redirect:/board/oftenquestion_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
     @RequestMapping("/oftenquestion_page")
     public String oftenquestion_page(@RequestParam("board_type") long boardType,
                                      @RequestParam("group_idx") long groupIdx,
+                                     @RequestParam("page") int page,
                                      Model model) {
 
-        List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
+        int itemsPerPage = 4;
+        int groupSize = 3;
 
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
+        Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
+
+        int totalCount = (int) paging.getTotalElements();
+
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
+
+        String link = "/board/oftenquestion_page";
+
+        model.addAttribute("paging", paging);
+        model.addAttribute("pagination", pagination);
         model.addAttribute("webtitle", "만화방초 | 자주 묻는 질문");
+        model.addAttribute("link",link);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
-        model.addAttribute("boardList", boardList);
 
         return "board/oftenquestion_page";
     }
@@ -343,13 +361,13 @@ public class BoardController {
         try {
             boardService.processBoardForm(groupIdx, boardDTO, memberDTO);
             model.addAttribute("message", "질문을 성공적으로 보냈습니다!");
-            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx; // 템플릿 렌더링
+            return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx; // 템플릿 렌더링
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+            return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         } catch (Exception e) {
             model.addAttribute("error", "서버에 문제가 발생했습니다. 다시 시도해주세요.");
-            return "redirect:/board/oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+            return "redirect:/board/oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
     }
 
@@ -362,7 +380,7 @@ public class BoardController {
 
         long groupIdx = 1;
         long boardType = 0;
-        int page = 0;
+        int page = 1;
 
         return "redirect:/board/notice_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
@@ -370,14 +388,23 @@ public class BoardController {
     public String notice_page(Model model,
                               @RequestParam("group_idx") long groupIdx,
                               @RequestParam("board_type") long boardType,
-                              @RequestParam("page") int page){
+                              @RequestParam(value="page", defaultValue = "1") int page){
         System.out.println(">>>>>>>>>>noticepage page<<<<<<<<<<");
 
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));//페이징+정렬
+
+        int itemsPerPage = 4;
+        int groupSize = 3;
+
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
+
+        int totalCount = (int) paging.getTotalElements();
+
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
 
         String link = "/board/notice_page";
 
+        model.addAttribute("pagination", pagination);
         model.addAttribute("webtitle", "만화방초 | 공지 사항");
         model.addAttribute("link", link);
         model.addAttribute("paging", paging);
@@ -430,7 +457,8 @@ public class BoardController {
         }
 
         try {
-            boardService.saveBoardWithAttachment(board, attachment, groupIdx);
+            boardService.saveBoard(board,groupIdx);
+            utility.saveAttachment(attachment,board);
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
@@ -440,7 +468,7 @@ public class BoardController {
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
 
-        return "redirect:/board/notice_page?board_type="+boardType+"&group_idx="+groupIdx;
+        return "redirect:/board/notice_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
     }
 
 
@@ -451,7 +479,7 @@ public class BoardController {
 
         long boardType = 0;
         long groupIdx = 2;
-        int page = 0;
+        int page = 1;
 
         return "redirect:/board/cmct_page?page="+page+"&board_type="+boardType+"&group_idx="+groupIdx;
     }
@@ -461,11 +489,19 @@ public class BoardController {
                             @RequestParam("page") int page,
                             Model model){
 
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt"));//페이징+정렬
+        int itemsPerPage = 4;
+        int groupSize = 3;
+
+        Pageable pageable = PageRequest.of(page - 1, itemsPerPage, Sort.Direction.DESC, "idx");
         Page<BoardEntity> paging = boardRepository.findByGroupIdx(groupIdx,pageable);
+
+        int totalCount = (int) paging.getTotalElements();
+
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
 
         String link = "/board/cmct_page";
 
+        model.addAttribute("pagination", pagination);
         model.addAttribute("webtitle", "만화방초 | 커뮤니티");
         model.addAttribute("link", link);
         model.addAttribute("paging", paging);
@@ -503,8 +539,11 @@ public class BoardController {
         //로그인 구현 후 수정
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        BoardEntity board = new BoardEntity();
+
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("boardType", boardType);
+        model.addAttribute("board", board);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("today", today);
         return "board/cmct_write";
@@ -514,7 +553,7 @@ public class BoardController {
                                   @ModelAttribute BoardEntity board,
                                   BindingResult result,
                                   @RequestParam("attachment") MultipartFile attachment,
-                                  @RequestParam("groupIdx") long groupIdx,
+                                  @RequestParam("group_idx") long groupIdx,
                                   @RequestParam("board_type") long boardType,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
@@ -526,7 +565,8 @@ public class BoardController {
         }
 
         try {
-            boardService.saveBoardWithAttachment(board, attachment, groupIdx);
+            boardService.saveBoard(board,groupIdx);
+            utility.saveAttachment(attachment,board);
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "파일 업로드 실패");
@@ -536,7 +576,7 @@ public class BoardController {
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
 
-        return "redirect:/board/cmct_page?board_type=" + boardType + "&group_idx=" + groupIdx;
+        return "redirect:/board/cmct_page?page=1&board_type=" + boardType + "&group_idx=" + groupIdx;
     }
 @PostMapping("cmct_comment_proc")
 public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
@@ -602,10 +642,10 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         String redirectUrl = "";
 
         if(groupIdx == 1 && boardType == 0){
-            redirectUrl = "notice_page?board_type="+boardType+"&group_idx="+groupIdx;
+            redirectUrl = "notice_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
         else if(groupIdx == 2 && boardType == 0){
-            redirectUrl = "cmct_page?board_type="+boardType+"&group_idx="+groupIdx;
+            redirectUrl = "cmct_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
         else if(groupIdx == 3 && boardType == 1){
             redirectUrl = "event_page?board_type="+boardType+"&group_idx="+groupIdx;
@@ -614,11 +654,12 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
             redirectUrl = "gallery_page?board_type="+boardType+"&group_idx="+groupIdx;
         }
         else if(groupIdx == 5 && boardType == 2){
-            redirectUrl = "oftenquestion_page?board_type="+boardType+"&group_idx="+groupIdx;
+            redirectUrl = "oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
 
         if(boardIdx >= 1) {
-            boardService.deleteBoardWithAttachments(boardIdx);
+            boardService.deleteBoard(boardIdx);
+            utility.deleteAttachments(boardIdx);
         }
 
         return "redirect:/board/"+redirectUrl;

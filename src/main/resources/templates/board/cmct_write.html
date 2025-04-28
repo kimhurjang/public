@@ -5,13 +5,13 @@
 <body>
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
 <section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
-  <h1>커뮤니티 글쓰기</h1>
+  <a th:href="@{/board/cmct}"><h1>커뮤니티 글쓰기</h1></a>
   <div id="content" class="content">
     <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data" th:object="${commonForm}">
       <input type="hidden" name="board_type" th:value="${boardType}">
       <input type="hidden" name="group_idx" th:value="${groupIdx}">
-      <input type="hidden" name="member" th:value="${board.member.idx}">
-      <input type="hideent" name="idx" th:value="${board.idx}">
+      <input type="hidden" name="member" th:value="1">
+      <input type="hidden" name="idx" th:value="${board.idx}">
 
       <!--유효성 검사 통과용-->
       <input type="hidden" name="email" value="user@example.com" />

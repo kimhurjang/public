@@ -7,7 +7,7 @@
 </head>
 <body>
 <div th:fragment="paging">
-  <div th:if="${!paging.isEmpty()}">
+
 
     <!--
         사용하실 파일(컨트롤러,레포지토리)에서 임폴트해주세요(레포지토리는 자동 임폴트 안 뜸)
@@ -43,27 +43,31 @@
          사용 하실 때 아래 코드 쓰시면 됩니다.
          <div th:replace="~{fragment/paging :: paging}"></div>
      -->
-    <ul>
-      <!-- 이전 버튼 -->
-      <li th:if="${paging.number > 0}">
-        <a th:href="@{|${link}?page=${(paging.number - 1)}&board_type=${boardType}&group_idx=${groupIdx}|}">&lt;</a>
+  <div th:if="${!paging.isEmpty()}">
+    <ul class="paging">
+      <li th:if="${pagination.hasFirst}">
+        <a th:href="@{|${link}?page=1&board_type=${boardType}&group_idx=${groupIdx}|}">처음</a>
       </li>
 
-      <!-- 페이지 번호 -->
-      <li th:each="page : ${#numbers.sequence(((paging.number / 5) * 5) + 1,
-                           T(java.lang.Math).min(((paging.number / 5) * 5) + 5, paging.totalPages))}"
-          th:classappend="${page == paging.number + 1} ? 'active'">
-        <a th:text="${page}"
-           th:href="@{|${link}?page=${page - 1}&board_type=${boardType}&group_idx=${groupIdx}|}"></a>
+      <li th:if="${pagination.hasPrev}">
+        <a th:href="@{|${link}?page=${pagination.currentGroupStart}&board_type=${boardType}&group_idx=${groupIdx}|}">이전</a>
       </li>
 
-      <!-- 다음 버튼 -->
-      <li th:if="${paging.number + 1 < paging.totalPages}">
-        <a th:href="@{|${link}?page=${(paging.number + 1)}&board_type=${boardType}&group_idx=${groupIdx}|}">&gt;</a>
+      <li th:each="pageNum : ${pagination.pageList}"
+          th:classappend="${pageNum == paging.number} ? 'active'">
+        <a th:text="${pageNum + 1}" th:href="@{|${link}?page=${pageNum + 1}&board_type=${boardType}&group_idx=${groupIdx}|}"></a>
       </li>
 
+      <li th:if="${pagination.hasNext}">
+        <a th:href="@{|${link}?page=${pagination.currentGroupEnd + 2}&board_type=${boardType}&group_idx=${groupIdx}|}">다음</a>
+      </li>
+
+      <li th:if="${pagination.hasLast}">
+        <a th:href="@{|${link}?page=${paging.totalPages}&board_type=${boardType}&group_idx=${groupIdx}|}">마지막</a>
+      </li>
     </ul>
   </div>
+
 </div>
 </body>
 </html>

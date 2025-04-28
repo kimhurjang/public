@@ -109,8 +109,8 @@ public class BoardService {
 
 
 
-    /*파일 업로드 서비스*/
-    public void saveBoardWithAttachment(BoardEntity board, MultipartFile attachment, long groupIdx) throws IOException {
+    /*게시물 업로드 서비스*/
+    public void saveBoard(BoardEntity board, long groupIdx) throws IOException {
         board.setRe(1);
         BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
         board.setGroup(group);
@@ -118,37 +118,8 @@ public class BoardService {
         // 임시: 로그인 사용자
         board.setMember(memberRepository.findByIdx(1L));
 
-        // 파일 업로드 처리
-        if (!attachment.isEmpty()) {
-            String uuidFileName = UUID.randomUUID().toString() + "_" + attachment.getOriginalFilename();
-            //uploadDir = "D:/SpringProject/data/";
-
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            File destination = new File(uploadDir, uuidFileName);
-            attachment.transferTo(destination);
-
-            // 상대 경로만 DB에 저장
-            String relativePath = uuidFileName;
-
-            AttachmentEntity attachmentEntity = new AttachmentEntity();
-            attachmentEntity.setFilePath(relativePath); // ✅ 상대 경로로 설정
-            attachmentEntity.setFileName(attachment.getOriginalFilename());
-            attachmentEntity.setFileType(attachment.getContentType());
-            attachmentEntity.setFileSize((int) attachment.getSize());
-
-            boardRepository.save(board); // 게시글 먼저 저장
-            attachmentEntity.setBoard(board);
-            attachmentRepository.save(attachmentEntity);
-
-            board.setAttachment(attachmentEntity);
-            boardRepository.save(board); // 연결 정보 반영
-        } else {
-            boardRepository.save(board); // 첨부파일 없을 때
-        }
+        // 게시글 저장
+        boardRepository.save(board);
     }
 
 
@@ -173,33 +144,34 @@ public class BoardService {
 
     /*게시물 삭제*/
     @Transactional
-    public void deleteBoardWithAttachments(long boardIdx) {
+    public void deleteBoard(long boardIdx) {
 
-        List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
-
-        for (AttachmentEntity attachment : attachments) {
-            String filepath = attachment.getFilePath();
-            System.out.println("파일 경로: " + filepath);
-            String dir = "D:/SpringProject/data/";
-
-            // 실제 파일 삭제
-            File file = new File(dir + filepath);
-            if (file.exists()) {
-                if (file.delete()) {
-                    System.out.println("파일 삭제 성공: " + filepath);
-                } else {
-                    System.out.println("파일 삭제 실패: " + filepath);
-                }
-            } else {
-                System.out.println("파일이 존재하지 않음: " + filepath);
-            }
-        }
-
-        // 1. 첨부파일 삭제
-        attachmentRepository.deleteByIdx(boardIdx);
+//        List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
+//
+//        for (AttachmentEntity attachment : attachments) {
+//            String filepath = attachment.getFilePath();
+//            System.out.println("파일 경로: " + filepath);
+//            String dir = "D:/SpringProject/data/";
+//
+//            // 실제 파일 삭제
+//            File file = new File(dir + filepath);
+//            if (file.exists()) {
+//                if (file.delete()) {
+//                    System.out.println("파일 삭제 성공: " + filepath);
+//                } else {
+//                    System.out.println("파일 삭제 실패: " + filepath);
+//                }
+//            } else {
+//                System.out.println("파일이 존재하지 않음: " + filepath);
+//            }
+//        }
+//
+//        // 1. 첨부파일 삭제
+//        attachmentRepository.deleteByIdx(boardIdx);
 
         // 2. 게시글 삭제
         boardRepository.deleteByIdx(boardIdx);
     }
+
 
 }
