@@ -1,5 +1,4 @@
 package com.example.mhbc.controller;
-
 import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.dto.SocialUserInfoDTO;
 import com.example.mhbc.entity.MemberEntity;
@@ -16,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -178,5 +178,7 @@ public class MemberController {
   public String adminuserinfo() {
     System.out.println(">>>>>>>>>>adminuserinfo page<<<<<<<<<<");
     return "member/adminuserinfo";
+
   }
 }
+

@@ -3,20 +3,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.mhbc.mapper.CustomMapper">
+
+
     <select id="selectAll" resultType="MemberEntity">
-        select * from member
+        select *
+        from member
     </select>
-    <select id="selectId" parameterType="String" resultType="MemberEntity">
+
+    <select id="selectName" parameterType="String" resultType="MemberEntity">
         select * from member
         <choose>
-            <when test=" userid != null and userid != '' ">
-                where userid like '%${userid}%'
+            <when test="name != null and name != ''">
+                where name like '%${a}%'
             </when>
             <otherwise>
                 where idx > 0
             </otherwise>
+        </choose>
+    </select>
 
-        </choose></select>
+
 
 
 </mapper>

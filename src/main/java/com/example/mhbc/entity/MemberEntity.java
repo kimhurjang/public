@@ -69,5 +69,7 @@ public class MemberEntity {
                 .status(status)
                 .build();
     }
+
+
 }
 

@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardGroupRepository extends JpaRepository<BoardGroupEntity, Long> {
 
+    BoardGroupEntity findByGroupIdx(long groupIdx);
 
-    //Page<BoardEntity> findByIdx
 }

@@ -1,6 +1,7 @@
 package com.example.mhbc;
 
-import com.example.mhbc.dto.MemberMapper;
+
+import com.example.mhbc.dto.MemberDTO;
 import com.example.mhbc.entity.MemberEntity;
 import com.example.mhbc.mapper.CustomMapper;
 import org.junit.jupiter.api.Test;
@@ -20,17 +21,19 @@ class MhbcApplicationTests {
 	CustomMapper customMapper;
 
 	@Test
-	void test11() {
-		List<MemberEntity> list = customMapper.selectId("");
+	void test(){
+		List<MemberEntity> List = customMapper.selectName("a");
 
-			for (MemberEntity m : list) {
-				System.out.print(m.getIdx());
-				System.out.print(" | ");
-				System.out.print(m.getName());
-				System.out.print(" | ");
-				System.out.println(m.getUserid());
-			}
+		for(MemberEntity m : List){
+			System.out.print(m.getName());
+			System.out.print("|");
+			System.out.print(m.getUserid());
+			System.out.print("|");
+			System.out.print(m.getStatus());
+			System.out.println();
+
 		}
-
 	}
+
+}
 

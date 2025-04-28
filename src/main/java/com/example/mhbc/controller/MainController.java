@@ -1,11 +1,28 @@
 package com.example.mhbc.controller;
 
+import com.example.mhbc.dto.CommentsDTO;
+import com.example.mhbc.entity.BoardEntity;
+import com.example.mhbc.entity.BoardGroupEntity;
+import com.example.mhbc.repository.AttachmentRepository;
+import com.example.mhbc.repository.BoardGroupRepository;
+import com.example.mhbc.repository.BoardRepository;
+import com.example.mhbc.repository.CommentsRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
+@AllArgsConstructor
 public class MainController {
+
+    private AttachmentRepository attachmentRepository;
+    private BoardGroupRepository boardGroupRepository;
+    private BoardRepository boardRepository;
+    private CommentsRepository commentsRepository;
 
     @RequestMapping({"/" , "/home"})
     public String index(Model model){

@@ -1,13 +1,23 @@
 package com.example.mhbc.service;
 
+
 import com.example.mhbc.dto.SocialUserInfoDTO;
 import com.example.mhbc.entity.SnsEntity;
 import com.example.mhbc.repository.SnsRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.example.mhbc.dto.SocialUserInfo;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
 
 import java.time.LocalDateTime;
 
@@ -20,21 +30,32 @@ public class KakaoService {
         this.snsRepository = snsRepository;
     }
 
+
     public String getKakaoAccessToken(String code) {
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://kauth.kakao.com")
+
                 .defaultHeader("Content-Type", "application/x-www-form-urlencoded")
+
+                //.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+
                 .build();
 
         String response = webClient.post()
                 .uri("/oauth/token")
                 .body(BodyInserters.fromFormData("grant_type", "authorization_code")
-                        .with("client_id", "3a729b684852129622871e6b959a97e6")
-                        .with("redirect_uri", "http://localhost:8090/api/member/kakao")
-                        .with("code", code))
+
+                        .with("client_id", "c9bb56960e98eceddc4418dc3243c916")
+                        .with("redirect_uri", "http://localhost:8090/member/sociallogin")
+                        .with("code", code)
+                )
+
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+
+
+        System.out.println("📦 카카오 토큰 응답: " + response);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -50,12 +71,14 @@ public class KakaoService {
         String response = WebClient.create()
                 .get()
                 .uri("https://kapi.kakao.com/v2/user/me") // 프로필 이미지와 이메일 제외
+
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
-        System.out.println("카카오 응답: " + response);
+        System.out.println("👤 사용자 정보 응답: " + response);
+
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -101,4 +124,5 @@ public class KakaoService {
             System.out.println("❌ SNS 테이블에 저장 실패");
         }
     }
+
 }
