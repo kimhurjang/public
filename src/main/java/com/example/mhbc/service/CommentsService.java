@@ -34,4 +34,10 @@ public class CommentsService {
         commentsRepository.save(comment);
     }
 
+    public void deleteComment(long idx) {
+
+        commentsRepository.deleteByIdx(idx);
+
+    }
+
 }

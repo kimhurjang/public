@@ -267,14 +267,12 @@ public class BoardController {
 
         int totalCount = (int) paging.getTotalElements();
 
-        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
-
-        String link = "/board/oftenquestion_page";
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
         model.addAttribute("paging", paging);
+        model.addAttribute("link","/board/oftenquestion_page");
         model.addAttribute("pagination", pagination);
         model.addAttribute("webtitle", "만화방초 | 자주 묻는 질문");
-        model.addAttribute("link",link);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
@@ -400,13 +398,12 @@ public class BoardController {
 
         int totalCount = (int) paging.getTotalElements();
 
-        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
-        String link = "/board/notice_page";
 
         model.addAttribute("pagination", pagination);
+        model.addAttribute("link","/board/notice_page");
         model.addAttribute("webtitle", "만화방초 | 공지 사항");
-        model.addAttribute("link", link);
         model.addAttribute("paging", paging);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
@@ -497,13 +494,11 @@ public class BoardController {
 
         int totalCount = (int) paging.getTotalElements();
 
-        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize);
-
-        String link = "/board/cmct_page";
+        Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
         model.addAttribute("pagination", pagination);
+        model.addAttribute("link", "/board/cmct_page");
         model.addAttribute("webtitle", "만화방초 | 커뮤니티");
-        model.addAttribute("link", link);
         model.addAttribute("paging", paging);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
@@ -587,7 +582,7 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                            @RequestParam(value = "boardType", required = false) long boardType){
 
 
-    boardService.saveComment(commentsDTO);
+    commentsService.saveComment(commentsDTO,1L);
 
     Long memberIdx = commentsDTO.getMemberIdx();
 
@@ -608,7 +603,7 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         if (attachment.getFilePath() == null || attachment.getFilePath().isEmpty()) {
             throw new RuntimeException("파일 경로가 존재하지 않습니다: " + attachment);
         }
-        String uploadDir = "D:/SpringProject";
+        String uploadDir = "D:/SpringProject/data/";
         Resource resource = new FileSystemResource(uploadDir + attachment.getFilePath());
 
 
@@ -637,7 +632,9 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
                          AttachmentEntity attachment,
                          @RequestParam("group_idx") long groupIdx,
                          @RequestParam("board_type") long boardType,
-                         @RequestParam("idx") long boardIdx){
+                         @RequestParam("memberIdx") long memberIdx,
+                         @RequestParam("idx") long boardIdx,
+                         @RequestParam("comments_idx") long commentsIdx){
 
         String redirectUrl = "";
 
@@ -657,11 +654,15 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
             redirectUrl = "oftenquestion_page?page=1&board_type="+boardType+"&group_idx="+groupIdx;
         }
 
-        if(boardIdx >= 1) {
-            boardService.deleteBoard(boardIdx);
+        if(boardIdx >= 1 && commentsIdx == 0) {
             utility.deleteAttachments(boardIdx);
+            boardService.deleteBoard(boardIdx);
         }
+        if(commentsIdx >= 1 && boardIdx >= 1){
+            commentsService.deleteComment(commentsIdx);
+            return "redirect:/board/cmct_view?board_type=" + boardType + "&group_idx=" + groupIdx+"&idx="+boardIdx+"&member="+memberIdx;
 
+        }
         return "redirect:/board/"+redirectUrl;
     }
 
