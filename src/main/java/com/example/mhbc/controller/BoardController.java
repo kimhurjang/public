@@ -10,7 +10,7 @@ import com.example.mhbc.repository.*;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
@@ -24,6 +24,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -324,18 +326,25 @@ public class BoardController {
 
         return "board/personalquestion_page";
     }
+    @Transactional(readOnly = true)
     @RequestMapping("myboard_page")
     public String myboard_page(@RequestParam("board_type") long boardType,
-                                      @RequestParam("group_idx") long groupIdx,
-                                      @RequestParam("member") long memberIdx,
-                                      Model model){
+                                @RequestParam("group_idx") long groupIdx,
+                                  Model model){
 
-        Optional<MemberEntity> member = memberRepository.findById(1L);
-        List<BoardEntity> boardList = boardRepository.findByMemberIdx(1L);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userid = authentication.getName();
+
+        MemberEntity member = memberRepository.findByUserid(userid);
+
+        List<BoardEntity> boardList = boardRepository.findByMemberIdx(member.getIdx());
+
+        System.out.println("조회된 member idx = " + member.getIdx());
+        System.out.println("조회된 member userid = " + member.getUserid());
 
         model.addAttribute("webtitle", "만화방초 | 내가 작성한 게시글");
         model.addAttribute("boardList", boardList);
-        model.addAttribute("member", member.get());
+        model.addAttribute("member", member);
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 

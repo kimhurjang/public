@@ -10,18 +10,29 @@
     <table>
 
       <tr>
-        <td colspan="2">1 대 1 문의</td>
+        <td colspan="2">1 대 1 문의        <div>board.member.idx = [[${board.member?.idx}]]</div>
+          <div>현재 로그인한 member.idx = [[${member.idx}]]</div>
+          <div>groupIdx = [[${groupIdx}]]</div></td>
       </tr>
-      <tr th:if="${groupIdx == 6 && member.idx == 1}" th:each=" board : ${boardList}">
-        <td><a th:href="@{/board/personalquestion_view(group_idx=${groupIdx},board_type=${boardType},idx=${board.idx})}"><span th:text="${board.title}"></span></a></td>
+      <tr th:each=" board : ${boardList}">
+        <td th:if="${groupIdx == 6 && board.member.idx == member.idx}">
+
+          <a th:href="@{/board/personalquestion_view(group_idx=${groupIdx},board_type=${boardType},idx=${board.idx})}">
+            <span th:text="${board.title} ?: '작성된 글이 없습니다.'"></span>
+          </a>
+        </td>
         <td><span th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span></td>
       </tr>
 
       <tr>
         <td colspan="2">커뮤니티</td>
       </tr>
-      <tr th:if="${groupIdx == 2 && member.idx == 1}" th:each=" board : ${boardList}">
-        <td><a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx}))}"><span th:text="${board.title}"></span></a></td>
+      <tr th:each=" board : ${boardList}">
+        <td th:if="${groupIdx == 2 && board.member.idx == member.idx}">
+          <a th:href="@{/board/cmct_view(group_idx=${groupIdx},idx=${board.idx},member=${board.member.idx}))}">
+            <span th:text="${board.title} ?: '작성된 글이 없습니다.'"></span>
+          </a>
+        </td>
         <td><span th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></span></td>
       </tr>
     </table>

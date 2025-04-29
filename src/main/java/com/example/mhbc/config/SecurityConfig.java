@@ -18,16 +18,17 @@ public class SecurityConfig {
         http.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests( authorize -> authorize
-                .requestMatchers("/**").permitAll()
-                // .requestMatchers("/image/*","/css/*","/fonts/*","/", "/login","/join","/error","/index","/home","wedding").permitAll()
-                //.requestMatchers("/booking").hasAnyRole("ADMIN","USER")
-                //.requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/image/*","/css/*","/fonts/*","/","/api/member/**","/error","/index","/home","/board/oftenquestion_page",
+                        "/board/cmct_page","/board/event_page","/board/event_view","/board/gallery_page","/board/gallery_view","/board/notice_page"
+                ,"/board/notice_view","/board/oftenquestion_view").permitAll()
+                .requestMatchers("/booking","/board/myboard_page","/board/cmct_view","/board/cmct_write","/board/personalquestion_page","/board/delete").hasAnyRole("ADMIN","USER")
+                .requestMatchers("/admin/**","/board/event_write","/board/gallery_write","/board/notice_write").hasRole("ADMIN")
                 .anyRequest().authenticated()
         );
 
         http.formLogin(login -> login
-                .loginPage("/login")
-                .loginProcessingUrl("/loginProc")
+                .loginPage("/api/member/login")
+                .loginProcessingUrl("/api/member/loginProc")
                 .usernameParameter("userid")
                 .passwordParameter("pwd")
                 .defaultSuccessUrl("/")
