@@ -59,7 +59,7 @@ public class MemberController {
     } else {
       // 비밀번호가 틀리거나 회원이 존재하지 않는 경우
       redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 틀립니다.");
-      return "redirect:/login";  // 로그인 페이지로 리디렉션
+      return "redirect:/api/member/login";  // 로그인 페이지로 리디렉션
     }
   }
 
@@ -181,4 +181,3 @@ public class MemberController {
 
   }
 }
-

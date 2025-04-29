@@ -65,32 +65,35 @@ public class Utility {
     /*파일 삭제*/
     @Transactional
     public void deleteAttachments(long boardIdx) {
+        try {
 
-        List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
+            List<AttachmentEntity> attachments = attachmentRepository.findByBoard_Idx(boardIdx);
 
-        for (AttachmentEntity attachment : attachments) {
-            String filepath = attachment.getFilePath();
-            System.out.println("파일 경로: " + filepath);
-            String dir = "D:/SpringProject/data/";
+            for (AttachmentEntity attachment : attachments) {
+                String filepath = attachment.getFilePath();
+                System.out.println("파일 경로: " + filepath);
+                String dir = "D:/SpringProject/data/";
 
-            // 실제 파일 삭제
-            File file = new File(dir + filepath);
-            if (file.exists()) {
-                if (file.delete()) {
-                    System.out.println("파일 삭제 성공: " + filepath);
+                // 실제 파일 삭제
+                File file = new File(dir + filepath);
+
+                if (file.exists()) {
+                    if (file.delete()) {
+                        System.out.println("파일 삭제 성공: " + filepath);
+                    } else {
+                        System.out.println("파일 삭제 실패: " + filepath);
+                    }
                 } else {
-                    System.out.println("파일 삭제 실패: " + filepath);
+                    System.out.println("파일이 존재하지 않음: " + filepath);
                 }
-            } else {
-                System.out.println("파일이 존재하지 않음: " + filepath);
             }
+
+            // 1. 첨부파일 삭제
+            attachmentRepository.deleteByIdx(boardIdx);
+        } catch (Exception e) {
+            System.out.println("예외 발생: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        // 1. 첨부파일 삭제
-        attachmentRepository.deleteByIdx(boardIdx);
-
-//        // 2. 게시글 삭제
-//        boardRepository.deleteByIdx(boardIdx);
     }
 
     /*
@@ -99,6 +102,7 @@ public class Utility {
     @Getter
     public static class Pagination {
 
+        private final String link;
         private int page;        // 현재 페이지
         private int size;        // 페이지당 데이터 수
         private int totalCount;  // 전체 데이터 수
@@ -117,11 +121,12 @@ public class Utility {
         private boolean hasFirst; // 처음 버튼 노출 여부
         private boolean hasLast;  // 마지막 버튼 노출 여부
 
-        public Pagination(int page, int size, int totalCount, int groupSize) {
+        public Pagination(int page, int size, int totalCount, int groupSize, String link) {
             this.page = page < 1 ? 1 : page;
             this.size = size;
             this.totalCount = totalCount;
             this.groupSize = groupSize;
+            this.link = link;
 
             this.totalPage = (int) Math.ceil((double) totalCount / size);
             if (totalPage == 0) totalPage = 1;

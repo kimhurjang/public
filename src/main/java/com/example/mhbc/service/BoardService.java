@@ -123,25 +123,6 @@ public class BoardService {
     }
 
 
-
-    /*댓글 저장*/
-    public void saveComment(CommentsDTO dto) {
-        BoardEntity board = boardRepository.findById(dto.getBoardIdx())
-                .orElseThrow(() -> new IllegalArgumentException("Board not found"));
-
-        MemberEntity member = memberRepository.findByIdx(dto.getMemberIdx());
-
-        CommentsEntity comment = new CommentsEntity();
-        comment.setBoard(board);
-        comment.setMember(member);
-        comment.setContent(dto.getContent());
-
-
-        commentsRepository.save(comment);
-    }
-
-
-
     /*게시물 삭제*/
     @Transactional
     public void deleteBoard(long boardIdx) {
