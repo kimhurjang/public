@@ -1,9 +1,10 @@
 package com.example.mhbc.service;
 
-
-
+// Lombok의 @Data 어노테이션을 사용하여 자동으로 getter, setter, toString 등을 생성
 import com.example.mhbc.entity.MemberEntity;
 import lombok.Data;
+
+// Spring Security의 GrantedAuthority 및 UserDetails 인터페이스를 사용
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,15 +30,15 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         //일반 유저 권한
-        if(member.getGrade().equals("1")){
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-        // grade == > 0 == 비회원 /  1 == 일반 회원(user) / 10 == admin
-        //관리자 권한
-        if(member.getGrade().equals("10")){
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
+//        if(member.getRole().equals("user")){
+//            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//        }
+//
+//        //관리자 권한
+//        if(member.getRole().equals("admin")){
+//            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//        }
         return authorities;
     }
 
@@ -55,4 +56,3 @@ public class UserDetailsImpl implements UserDetails {  // Spring Security의 Use
         return member.getUserid();
     }
 }
-
