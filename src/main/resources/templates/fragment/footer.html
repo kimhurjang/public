@@ -14,6 +14,7 @@
         <p>내 정보</p>
         <p><a href="">마이 페이지</a></p>
         <p><a href="">예약 정보 조회 / 수정</a></p>
+        <p sec:authorize="hasRole('ADMIN')" th:if="member.grade==${10}"><a th:href="/admin(member.grade=${member.grade})">관리자 페이지</a></p>
     </div>
     <div class="footerBox address">
         <p>주소</p>

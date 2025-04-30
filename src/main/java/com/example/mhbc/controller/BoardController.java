@@ -271,6 +271,12 @@ public class BoardController {
 
         Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userid = authentication.getName();
+
+        MemberEntity member = memberRepository.findByUserid(userid);
+
+        model.addAttribute("member", member);
         model.addAttribute("paging", paging);
         model.addAttribute("link","/board/oftenquestion_page");
         model.addAttribute("pagination", pagination);
@@ -317,6 +323,12 @@ public class BoardController {
         List<BoardEntity> boardList = boardService.getBoardListByGroupIdx(groupIdx);
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userid = authentication.getName();
+
+        MemberEntity member = memberRepository.findByUserid(userid);
+
+        model.addAttribute("member", member);
         model.addAttribute("webtitle", "만화방초 | 1대1 질문");
         model.addAttribute("commonForm", new CommonForm());
         model.addAttribute("today", today);
@@ -338,9 +350,6 @@ public class BoardController {
         MemberEntity member = memberRepository.findByUserid(userid);
 
         List<BoardEntity> boardList = boardRepository.findByMemberIdx(member.getIdx());
-
-        System.out.println("조회된 member idx = " + member.getIdx());
-        System.out.println("조회된 member userid = " + member.getUserid());
 
         model.addAttribute("webtitle", "만화방초 | 내가 작성한 게시글");
         model.addAttribute("boardList", boardList);
@@ -427,6 +436,12 @@ public class BoardController {
 
         BoardEntity board = boardRepository.findByIdx(idx);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userid = authentication.getName();
+
+        MemberEntity member = memberRepository.findByUserid(userid);
+
+        model.addAttribute("member", member);
         model.addAttribute("board", board);
         model.addAttribute("idx", idx);
         model.addAttribute("groupIdx", groupIdx);

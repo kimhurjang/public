@@ -29,7 +29,7 @@
             <tr>
                 <td colspan="2">
                     <a th:href="@{/board/notice}"><button>뒤로가기</button></a>
-                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, member.grade=${10}, comments_idx=${0})}"><button>[관리자]삭제</button></a>
                 </td>
             </tr>
         </table>
