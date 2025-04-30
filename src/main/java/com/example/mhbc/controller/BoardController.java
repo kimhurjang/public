@@ -430,12 +430,18 @@ public class BoardController {
 
         BoardEntity board = boardRepository.findByIdx(idx);
 
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userid = authentication.getName();
 
-        MemberEntity member = memberRepository.findByUserid(userid);
+        /*로그인 중일경우 정보 조회(관리자 기능 사용하기 위함)*/
+        if (authentication != null && authentication.isAuthenticated() &&
+                !"anonymousUser".equals(authentication.getPrincipal())) {
 
-        model.addAttribute("member", member);
+            String userid = authentication.getName();
+            MemberEntity member = memberRepository.findByUserid(userid);
+            model.addAttribute("member", member);
+        }
+
         model.addAttribute("board", board);
         model.addAttribute("idx", idx);
         model.addAttribute("groupIdx", groupIdx);
