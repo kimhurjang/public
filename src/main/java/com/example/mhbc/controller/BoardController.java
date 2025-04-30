@@ -659,6 +659,21 @@ public String comment_proc(@ModelAttribute CommentsDTO commentsDTO,
         return "redirect:/board/"+redirectUrl;
     }
 
+    @GetMapping("search")
+    public String search(@RequestParam("group_idx") long groupIdx,
+                         @RequestParam("board_type") long boardType,
+                         @RequestParam("keyword") String keyword,
+                         Model model){
 
+        List<BoardDTO> result;
+        result = utility.searchByTitle(keyword, groupIdx, boardType);
+
+        model.addAttribute("groupIdx", groupIdx);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("isSearch", true);
+        model.addAttribute("paging", result);
+        model.addAttribute("keyword", keyword); // 검색어 유지
+        return "/board/cmct_page";
+    }
 
 }

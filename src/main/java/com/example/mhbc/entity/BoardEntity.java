@@ -70,14 +70,17 @@ public class BoardEntity {
 
     public BoardDTO toDTO() {
         return BoardDTO.builder()
+                .idx(idx)
                 .title(title)
                 .content(content)
+                .re(re)
                 .viewCnt(viewCnt)
                 .createdAt(createdAt)
                 .groupIdx(group != null ? group.getGroupIdx() : null)
-                .memberIdx(member != null ? member.getIdx() : null)
+                .member(member)
                 .build();
     }
+
 
 
 }
