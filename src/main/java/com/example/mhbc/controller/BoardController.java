@@ -1,6 +1,6 @@
 package com.example.mhbc.controller;
 
-import com.example.mhbc.Util.Utility;
+import com.example.mhbc.util.Utility;
 import com.example.mhbc.dto.BoardDTO;
 import com.example.mhbc.dto.CommentsDTO;
 import com.example.mhbc.dto.CommonForm;
@@ -9,11 +9,7 @@ import com.example.mhbc.entity.*;
 import com.example.mhbc.repository.*;
 import com.example.mhbc.service.BoardService;
 import com.example.mhbc.service.CommentsService;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jdk.jshell.execution.Util;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -22,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +27,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
