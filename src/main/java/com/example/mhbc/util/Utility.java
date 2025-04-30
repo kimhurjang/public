@@ -1,12 +1,10 @@
-package com.example.mhbc.Util;
+package com.example.mhbc.util;
 
 import com.example.mhbc.entity.AttachmentEntity;
 import com.example.mhbc.entity.BoardEntity;
-import com.example.mhbc.entity.BoardGroupEntity;
 import com.example.mhbc.repository.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
