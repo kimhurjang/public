@@ -10,7 +10,7 @@
   <h1>상담예약</h1>
   <div id="content" class="content">
     <form th:action="@{/reservation/save}" th:object="${reservation}" method="post" onsubmit="return validateForm();">
-      <input type="hidden" name="memberIdx" value="1">
+      <input type="hidden" name="memberIdx">
       <input type="hidden" th:field="*{idx}">
       <div class="form_section">
         <p class="section_title">01. 기본 정보를 입력해주세요</p>
