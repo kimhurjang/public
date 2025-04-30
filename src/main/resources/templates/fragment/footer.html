@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<footer th:fragment="footer">
+    <div class="footerBox copy">
+        <h2>logo img</h2>
+        <p>©ManHwaBangCho</p>
+        <div id="snsIcon">
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
+            <a href=""><img src=""></a>
+        </div>
+    </div>
+    <div class="footerBox myAccount">
+        <p>내 정보</p>
+        <p><a href="">마이 페이지</a></p>
+        <p><a href="">예약 정보 조회 / 수정</a></p>
+    </div>
+    <div class="footerBox address">
+        <p>주소</p>
+        <p>경상남도 고성군 거류면 은월리 17-5</p>
+    </div>
+    <div class="footerBox tel">
+        <p>연락처</p>
+        <p>TEL : 00-000-0000</p>
+        <p>Email : abcd1234@mail.com</p>
+    </div>
+
+    <script>
+        // 네비게이션 효과
+        document.addEventListener("DOMContentLoaded", function () {
+            const nav = document.querySelector("nav");
+            const submenu = document.querySelector(".sub_nav_layer");
+            let hideTimeout;
+
+            nav.addEventListener("mouseenter", () => {
+                clearTimeout(hideTimeout);
+                submenu.style.opacity = "1";
+                submenu.style.transform = "translateY(0)";
+                submenu.style.pointerEvents = "auto";
+            });
+
+            nav.addEventListener("mouseleave", () => {
+                hideTimeout = setTimeout(() => {
+                    submenu.style.opacity = "0";
+                    submenu.style.transform = "translateY(-10px)";
+                    submenu.style.pointerEvents = "none";
+                }, 200);
+            });
+
+            submenu.addEventListener("mouseenter", () => {
+                clearTimeout(hideTimeout);
+                submenu.style.opacity = "1";
+                submenu.style.transform = "translateY(0)";
+                submenu.style.pointerEvents = "auto";
+            });
+
+            submenu.addEventListener("mouseleave", () => {
+                hideTimeout = setTimeout(() => {
+                    submenu.style.opacity = "0";
+                    submenu.style.transform = "translateY(-10px)";
+                    submenu.style.pointerEvents = "none";
+                }, 200);
+            });
+        });
+
+    카피라이트©20250325<br>
+
+    <!--관리자 권한 가진 계정으로 로그인 하면 활성화-->
+    <a href="/admin" sec:authorize="hasRole('ADMIN')"><button type="button" id="adminBtn">관리자 페이지</button></a>
+
+</footer>
+</html>
