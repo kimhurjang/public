@@ -48,44 +48,20 @@ public class MainController {
     }
 
     @RequestMapping("/admin")
-    public String admin(Model model){
+    public String admin(Model model,
+                        @RequestParam("grade") int grade){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
 
         /*권한 체크*/
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-            String userid = auth.getName(); // 또는 ((User) auth.getPrincipal()).getUsername()
-            boolean isAdmin = auth.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
-
-            model.addAttribute("userid", userid);
-            model.addAttribute("isAdmin", isAdmin);
-        } else {
-            model.addAttribute("userid", null);
-            model.addAttribute("isAdmin", false);
+        if(grade == 10) {
+            return "/admin/admin";
         }
 
-/*
- *
- *                 관리자 전용 메뉴 html
- *                 <li th:if="${isAdmin}">
- *                 <a href="/admin" class="nav_item admin">
- *                 <span class="xi-cog"></span><br>
- *                 <span>관리자 페이지</span>
- *                 </a>
- *                 </li>
- *
- */
+        return"";
+    }
 
-        return "admin";
-    }
-    @RequestMapping("/gallery")
-    public String gallery(){
-        System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
-        return "board/gallery";
-    }
 
 
 
