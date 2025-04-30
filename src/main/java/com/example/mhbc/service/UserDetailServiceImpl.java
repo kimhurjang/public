@@ -1,15 +1,16 @@
-//package com.example.mhbc.service;
 //
-//import com.example.mhbc.entity.MemberEntity;
-//import com.example.mhbc.repository.MemberRepository;
-//import com.example.mhbc.service.UserDetailsImpl;
+// 
+// 엔티티 만들고 활성화
+// 
+// package com.example.mhbc.Service;
+//
+//import com.example.mhbc.Entity.MemberEntity;
+//import com.example.mhbc.Repository.MemberRepository;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
 //import org.springframework.stereotype.Service;
-//
-//import java.util.Optional;
 //
 //@RequiredArgsConstructor//자동 생성자
 //@Service
@@ -21,7 +22,7 @@
 //        System.out.println("----UserDetailService----");
 //        System.out.println("----username : " + username);
 //
-//        Optional<MemberEntity> member = memberRepository.findByUserid(username);//DB에서 username과 일치하는 userid찾기
+//        MemberEntity member = memberRepository.findByUserid(username);//DB에서 username과 일치하는 userid찾기
 //
 //        if(member == null){
 //            System.out.println("없는 아이디");
