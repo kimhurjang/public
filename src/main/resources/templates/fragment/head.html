@@ -16,29 +16,47 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     $(document).ready(function(){
-      $(".slider").bxSlider({
-       auto: true,
-       autoControls: true,
-       stopAutoOnClick: true,
-       pager: true,
-       pager: false,  // 페이지 네비게이션 숨김
-       controls: false,  // 좌우 화살표 숨김
-       speed: 170
-     });
+            $('.bxslider').bxSlider({
+                infiniteLoop: false,
+                hideControlOnEnd: true,
+                slideWidth: 600
+             });
+            $(".slider").bxSlider({
+                auto: true,
+                autoControls: true,
+                stopAutoOnClick: true,
+                pager: true,
+                pager: false,  // 페이지 네비게이션 숨김
+                controls: false,  // 좌우 화살표 숨김
+                speed: 1000
+            });
 
-      $(".subSlider").bxSlider({
-       auto: true,
-       autoControls: true,
-       stopAutoOnClick: true,
-       pager: true,
-       pager: false,  // 페이지 네비게이션 숨김
-       controls: false,  // 좌우 화살표 숨김
-       speed: 170
-     });
+            var subSlider = $(".subSlider").bxSlider({
+                auto: true,
+                autoControls: true,
+                stopAutoOnClick: true,
+                pager: true,
+                pager: false,  // 페이지 네비게이션 숨김
+                controls: false,  // 좌우 화살표 숨김
+                speed: 1000
+            });
+                // 커스텀 버튼 이벤트
+            $('.btn.prev').click(function() {
+                subSlider.goToPrevSlide();
+            });
 
+            $('.btn.next').click(function() {
+                subSlider.goToNextSlide();
+            });
     });
+
   </script>
 
   <!--<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3bf69ce9275feb61004f536b17f363b9"></script>-->

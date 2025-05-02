@@ -26,6 +26,17 @@
         <p>Email : abcd1234@mail.com</p>
     </div>
 
+    <!--패럴렉스 스크롤링 라이브러리 임폴트-->
+    <script src="/js/jquery.parallax-scroll.min.js"></script>
+
+    <!--제이쿼리 스크롤 효과 라이브러리 삽입-->
+    <script src="/js/jquery.scrollTo.min.js"></script>
+
+    <!--휠 효과 임폴트-->
+    <script src="/js/wheel.js"></script>
+
+    <script src="/js/main.js"></script>
+
     <script>
         // 네비게이션 효과
         document.addEventListener("DOMContentLoaded", function () {
@@ -62,7 +73,15 @@
                     submenu.style.pointerEvents = "none";
                 }, 200);
             });
+            $(document).ready(function(){
+               $('.swiper-wrapper').bxSlider({
+               slideWidth: 900,
+               minSlides: 1,
+               maxSlides: 2,
+               moveSlides: 1,
+               slideMargin: 10
         });
+    });
 </script>
 </footer>
 </html>
