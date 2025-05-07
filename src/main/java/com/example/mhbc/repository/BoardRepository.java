@@ -23,6 +23,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
 
     public List<BoardEntity> findByTitle(String title);
 
+    public List<BoardEntity> findByGroupGroupIdx(long groupIdx);
 
     @Transactional
     @Modifying

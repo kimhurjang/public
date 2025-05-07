@@ -13,9 +13,7 @@
   <link rel="stylesheet" href="/css/common.css">
   <th:block layout:fragment="css"></th:block>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
@@ -23,17 +21,13 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
     $(document).ready(function(){
-            $('.bxslider').bxSlider({
-                infiniteLoop: false,
-                hideControlOnEnd: true,
-                slideWidth: 600
-             });
+
             $(".slider").bxSlider({
                 auto: true,
                 autoControls: true,
                 stopAutoOnClick: true,
-                pager: true,
-                pager: false,  // 페이지 네비게이션 숨김
+                pager: false,
+
                 controls: false,  // 좌우 화살표 숨김
                 speed: 1000
             });
@@ -42,8 +36,8 @@
                 auto: true,
                 autoControls: true,
                 stopAutoOnClick: true,
-                pager: true,
-                pager: false,  // 페이지 네비게이션 숨김
+                pager: false,
+
                 controls: false,  // 좌우 화살표 숨김
                 speed: 1000
             });
@@ -54,6 +48,16 @@
 
             $('.btn.next').click(function() {
                 subSlider.goToNextSlide();
+            });
+
+            $('.gallerySlider .gaSlider').bxSlider({
+                slideWidth: 900,
+                minSlides: 1,
+                maxSlides: 2,
+                moveSlides: 1,
+                slideMargin: 10,
+                infiniteLoop: true,
+                startSlide: 1
             });
     });
 

@@ -1,6 +1,7 @@
 
 section{
    width: 100%;
+   background-color:white;
 }
 .main article, #board article{
    margin: 100px 0;
@@ -114,6 +115,13 @@ button:hover{
   font-size: 0.95rem;
 }
 
+.buttons .btn{
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    margin: 0 10px;
+
+}
 
 
 
@@ -240,37 +248,36 @@ button:hover{
 -------------------------------
 */
 
-div#ms4{
-   padding-top : 150px;
+div#ms4 {
+   padding-top: 150px;
 }
-.mySwiper .bx-viewport{
-   padding-left: 550px;
+.gallerySlider .bx-viewport {
+   padding-left: 30%;
 }
-.mySwiper .bx-controls{
+.gallerySlider .bx-controls {
    display: block;
 }
-.bx-wrapper{
+
+.bx-wrapper {
    max-width: 100% !important;
 }
-.bx-wrapper .bx-controls-direction a{
+.bx-wrapper .bx-controls-direction a {
    margin-top: -180px !important;
 }
 
-
-
-
- /* 현재 활성화 슬라이드 더 크게 */
- .swiper-slide.swiper-slide-active {
-   /*transform: scale(1.1);*/
+/* 현재 활성화 슬라이드 더 크게 */
+.gaSlider .bx-active {
+   /* transform: scale(1.1); */
    z-index: 2;
- }
+}
 
- /* 앞뒤 슬라이드는 살짝 작게 */
- .swiper-slide:not(.swiper-slide-active) {
+/* 앞뒤 슬라이드는 살짝 작게 */
+.gaSlider li:not(.bx-active) {
    opacity: 0.8;
    transform: scale(0.9);
    z-index: 1;
- }
+}
+
 
 
 /*보드(게시판 / 맵)*/
@@ -315,7 +322,7 @@ div#ms4{
    color: #F7F4ED;
 }
 .more{
-   margin-left: 330px;
+   margin-left: 290px;
    width: 80px; height: 40px;
    border-radius: 5px;
    background-color: #9b89b3;
@@ -363,10 +370,12 @@ div#ms4{
    bottom: -15px;
    z-index: 99999;
    background-color: var(--accent-color);
-   width: 44px;
-   height: 44px;
-   border-radius: 50px;
    transition: all 0.4s;
+ }
+ .scroll-top button{
+    width: 45px;
+    height: 45px;
+    border-radius: 80px;
  }
 
  .scroll-top i {
