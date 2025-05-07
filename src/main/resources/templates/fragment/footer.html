@@ -38,17 +38,44 @@
     <script src="/js/main.js"></script>
 
     <script>
-        // 네비게이션 효과
         document.addEventListener("DOMContentLoaded", function () {
             const nav = document.querySelector("nav");
+            const logo = document.querySelector(".logo");
             const submenu = document.querySelector(".sub_nav_layer");
+            const mainSlide = document.querySelector("#ms1");
             let hideTimeout;
 
+            // 페이지 로드 시 스크롤 위치에 따라 투명 상태 초기화
+            function checkScroll() {
+                if (!mainSlide) {
+                    // 서브페이지에서는 transparentNav 적용하지 않음
+                    nav.classList.remove("transparentNav");
+                    logo.classList.remove("transparentNav");
+                    return;
+                }
+
+                const mainSlideHeight = mainSlide.offsetHeight;
+                if (window.scrollY <= mainSlideHeight - nav.offsetHeight) {
+                    nav.classList.add("transparentNav");
+                    logo.classList.add("transparentNav");
+                } else {
+                    nav.classList.remove("transparentNav");
+                    logo.classList.remove("transparentNav");
+                }
+            }
+
+            // 페이지 로드 후 즉시 적용
+            checkScroll();
+
+            // 서브메뉴 hover 제어
             nav.addEventListener("mouseenter", () => {
                 clearTimeout(hideTimeout);
                 submenu.style.opacity = "1";
                 submenu.style.transform = "translateY(0)";
                 submenu.style.pointerEvents = "auto";
+
+                // hover 시 투명 클래스 제거
+                nav.classList.remove("transparentNav");
             });
 
             nav.addEventListener("mouseleave", () => {
@@ -56,6 +83,9 @@
                     submenu.style.opacity = "0";
                     submenu.style.transform = "translateY(-10px)";
                     submenu.style.pointerEvents = "none";
+
+                    // 스크롤 위치가 캐러셀 안이면 다시 투명하게
+                    checkScroll();
                 }, 200);
             });
 
@@ -71,10 +101,19 @@
                     submenu.style.opacity = "0";
                     submenu.style.transform = "translateY(-10px)";
                     submenu.style.pointerEvents = "none";
+
+                    // 스크롤 위치가 캐러셀 안이면 다시 투명하게
+                    checkScroll();
                 }, 200);
             });
 
-    });
-</script>
+            // 스크롤 이벤트 추가
+            window.addEventListener("scroll", function () {
+                checkScroll(); // 스크롤 시마다 스크롤 위치에 따라 투명 상태 체크
+            });
+        });
+
+
+    </script>
 </footer>
 </html>

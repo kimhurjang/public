@@ -3,10 +3,17 @@ body { position:relative; }
 
 /* ----------------- user------------------*/
 #user header { width:100%; height:70px; display:flex; align-items:center; justify-content:space-between; position:fixed; z-index:999; top:0;}
-#user .logo img { width:100px; height:auto; }
+#user .logo a span{ background-size: cover; width:100px; height:100px; display: block; background-image: url("/image/logo_1-2.png"); border-radius:10px;}
 
 /* nav */
-#user nav { position:relative; }
+
+/* 캐러셀 위에서만 적용될 클래스 */
+#user .logo.transparentNav a span{background-image: url("/image/logo_1-1.png") !important;}
+#user nav.transparentNav #gnb {background-color: transparent !important;}
+#user nav.transparentNav #gnb a {color: white !important;}
+#user nav.transparentNav #gnb li.login a span{color: white !important}
+
+#user nav { position:relative; transition: background-color 0.3s, color 0.3s;}
 #user #gnb { width:750px; height:70px; display:flex; justify-content:space-around; text-align:center; background-color:#D6CAE8; border-radius:0 0 0 30px; transition:border-radius 0.8s ease; }
 #user #gnb a { color:#000; }
 #user #gnb li:hover a { color:#F7F4ED; }
