@@ -199,7 +199,7 @@ button:hover{
 */
 #event{
    margin: 100px auto;
-   padding: 50px;
+   padding: 0 50px;
    width:1200px;
    text-align:center;
    display: flex;
@@ -207,25 +207,24 @@ button:hover{
 #event div{
    width: 500px;
    padding: 30px;
-   background-color: #9b89b3;
    border-radius: 100px;
 }
 #event div:first-child{
    margin-right:150px;
 }
 #event div img{
-   width: 300px;
-   height: 300px;
+   width: 450px;
+   height: 400px;
 }
 #event div div{
-   width: 350px;
-   padding: 20px 30px;
+   width: 400px;
+   padding: 10px 0;
    background-color: white;
    text-align: left;
    margin: 0 auto;
 }
 #event div div a{
-   margin-left: 250px;
+   margin-left: 380px;
 }
 #event button{
    width: 50px; height: 50px;
@@ -237,6 +236,14 @@ button:hover{
 #event button:hover{
    background-color: #9b89b3;
    color: #F7F4ED;
+}
+#nullEvent{
+    margin: 100px 300px !important;
+    padding: 80px !important;
+    border: 2px solid lightgray;
+}
+#nullEvent h2{
+    color: lightgray;
 }
 
 
@@ -322,7 +329,7 @@ div#ms4 {
    color: #F7F4ED;
 }
 .more{
-   margin-left: 290px;
+   margin: 10px 0 0 330px;
    width: 80px; height: 40px;
    border-radius: 5px;
    background-color: #9b89b3;

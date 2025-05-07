@@ -1,0 +1,22 @@
+
+
+.card-img{
+    width: 100%;
+    height: auto;
+}
+
+.event.at{
+    line-height:50px;
+    padding: 20px 0;
+    border-bottom: 1px solid lightgray;
+}
+#eventContent{
+    padding: 30px 0;
+    line-height: 15px;
+    border-bottom: 1px solid lightgray;
+}
+.event.view{
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}

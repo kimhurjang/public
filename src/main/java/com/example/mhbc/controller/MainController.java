@@ -22,8 +22,8 @@ public class MainController {
         List<BoardEntity> event = boardRepository.findByGroupGroupIdx(3L);
         List<BoardEntity> board = boardRepository.findByGroupGroupIdx(1L);
 
-        model.addAttribute("event", event);
-        model.addAttribute("board", board);
+        model.addAttribute("event", event.subList(0, Math.min(2, event.size())));
+        model.addAttribute("board", board.subList(0, Math.min(2, event.size())));
 
         return "index";
     }
@@ -31,6 +31,12 @@ public class MainController {
     public String admin(){
         System.out.println(">>>>>>>>>>admin page<<<<<<<<<<");
         return "admin";
+    }
+
+    @RequestMapping("/map")
+    public String map(){
+
+        return "map";
     }
 
 

@@ -16,19 +16,19 @@
         <!--메인 이미지 캐러셀-->
         <div class="slider">
             <div class="slide slide1">
-                <img src="./image/sample.jpg">
+                <img src="./image/1.jfif">
             </div>
             <div class="slide slide2">
-                <img src="./image/sample.jpg">
+                <img src="./image/1-1.jfif">
             </div>
             <div class="slide slide3">
-                <img src="./image/sample.jpg">
+                <img src="./image/2.jfif">
             </div>
             <div class="slide slide4">
-                <img src="./image/sample.jpg">
+                <img src="./image/3.jfif">
             </div>
             <div class="slide slide5">
-                <img src="./image/sample.jpg">
+                <img src="./image/4.jfif">
             </div>
         </div>
     </div>
@@ -115,22 +115,23 @@
 
         <!--이벤트-->
         <article id="event">
-            <div>
-                <img src="./image/sample.jpg">
+
+            <div th:if="${#lists.size(event) == 0}" id="nullEvent">
+                <h2>현재 진행 중인 이벤트가 없습니다.</h2>
+            </div>
+
+            <div th:each="event : ${event}">
+                <img th:src="@{|/data/${event.attachment.filePath}|}">
                 <div>
-                    <h3 th:text="${event[0].title}"></h3>
-                    <p th:text="${event[0].content.length() > 50} ? ${#strings.substring(event[0].content, 0, 50) + '...'} : ${event[0].content}"></p>
-                    <a href=""><button class="xi-arrow-right"></button></a>
+                    <span>
+                        <sub th:text="${#dates.format(event.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(event.closedAt, 'yyyy-MM-dd')}"></sub>
+                    </span>
+                    <h3 th:text="${event.title}"></h3>
+                    <p th:text="${event.content.length() > 30} ? ${#strings.substring(event.content, 0, 30) + '...'} : ${event.content}"></p>
+                    <a th:href="@{/board/event_view(group_idx=${event.group.groupIdx}, board_type=${event.group.boardType}, idx=${event.idx})}"><button class="xi-arrow-right"></button></a>
                 </div>
             </div>
-            <div>
-                <img src="./image/sample.jpg">
-                <div>
-                    <h3 th:text="${event[1].title}"></h3>
-                    <p th:text="${event[1].content.length() > 50} ? ${#strings.substring(event[1].content, 0, 50) + '...'} : ${event[1].content}"></p>
-                    <a href=""><button class="xi-arrow-right"></button></a>
-                </div>
-            </div>
+
         </article>
     </div>
 
@@ -151,22 +152,15 @@
             <div>
                 <div class="board boards">
                     <h2>게시판</h2>
-                    <a href=""><button class="btn more">더 보기</button></a>
+                    <a href="/board/notice"><button class="btn more">더 보기</button></a>
                 </div>
 
                 <div class="board contents">
-                    <div class="board content">
-                        <p th:text="${board[1].title}"></p><br>
-                        <sub th:text="${#dates.format(board[1].createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
-                        <p th:text="${board[1].content.length() > 50} ? ${#strings.substring(board[1].content, 0, 50) + '...'} : ${board[1].content}"></p>
-                        <a href=""><button class="xi-arrow-right"></button></a>
-                    </div>
-
-                    <div class="board content">
-                        <p th:text="${board[2].title}"></p><br>
-                        <sub th:text="${#dates.format(board[2].createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
-                        <p th:text="${board[1].content.length() > 50} ? ${#strings.substring(board[2].content, 0, 50) + '...'} : ${board[1].content}"></p>
-                        <a href=""><button class="xi-arrow-right"></button></a>
+                    <div class="board content" th:each="board : ${board}">
+                        <p th:text="${board.title}"></p><br>
+                        <sub th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
+                        <p th:text="${board.content.length() > 30} ? ${#strings.substring(board.content, 0, 30) + '...'} : ${board.content}"></p>
+                        <a th:href="@{/board/notice_view(group_idx=${board.group.groupIdx}, board_type=${board.group.boardType}, idx=${board.idx})}"><button class="xi-arrow-right"></button></a>
                     </div>
 
                 </div>

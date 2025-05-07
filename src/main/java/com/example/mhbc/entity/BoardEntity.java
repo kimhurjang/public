@@ -48,6 +48,16 @@ public class BoardEntity {
 
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "START_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startAt; // 이벤트 시작일
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CLOSED_AT")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date closedAt; // 이벤트 종료일
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt; // 작성일
@@ -76,6 +86,8 @@ public class BoardEntity {
                 .re(re)
                 .viewCnt(viewCnt)
                 .createdAt(createdAt)
+                .closedAt(closedAt)
+                .startAt(startAt)
                 .groupIdx(group != null ? group.getGroupIdx() : null)
                 .member(member)
                 .build();

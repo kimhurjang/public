@@ -21,6 +21,8 @@ public class BoardDTO {
     private Integer re;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
+    private Date closedAt;
+    private Date startAt;
 
     private Long groupIdx;
     private MemberEntity member;
@@ -30,6 +32,8 @@ public class BoardDTO {
                 .title(title)
                 .content(content)
                 .viewCnt(viewCnt)
+                .startAt(startAt)
+                .closedAt(closedAt)
                 .member(member)
                 .group(group)
                 .build();
@@ -39,6 +43,8 @@ public class BoardDTO {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setCreatedAt(entity.getCreatedAt());
+        dto.setClosedAt(entity.getClosedAt());
+        dto.setStartAt(entity.getStartAt());
         dto.setMember(entity.getMember());  // entity의 member를 DTO의 member에 할당
         return dto;
     }
