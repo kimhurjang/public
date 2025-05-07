@@ -116,9 +116,9 @@
         <!--중간 배너-->
         <article id="banner">
             <div>
-                <h3>배너 타이틀</h3>
-                <p>한 줄 글</p>
-                <a href="#"><button>보러가기</button></a>
+                <h1>EVENT</h1>
+                <p>만화방초에서 진행되는 다양한 이벤트</p>
+                <a href="/board/event"><button>보러가기</button></a>
             </div>
         </article>
 
@@ -129,7 +129,7 @@
                 <h2>현재 진행 중인 이벤트가 없습니다.</h2>
             </div>
 
-            <div th:each="event : ${event}">
+            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200">
                 <img th:src="@{|/data/${event.attachment.filePath}|}">
                 <div>
                     <span>

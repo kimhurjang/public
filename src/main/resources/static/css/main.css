@@ -122,7 +122,12 @@ button:hover{
   color: #888;
   font-size: 0.95rem;
 }
-
+.buttons{
+    display: flex;
+}
+.buttons .more{
+    margin: 0 0 0 300px;
+}
 .buttons .btn{
     width: 40px;
     height: 40px;
@@ -178,13 +183,28 @@ button:hover{
 ----------------------
 */
 #banner{
+   position: relative;
    text-align: center;
    margin: 100px 200px 0 0 !important;
+   overflow: hidden;
 }
 #banner div{
    height: 200px;
-   background-image: url("/image/sample.jpg");
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("/image/kuk202306110112.680x.0.jpg");
+   background-repeat: no-repeat;
+   background-position: center;
+   background-blend-mode: darken;
+   background-size: cover;
+
 }
+#banner div h1,#banner div p{
+   line-height: 15px;
+   color: #F7F4ED;
+}
+
+
 #banner div div{
    margin: auto;
 }
@@ -193,10 +213,11 @@ button:hover{
    width: 150px; height: 50px;
    border: 3px solid #9b89b3;
    border-radius: 30px;
+   background-color: rgba(255,255,255,0.6) !important;
    background-color: rgba(0,0,0,0);
 }
 #banner button:hover{
-   background-color: #9b89b3;
+   background-color: #9b89b3 !important;
 }
 
 
@@ -340,7 +361,11 @@ div#ms4 {
    margin: 10px 0 0 330px;
    width: 80px; height: 40px;
    border-radius: 5px;
-   background-color: #9b89b3;
+   background-color: #D6CAE8;
+}
+.more:hover{
+    color: #F7F4ED;
+    background-color: #8676A1;
 }
 
 .mapBox{
