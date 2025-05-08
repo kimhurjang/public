@@ -122,19 +122,41 @@ button:hover{
   color: #888;
   font-size: 0.95rem;
 }
-.buttons{
-    display: flex;
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-top: auto; /* 아래쪽에 위치하게 */
 }
-.buttons .more{
-    margin: 0 0 0 300px;
-}
-.buttons .btn{
-    width: 40px;
-    height: 40px;
-    border-radius: 50px;
-    margin: 0 10px;
 
+.buttons .btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0d9ec;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
+
+.buttons .btn i {
+  font-size: 20px;
+  color: #8676A1;
+}
+
+.buttons .more {
+  background-color: #D6CAE8;
+  border: none;
+  border-radius: 8px;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 0 0 240px !important;
+}
+
+
 
 
 
@@ -311,9 +333,16 @@ div#ms4 {
 
 /* 앞뒤 슬라이드는 살짝 작게 */
 .gaSlider li:not(.bx-active) {
-   opacity: 0.8;
    transform: scale(0.9);
    z-index: 1;
+}
+.gaSlider li img{
+    width: 800px;
+    height: 550px;
+    margin: auto;
+}
+.gaSlider li{
+    margin: 0 !important;
 }
 
 /*컨트롤러*/

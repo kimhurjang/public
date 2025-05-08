@@ -37,18 +37,20 @@
                 autoControls: true,
                 stopAutoOnClick: true,
                 pager: false,
-
-                controls: false,  // 좌우 화살표 숨김
+                controls: false,
                 speed: 1000
             });
-                // 커스텀 버튼 이벤트
-            $('.btn.prev').click(function() {
+            $('.sub-left').on('click', function () {
+                subSlider.stopAuto();
                 subSlider.goToPrevSlide();
+                subSlider.startAuto();
+            });
+            $('.sub-right').on('click', function () {
+                subSlider.stopAuto();
+                subSlider.goToNextSlide();
+                subSlider.startAuto();
             });
 
-            $('.btn.next').click(function() {
-                subSlider.goToNextSlide();
-            });
 
             $('.gallerySlider .gaSlider').bxSlider({
                 slideWidth: 900,
