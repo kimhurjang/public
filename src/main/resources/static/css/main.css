@@ -189,7 +189,7 @@ button:hover{
    overflow: hidden;
 }
 #banner div{
-   height: 200px;
+   height: 240px;
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
         url("/image/kuk202306110112.680x.0.jpg");
@@ -197,11 +197,16 @@ button:hover{
    background-position: center;
    background-blend-mode: darken;
    background-size: cover;
+   padding: 20px 0;
 
 }
-#banner div h1,#banner div p{
-   line-height: 15px;
+#banner div p{
+   line-height: 45px;
    color: #F7F4ED;
+}
+#banner div p:first-child{
+    font-size: 40px;
+    font-weight: bold;
 }
 
 
@@ -227,19 +232,17 @@ button:hover{
 -----------------------
 */
 #event{
-   margin: 100px auto;
+   margin: 50px auto;
    padding: 0 50px;
    width:1200px;
    text-align:center;
    display: flex;
+   justify-content: space-between;
 }
 #event div{
    width: 500px;
    padding: 30px;
    border-radius: 100px;
-}
-#event div:first-child{
-   margin-right:150px;
 }
 #event div img{
    width: 450px;
@@ -293,7 +296,6 @@ div#ms4 {
 .gallerySlider .bx-controls {
    display: block;
 }
-
 .bx-wrapper {
    max-width: 100% !important;
 }
@@ -313,6 +315,27 @@ div#ms4 {
    transform: scale(0.9);
    z-index: 1;
 }
+
+/*컨트롤러*/
+.gallerySlider { position: relative; }
+.gallerySlider .ga-prev,
+.gallerySlider .ga-next {
+  position: absolute;
+  top: 35%; transform: translateY(-50%);
+  width: 40px; height: 40px; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallerySlider .ga-prev a i,
+.gallerySlider .ga-next a i{
+    font-weight: bold;
+    color: white;
+    font-size: 50px;
+    text-shadow: 0px 0px 5px #444;
+}
+.gallerySlider .ga-prev { left: 5%; }
+.gallerySlider .ga-next { right: 5%; }
+
+
 
 
 

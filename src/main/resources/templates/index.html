@@ -116,7 +116,7 @@
         <!--중간 배너-->
         <article id="banner">
             <div>
-                <h1>EVENT</h1>
+                <p>EVENT</p>
                 <p>만화방초에서 진행되는 다양한 이벤트</p>
                 <a href="/board/event"><button>보러가기</button></a>
             </div>
@@ -146,19 +146,28 @@
 
     <div id="ms4" class="container bg-holder" data-width="1200" data-height="700">
         <!--갤러리-->
-        <div class="gallerySlider">
+        <div class="gallerySlider" data-aos="fade-down" data-aos-delay="200">
+
+                <div class="ga-prev"></div>
+
             <ul class="gaSlider">
                 <li><img src="/image/sample.jpg" alt="갤러리 이미지 1"></li>
                 <li><img src="/image/sample.jpg" alt="갤러리 이미지 2"></li>
                 <li><img src="/image/sample.jpg" alt="갤러리 이미지 3"></li>
+                <li><img src="/image/sample.jpg" alt="갤러리 이미지 3"></li>
+                <li><img src="/image/sample.jpg" alt="갤러리 이미지 3"></li>
+                <li><img src="/image/sample.jpg" alt="갤러리 이미지 3"></li>
             </ul>
+
+            <div class="ga-next"></div>
+
         </div>
     </div>
 
     <div id="ms5" class="container bg-holder" data-width="1200" data-height="700">
         <!--게시판 / 오시는 길-->
         <article id="board">
-            <div>
+            <div data-aos="fade-right" data-aos-delay="200">
                 <div class="board boards">
                     <h2>게시판</h2>
                     <a href="/board/notice"><button class="btn more">더 보기</button></a>
@@ -174,7 +183,7 @@
 
                 </div>
             </div>
-            <div class="mapBox">
+            <div class="mapBox" data-aos="fade-left" data-aos-delay="200">
                 <div id="map"></div><!--맵스-->
                 <div id="boardMap">
                     <h3>오시는 길</h3>
