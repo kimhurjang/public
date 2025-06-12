@@ -37,7 +37,7 @@ public class BoardService {
     public BoardEntity getBoardByIdx(long idx) {
         BoardEntity board = boardRepository.findByIdx(idx);
 
-        int viewCnt =  0;
+        Long viewCnt =  0L;
 
         if(board.getViewCnt() != null){
             viewCnt = board.getViewCnt();
@@ -76,8 +76,8 @@ public class BoardService {
         // 3. DTO → Entity 변환
         BoardEntity board = boardDTO.toEntity(member, group);
         board.setCreatedAt(boardDTO.getCreatedAt()); // createdAt 수동 설정 시 필요
-        board.setViewCnt(0); // 기본 조회수 0
-        board.setRe(1);//1===답변가능한 게시물
+        board.setViewCnt(0L); // 기본 조회수 0
+        board.setRe(1L);//1===답변가능한 게시물
         board.setRequest(0);//시작은 답변 전 상태
 
         // 4. 저장
@@ -114,7 +114,7 @@ public class BoardService {
 
     /*게시물 업로드 서비스*/
     public void saveBoard(BoardEntity board, long groupIdx) throws IOException {
-        board.setRe(1);
+        board.setRe(1L);
         BoardGroupEntity group = boardGroupRepository.findByGroupIdx(groupIdx);
         board.setGroup(group);
 
@@ -194,7 +194,7 @@ public class BoardService {
         attach.setFileName(file.getOriginalFilename());
         attach.setFilePath(uuidFileName);
         attach.setFileType(file.getContentType());
-        attach.setFileSize((int) file.getSize());
+        attach.setFileSize((Long) file.getSize());
 
         // 6) 저장
         attachmentRepository.save(attach);

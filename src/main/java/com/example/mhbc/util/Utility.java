@@ -59,7 +59,7 @@ public class Utility {
             attachmentEntity.setFilePath(relativePath); // 상대 경로
             attachmentEntity.setFileName(attachment.getOriginalFilename());
             attachmentEntity.setFileType(attachment.getContentType());
-            attachmentEntity.setFileSize((int) attachment.getSize());
+            attachmentEntity.setFileSize((Long) attachment.getSize());
 
             // 파일과 게시글 연결
             attachmentEntity.setBoard(board);

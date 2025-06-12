@@ -17,9 +17,9 @@ import java.util.Date;
 public class BoardDTO {
     private String title;
     private String content;
-    private Integer viewCnt;
+    private Long viewCnt;
     private Long idx;
-    private Integer re;
+    private Long re;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
     private Date closedAt;

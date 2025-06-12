@@ -13,7 +13,7 @@ public class AttachmentDTO {
     private String fileName;
     private String fileType;
     private String filePath;
-    private Integer fileSize;
+    private Long fileSize;
     private Date createdAt;
     private Long boardIdx;
 

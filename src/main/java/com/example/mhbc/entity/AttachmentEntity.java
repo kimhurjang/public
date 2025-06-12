@@ -24,7 +24,9 @@ public class AttachmentEntity {
     private String fileName; // 파일 이름
     private String fileType; // 파일 형식
     private String filePath; // 파일 경로
-    private Integer fileSize; // 파일 크기
+
+    @Column(name = "file_size", nullable = true)
+    private Long fileSize; // 파일 크기
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_AT")

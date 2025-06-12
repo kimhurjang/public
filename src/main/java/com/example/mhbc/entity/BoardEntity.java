@@ -38,7 +38,7 @@ public class BoardEntity {
     private String content; // 내용
 
 
-    private Integer re; // 질문 답변 구분용
+    private Long re; // 질문 답변 구분용
 
     @Column(name = "request")
     private Integer request;//1ㄷ1 답변 유무 0==전 / 1==후
@@ -50,7 +50,7 @@ public class BoardEntity {
     private String requestContent;
 
     @Builder.Default
-    private Integer viewCnt = 0; // 조회수
+    private Long viewCnt = 0L; // 조회수
 
     @OneToOne(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private AttachmentEntity attachment;
