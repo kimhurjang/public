@@ -558,7 +558,7 @@ div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
   .event .card{ width:100%; display: flex; margin-top:30px;}
   .event div img{ width: 100%; height:100%; object-fit: cover;  }
   .event div div{ height:260px; padding: 0 20px; text-align: left; }
-  .event div div a{ top:auto; bottom:20px; }
+  .event div div a{ top:auto; bottom:20px; right:220px;}
 
   /* 보드 */
   #board{ display: block; padding: 100px 0;}
