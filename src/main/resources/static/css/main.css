@@ -332,7 +332,6 @@ button:hover{
 #nullEvent{
     margin: 100px 300px !important;
     padding: 80px !important;
-    border: 2px solid lightgray;
 }
 #nullEvent h2{
     color: lightgray;
