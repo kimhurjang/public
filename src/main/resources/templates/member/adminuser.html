@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+
+<!-- CSS 연결 -->
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/adminuser.css">
+</th:block>
+
+<section layout:fragment="content" id="container">
+    <h1 class="page_title">회원 관리</h1>
+
+    <div id="content" class="content">
+
+        <!-- 검색 영역 -->
+        <form th:action="@{/api/member/adminuser}" method="get" class="search_box">
+            <select name="status">
+                <option value="" th:selected="${status == null or status == ''}">전체</option>
+                <option value="정상" th:selected="${status == '정상'}">정상</option>
+                <option value="정지" th:selected="${status == '정지'}">정지</option>
+                <option value="탈퇴" th:selected="${status == '탈퇴'}">탈퇴</option>
+            </select>
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="회원 검색">
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 회원 목록 테이블 -->
+        <table class="member_table">
+            <thead>
+            <tr>
+                <th>회원번호</th>
+                <th>회원 이름</th>
+                <th>아이디</th>
+                <th>휴대폰 번호</th>
+                <th>이메일</th>
+                <th>회원 상태</th>
+                <th>가입일</th>
+                <th>최종접속</th>
+                <th>권한</th>
+                <th>SNS 타입</th>
+                <th>SNS ID</th>
+                <th>SNS 이름</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${memberPage.content}">
+                <td th:text="${member.idx}">00000000</td>
+                <td th:text="${member.name != null ? member.name : '-'}">홍길동</td>
+                <td th:text="${member.userid != null ? member.userid : '-'}">아이디</td>
+                <td th:text="${member.mobile != null ? member.mobile : '정보없음'}">정보없음</td>
+                <td th:text="${member.email != null ? member.email : '정보없음'}">abc@mail.com</td>
+                <td th:text="${member.status != null ? member.status : '-'}"
+                    th:classappend="'status-' + ${member.status?.toLowerCase()}">정상</td>
+                <td th:text="${member.createdAt != null ? #dates.format(member.createdAt, 'yyyy.MM.dd') : '-'}">2021.07.01</td>
+                <td th:text="${member.updatedAt != null ? #dates.format(member.updatedAt, 'yyyy.MM.dd') : '-'}">2021.07.02</td>
+                <td th:text="${member.grade != null ? (member.grade == 10 ? '관리자' : '유저') : '-'}">유저</td>
+                <td th:text="${member.snsType != null ? member.snsType : '없음'}">없음</td>
+                <td th:text="${member.snsId != null ? member.snsId : '없음'}">없음</td>
+                <td th:text="${member.snsName != null ? member.snsName : '없음'}">없음</td>
+                <td>
+                    <a th:href="@{/api/member/adminuserinfo(idx=${member.idx})}">
+                        <button type="button">정보</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <span th:if="${currentPage > 0}">
+                <a th:href="@{/api/member/adminuser(page=${currentPage - 1}, status=${status}, keyword=${keyword})}">이전</a>
+            </span>
+
+            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:href="@{/api/member/adminuser(page=${i}, status=${status}, keyword=${keyword})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+            </span>
+
+            <span th:if="${currentPage < totalPages - 1}">
+                <a th:href="@{/api/member/adminuser(page=${currentPage + 1}, status=${status}, keyword=${keyword})}">다음</a>
+            </span>
+        </div>
+
+    </div><!-- E content -->
+</section><!-- E container -->
+
+</body>
+</html>

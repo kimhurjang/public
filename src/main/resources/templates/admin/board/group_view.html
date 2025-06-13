@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .left {text-align: left;}
+
+    </style>
+</th:block>
+<body>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+    <h1>상세보기</h1>
+    <div id="content" class="content">
+
+        <!--1 대 1 전용 테이블-->
+        <table th:if="${board.request != null && groupIdx == 6}">
+            <tr>
+                <th>카테고리</th>
+                <td th:text="${category}" class="left pd10"></td>
+                <th>작성 일자</th>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}" class="left pd10"></td>
+                <th>처리 상태</th>
+                <td th:if="${board.request == 0}" class="left pd10"><span>답변 대기</span></td>
+                <td th:if="${board.request == 1}" class="left pd10"><span>답변 완료</span></td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td th:text="${member.userid}" class="left pd10"></td>
+                <th>작성자 이름</th>
+                <td th:text="${member.name}" class="left pd10"></td>
+                <th>작성자 메일</th>
+                <td th:text="${member.email}" class="left pd10"></td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table>
+                        <tr>
+                            <th colspan="2">질문</th>
+                        </tr>
+                        <tr>
+                            <th>건의사항 카테고리</th>
+                            <td th:text="${board.category} ?: '등록된 카테고리가 없습니다.'" class="left pd10"></td>
+                        </tr>
+                        <tr>
+                            <th>질문 제목</th>
+                            <td><input type="text" th:value="${board.title}" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>질문 내용</th>
+                            <td><textarea th:text="${board.content}" readonly="readonly"></textarea></td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">답변</th>
+                        </tr>
+                        <tr>
+                            <th>답변 제목</th>
+                            <td><input type="text" name="requestTitle" th:value="${board.requestTitle} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></td>
+                        </tr>
+                        <tr>
+                            <th>답변 내용</th>
+                            <td><textarea name="requestContent" th:text="${board.requestContent} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></textarea></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!--자주 묻는 질문 전용 테이블-->
+        <table th:if="${board.request != null && groupIdx == 5}">
+            <tr>
+                <th>카테고리</th>
+                <td th:text="${category}"></td>
+                <th>작성 일자</th>
+                <td th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td>질문 제목</td>
+                            <td><input type="text" th:value="${board.title}" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>질문 내용</td>
+                            <td><textarea th:text="${board.content}" readonly></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>답변 제목</td>
+                            <td><input type="text" name="answerTitle" th:value="${board.answerTitle} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>답변 내용</td>
+                            <td><textarea name="answerContent" th:text="${board.answerContent} ?: '등록된 답변이 없습니다. [수정]페이지에서 작성 해주세요.'" readonly></textarea></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <div class="btn_group mt20">
+            <a th:href="@{/admin/board/modify(id=${board.idx},groupIdx=${groupIdx},page=${page})}">
+                <button type="button" class="small">수정</button>
+            </a>
+            <a th:href="@{/admin/board/group_list_select(group_idx=${groupIdx},groupIdx=${groupIdx},page=${page})}">
+                <button type="button" class="small">목록으로</button>
+            </a>
+            <a th:href="@{/admin/board/delete(id=${board.idx},groupIdx=${groupIdx},page=${page})}" onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
+                <button type="button" class="small red">삭제</button>
+            </a>
+        </div>
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>
+
+v

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="footer">
+
+  <script>
+    const header = document.querySelector('#admin header');
+    const toggleBtn = document.querySelector('.toggle_ic');
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      header.classList.toggle('closed');
+    });
+
+    // 초기 active 메뉴 펼치기 유지
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#gnb > li.active .sub').forEach(sub => {
+        sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+        sub.style.padding = '20px';
+      });
+    });
+    // 뒤로가기 버튼
+    function goBack() {
+      history.back();
+    }
+  </script>
+</th:block>
+</html>

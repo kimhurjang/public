@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<footer th:fragment="footer" class="bg-holder">
+    <div class="side">
+        <a href="/home" class="home_btn"
+           th:if="${currentUri != '/' and currentUri != '/home' and currentUri != '/index'}">
+            <i class="xi-home-o"></i>
+        </a>
+        <a href="/reservation/" class="reservation_btn"><i class="xi-emoticon-happy"></i>대관하러가기</a>
+        <a href="#" class="scroll-top"><button class="btn xi-arrow-up"></button></a>
+    </div>
+
+    <div class="footerBox copy">
+        <a href="/home">
+            <img src="/image/logo_1-2.png">
+        </a>
+        <p>©ManHwaBangCho</p>
+        <div id="snsIcon">
+            <a href="" class="xi-facebook"></a>
+            <a href="" class="xi-instagram"></a>
+            <a href="" class="xi-kakaotalk"></a>
+            <a href="" class="xi-twitter"></a>
+        </div>
+    </div>
+    <div class="footerBox info">
+        <div class="footerBox myAccount">
+            <div th:if="${loginMember != null and loginMember.grade == 10}">
+                <a href="/admin/admin_index" target="_blank">관리자 페이지</a>
+            </div>
+            <div th:if="${loginMember != null and loginMember.grade == 1}">
+                <p><b>내 정보</b></p>
+                <p><a th:href="@{/api/member/mypage}">마이 페이지</a></p>
+                <p><a href="">예약 정보 조회 / 수정</a></p>
+            </div>
+        </div>
+        <div class="footerBox address">
+            <p><b>주소</b></p>
+            <p>경상남도 고성군 거류면 은황길 81-91</p>
+            <p>(우)52924 (지번)거류면 은월리 17-8</p>
+        </div>
+        <div class="footerBox tel">
+            <p><b>연락처</b></p>
+            <p>TEL : 051-610-1041</p>
+            <p>Email : abcd1234@mail.com</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <!--제이쿼리 스크롤 효과 라이브러리 삽입
+    <script src="/js/jquery.scrollTo.min.js"></script>-->
+    <script src="/js/comm.js"></script>
+    <script>
+        // 공통 이벤트 핸들러 (고정 참조)
+        function checkScroll() {
+          const header = document.querySelector("header");
+          const nav = document.querySelector("nav");
+          const mainSlide = document.querySelector("#ms1");
+          if (!mainSlide || window.scrollY > mainSlide.offsetHeight - nav.offsetHeight) {
+            header.classList.add("transparentNav");
+          } else {
+            header.classList.remove("transparentNav");
+          }
+        }
+
+        function outsideClickHandler(e) {
+          const header = document.querySelector("header");
+          const gnb = document.getElementById("gnb");
+          const itemsWithSub = Array.from(gnb.querySelectorAll("li")).filter(li => li.querySelector(".sub_nav_layer"));
+
+          if (document.body.classList.contains('menu_open')) {
+            const inside = e.target.closest("#gnb, .toggle.icon, #map");
+            if (!inside) {
+              gnb.classList.remove("active");
+              header.classList.remove("closed");
+              document.body.classList.remove("menu_open");
+              itemsWithSub.forEach(li => li.classList.remove("active"));
+            }
+          }
+        }
+
+        function accordionHandler(e) {
+          const li = e.currentTarget.closest('li');
+          const sub = li.querySelector('.sub_group');
+          if (sub) {
+            e.preventDefault();
+            const isActive = li.classList.contains('active');
+            document.querySelectorAll('#gnb > li').forEach(item => {
+              item.classList.remove('active');
+              const s = item.querySelector('.sub_group');
+              if (s) s.style.maxHeight = '0';
+            });
+            if (!isActive) {
+              li.classList.add('active');
+              sub.style.maxHeight = (sub.scrollHeight + 40) + 'px';
+            }
+          }
+        }
+
+        function toggleHandler(e) {
+          e.preventDefault();
+          const header = document.querySelector("header");
+          const gnb = document.getElementById("gnb");
+          header.classList.toggle('closed');
+          gnb.classList.toggle('active');
+          document.body.classList.toggle('menu_open');
+        }
+
+        // debounce 유틸리티
+        function debounce(fn, ms) {
+          let timer;
+          return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), ms);
+          };
+        }
+
+        // 메뉴 초기화 함수
+        function initMenu() {
+          const header = document.querySelector("header");
+          const nav = document.querySelector("nav");
+          const gnb = document.getElementById("gnb");
+          const toggleBtn = document.querySelector('.toggle.icon');
+          const navItems = document.querySelectorAll('#gnb .nav_item');
+          const subMenuLinks = document.querySelectorAll('#gnb > li > strong > a');
+
+          // 공통 초기화
+          navItems.forEach(i => i.classList.remove('active'));
+          document.body.classList.remove('menu_open');
+          gnb.classList.remove('active');
+          header.classList.remove('closed');
+
+          if (window.innerWidth >= 765) {
+            navItems.forEach(item => {
+                // 모바일에서 남아있던 인라인 maxHeight 제거 리사이즈 했을 때 피씨버전 서브메뉴 오류 해결용
+                const sub = item.querySelector('.sub_group');
+                if (sub) sub.style.maxHeight = '';
+
+                // 모바일에서 남아있던 active 클래스 제거
+                item.classList.remove('active');
+              });
+            // 데스크탑 모드: 스크롤, hover
+            window.removeEventListener('scroll', checkScroll);
+            window.addEventListener('scroll', checkScroll);
+            checkScroll();
+
+            navItems.forEach(item => {
+<!--              item.removeEventListener('mouseenter', desktopMouseEnter);-->
+<!--              item.removeEventListener('mouseleave', desktopMouseLeave);-->
+              item.addEventListener('mouseenter', desktopMouseEnter);
+              item.addEventListener('mouseleave', desktopMouseLeave);
+            });
+          } else {
+
+            // 모바일 모드: 외부 클릭, 아코디언, 토글
+            navItems.forEach(item => {
+              item.removeEventListener('mouseenter', desktopMouseEnter);  // 🔧 수정됨
+              item.removeEventListener('mouseleave', desktopMouseLeave); // 🔧 수정됨
+            });
+<!--            document.removeEventListener('click', outsideClickHandler);-->
+            document.addEventListener('click', outsideClickHandler);
+
+            if (toggleBtn) {
+              toggleBtn.removeEventListener('click', toggleHandler);
+              toggleBtn.addEventListener('click', toggleHandler);
+            }
+
+            subMenuLinks.forEach(link => {
+              link.removeEventListener('click', accordionHandler);
+              link.addEventListener('click', accordionHandler);
+            });
+            const currentPath = window.location.pathname;
+            const matchedLink = Array.from(document.querySelectorAll('#gnb a')).find(a => {
+              const href = a.getAttribute('href');
+              return href && currentPath.startsWith(href);
+            });
+            if (matchedLink) {
+              const li = matchedLink.closest('.nav_item');
+              if (li) {
+                li.classList.add('active');
+              }
+            }
+            // 활성된 서브 자동 펼침
+            document.querySelectorAll('#gnb > li.active .sub_group')
+              .forEach(sub => sub.style.maxHeight = (sub.scrollHeight + 40) + 'px');
+          }
+        }
+
+        // 데스크탑 마우스 enter/leave 핸들러
+        function desktopMouseEnter() {
+          const navItems = document.querySelectorAll('#gnb .nav_item');
+          navItems.forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        }
+        function desktopMouseLeave() {
+          this.classList.remove('active');
+        }
+
+        // 초기 바인딩
+        document.addEventListener('DOMContentLoaded', initMenu);
+        window.addEventListener('resize', debounce(initMenu, 300));
+
+
+        // 뒤로가기 버튼
+        function goBack() {
+          history.back();
+        }
+
+    </script>
+
+
+    <th:block layout:fragment="js">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    </th:block>
+</footer>
+</html>

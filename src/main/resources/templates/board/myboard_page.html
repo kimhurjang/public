@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <h1>내가 작성한 글 목록</h1>
+  <div id="content" class="content">
+    <table style="teble">
+      <tr>
+        <th colspan="2"><h3>1 대 1 문의</h3></th>
+      </tr>
+      <tr th:if="${#lists.isEmpty(personalList)}">
+        <td colspan="2">작성된 게시물이 없습니다.</td>
+      </tr>
+      <tr th:each="board : ${personalList}">
+        <td style="width: 70%;">
+          <a th:href="@{/board/personalquestion_view(group_idx=${6},board_type=${2},idx=${board.idx})}">
+            <span th:text="${board.title}"></span>
+          </a>
+        </td>
+        <td>
+          <div  style="display: flex; justify-content: space-between; padding: 0 10px;" >
+            <span th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}" ></span>
+            <span th:if="${board.request == 1} " class="red" ><sub>답변 완료</sub></span>
+            <span th:if="${board.request == 0}"><sub>답변 대기중</sub></span>
+          </div>
+        </td>
+      </tr>
+
+
+      <!-- 커뮤니티 -->
+      <tr>
+        <th colspan="2"><h3>커뮤니티</h3></th>
+      </tr>
+      <tr th:if="${#lists.isEmpty(communityList)}">
+        <td colspan="2">작성된 게시물이 없습니다.</td>
+      </tr>
+      <tr th:each="board : ${communityList}">
+        <td style="width: 70%;">
+          <a th:href="@{/board/cmct_view(group_idx=${2},board_type=${0},idx=${board.idx},member=${member.idx})}">
+            <span th:text="${board.title}"></span>
+          </a>
+        </td>
+        <td>
+          <span th:text="${#dates.format(board.createdAt, 'yy.MM.dd HH:mm')}"></span>
+        </td>
+      </tr>
+    </table>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

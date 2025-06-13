@@ -1,0 +1,568 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
+section{
+   width: 100%;
+   background-color:white;
+}
+#ms2, #ms3, #ms4, #ms5{
+   width: 100%;
+   height: 100vh;
+   margin:0 auto;
+   overflow:hidden;
+}
+#ms1{
+   width: 100%;
+   height: 100vh;
+}
+#ms2, #ms5, .event {
+    max-width: 1500px;
+}
+
+#ms2 {padding-top:150px;}
+#ms3 {padding-top:70px;}
+@media (max-width:764px){
+  #ms3 {padding-top:0;}
+}
+
+button:hover{
+   color: #F7F4ED;
+   background-color: #8676A1;
+}
+.main .btn, .main button{
+   padding: 0;
+}
+
+
+/*
+---------------------------
+메인 이미지 슬라이더
+--------------------------
+*/
+
+#ms1 {position:relative;background:#333;width:100%;height:100vh;}
+.name, .subtitle {display:flex;position:absolute;left:50%;z-index:9;transform:translate(-50%, -50%);}
+.name {top:45%;}
+.subtitle {top:52%;}
+.name .letter, .subtitle .phrase {display:inline-block;opacity:0;transform:scale(0.9);color:#fff;font-family:"Dancing Script";font-size:5em;}
+.subtitle .letter {font-family:inherit ;font-size:2rem;}
+.subtitle .phrase { display:inline-block; white-space:nowrap; opacity:0; transform:scale(0.9); font-size:2.5em; color:#fff; font-family:serif;}
+@media (max-width: 764px) {
+    .name .letter {font-size:3.5rem;}
+    .subtitle {top:50%;}
+    .subtitle .phrase {font-size:2rem;}
+}
+
+.slider {
+    width: 100%;
+    height: 100vh;  /* 화면 높이를 꽉 채움 */
+    overflow: hidden;  /* 슬라이더 영역을 벗어나는 콘텐츠는 보이지 않도록 설정 */
+    border: none; /* 테두리 제거 */
+}
+.slide::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.45); /* 반투명 검정 오버레이 */
+    z-index: 1;
+}
+.slider .slide img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover; /* 이미지가 비율을 유지하면서 화면을 꽉 채움 */
+    border: none; /* 이미지의 테두리도 제거 */
+}
+/* bxSlider의 기본 테두리나 스타일을 덮어쓰는 방법 */
+.bx-wrapper {
+    border: none !important; /* bxSlider의 기본 테두리 제거 */
+    box-shadow: none !important; /* 그림자 제거 */
+}
+/* bxSlider 페이지네비게이션이나 컨트롤러가 있을 경우 숨기기 */
+.bx-pager, .bx-controls {
+    display: none ; /* 페이지 네비게이션과 화살표 숨기기 */
+}
+.bx-viewport {
+ /*  height: 100vh !important; 뷰포트 꽉 채우기 */
+  overflow: hidden !important;
+}
+
+/*
+--------------------------------
+서브 슬라이더
+-----------------------------------
+*/
+
+.subSlideWrapper {
+  display: flex;
+   /* align-items: center;     세로 중앙 */
+  justify-content: center;  /* 가로 중앙 */
+  height: 100%;             /* 부모(.bx-viewport) 기준 100% */
+  width: 100%;
+  gap: 2rem;
+  font-family: sans-serif;
+  margin:0 auto;
+  /*margin: 9rem auto;*/
+}
+
+/* 메인 이미지 */
+.mainImage {
+  width: 50%;
+  height: 600px;
+  background-color: #ddd;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mainImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 오른쪽 콘텐츠 */
+.sideContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 50%;
+}
+
+/* 서브 이미지 */
+.subImage {
+  width: 100%;
+  height: 250px;
+  background-color: #ddd;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.subImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 텍스트 설명 */
+.sideContent h3 {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.sideContent p {
+  color: #888;
+  font-size: 0.95rem;
+}
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 5%;
+  margin-top: auto; /* 아래쪽에 위치하게 */
+  position: relative;
+}
+
+.buttons .btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0d9ec;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.buttons .btn i {
+  font-size: 20px;
+  color: #8676A1;
+}
+.buttons a{
+    position: absolute;
+    right: 5px;
+}
+.buttons .more {
+  background-color: #D6CAE8;
+  border: none;
+  border-radius: 8px;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+/*
+------------------------------------
+메인 웨딩 캐러셀
+------------------------------------
+*/
+#main_wedding{
+   margin:500px auto;
+   width:1200px;
+   text-align:center;
+}
+#main_wedding div img{
+   width: 1000px;
+   height: 600px;
+}
+#main_wedding div div{
+   display: flex;
+}
+#main_wedding div div div{
+   display: block;
+   line-height: 50px;
+   margin-left:100px;
+}
+#main_wedding div a{
+   margin-left:700px;
+   padding: 40px;
+}
+#main_wedding button{
+   width: 150px; height: 50px;
+   border: 3px solid #9b89b3;
+   border-radius: 30px;
+   background-color: rgba(0,0,0,0);
+}
+#main_wedding button:hover{
+   background-color: #9b89b3;
+}
+
+
+/*
+--------------------------
+배너
+----------------------
+*/
+#banner{
+   position: relative;
+   text-align: center;
+   /*margin: 100px 200px 0 0 !important;*/
+   overflow: hidden;
+}
+#banner div{
+   height: 240px;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url("/image/kuk202306110112.680x.0.jpg");
+   background-repeat: no-repeat;
+   background-position: center;
+   background-blend-mode: darken;
+   background-size: cover;
+   padding: 20px 0;
+
+}
+#banner div p{
+   line-height: 45px;
+   color: #F7F4ED;
+}
+#banner div p:first-child{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+
+#banner div div{
+   margin: auto;
+}
+#banner button{
+   margin: 50px 0 0 0;
+   width: 150px; height: 50px;
+   border: 3px solid #9b89b3;
+   border-radius: 30px;
+   background-color: rgba(255,255,255,0.6) !important;
+   background-color: rgba(0,0,0,0);
+}
+#banner button:hover{
+   background-color: #9b89b3 !important;
+}
+
+
+/*
+---------------------
+이벤트
+-----------------------
+*/
+.event{
+   margin: 3% auto;
+   /*padding: 0 50px;*/
+   width: 100%;
+   height: 65%;
+   display: flex;
+   justify-content: space-evenly;
+}
+.event .card{
+   width: 35%;
+   display: block;
+   position:relative;
+}
+.event div img{
+   width: 100%;
+   height: 100%;
+}
+.event div div{
+   width: 100%;
+   height:380px;
+   background-color: white;
+   text-align: center;
+   margin: 0 auto;
+}
+.event div div a{
+   position:absolute;
+   top:55%; right:20px;
+
+}
+.event button{
+   width: 50px; height: 50px;
+   border: 3px solid #9b89b3;
+   padding: 10px;
+   border-radius: 30px;
+   background-color: rgba(255,255,255,0.6);
+}
+.event button:hover{
+   background-color: #9b89b3;
+   color: #F7F4ED;
+}
+#nullEvent{
+    margin: 100px 300px !important;
+    padding: 80px !important;
+    border: 2px solid lightgray;
+}
+#nullEvent h2{
+    color: lightgray;
+}
+
+
+
+
+/*
+-------------------------------
+메인화면 갤러리 캐러셀
+-------------------------------
+*/
+
+div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
+#ms4 h2 {font-size:4rem; text-align:center;margin-bottom:20px;}
+.gallerySlider .bx-wrapper {background-color:transparent;}
+.gallerySlider .bx-viewport { height:100% !important; padding: 0 15%;}
+.gallerySlider .bx-controls { display: block;}
+.bx-wrapper { max-width: 100% !important;}
+.bx-wrapper .bx-controls-direction a { margin-top: -180px !important;}
+/* 현재 활성화 슬라이드 더 크게 */
+.gaSlider .bx-active {
+   /* transform: scale(1.1); */
+   z-index: 2;
+}
+
+/* 앞뒤 슬라이드는 살짝 작게 */
+.gaSlider li:not(.bx-active) {
+   transform: scale(0.9);
+   z-index: 1;
+}
+/*
+.gaSlider li img{
+    width: 800px;
+    height: 550px;
+    margin: auto;
+}
+.gaSlider li{
+    margin: 0 !important;
+}
+*/
+/* 슬라이드 이미지 배경으로 바꿈 */
+.gaSlider li {height:530px;min-width:400px !important;}
+.gaSlider li a {display:block; width:100%; height:100%; background-size:auto 100%; background-position:50%; background-repeat:no-repeat;}
+
+/*컨트롤러*/
+.gallerySlider { position: relative; }
+.gallerySlider .ga-prev,
+.gallerySlider .ga-next {
+  position: absolute;
+  top: 55%; transform: translateY(-50%);
+  width: 40px; height: 40px; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallerySlider .ga-prev a i,
+.gallerySlider .ga-next a i{
+    font-weight: bold;
+    color: white;
+    font-size: 50px;
+    text-shadow: 0px 0px 5px #444;
+}
+.gallerySlider .ga-prev { left: 5%; }
+.gallerySlider .ga-next { right: 5%; }
+
+/* 기본: 모든 슬라이드의 링크 클릭 차단
+.gallerySlider ul.gaSlider li a {
+  pointer-events: none !important;
+}*/
+
+/* 활성화된(slideAfter) 슬라이드의 링크만 허용 */
+.gallerySlider ul.gaSlider li.active a {
+  pointer-events: auto !important;
+}
+
+
+
+
+/*보드(게시판 / 맵)*/
+#board{
+   margin: 0 auto;
+   padding: 200px 0;
+   width: 100%;
+   display: flex;
+}
+/*
+#board>div{
+   padding-top: 30px;
+   margin: 150px 0;
+   width: 100%;
+   max-width: 600px;
+}*/
+.boards{
+   display:flex;
+   padding: 0 30px;
+   justify-content: space-between;
+   width: 100%;
+}
+.boards h2{
+   padding: 10px;
+}
+.contents{
+   padding: 20px 30px 0 30px;
+   position: relative;
+   width: 100%;
+}
+.board.content p {width:75%;}
+.boardBox, .mapBox{
+   width: 50%;
+   padding: 0 30px;
+   margin: 0 auto;
+   max-width: 600px;
+   max-height:700px;
+   min-height:290px;
+}
+.content{
+    position: relative;
+   margin: 20px 0;
+   padding: 20px;
+   background-color: whitesmoke;
+}
+.content a{
+   position: absolute;
+   right: 30px; top: 30px;
+}
+.content button{
+   width: 50px; height: 50px;
+   border: 2px solid #9b89b3;
+   padding: 5px;
+   border-radius: 30px;
+   background-color: rgba(0,0,0,0);
+}
+.content button:hover{
+   background-color: #9b89b3;
+   color: #F7F4ED;
+}
+.more{
+   width: 80px; height: 40px;
+   border-radius: 5px;
+   background-color: #D6CAE8;
+   margin: 10px 0 0 0;
+}
+.more:hover{
+    color: #F7F4ED;
+    background-color: #8676A1;
+}
+/*
+.mapBox{
+   width: 50%;
+}
+*/
+#map{
+   border: 1px solid lightgray;
+   margin: auto;
+   width: 100%;
+   height: 50%;
+}
+.mapBox div:nth-child(2){
+  line-height: 25px;
+}
+#boardMap{
+   line-height: 50px;
+   padding: 2%;
+   max-width: 600px;
+   margin: auto;
+}
+#boardMap a{
+    margin: 0 0 0 75%;
+}
+#boardMap button{
+   width: 120px; height: 50px;
+   border: 2px solid #9b89b3;
+   border-radius: 30px;
+   background-color: rgba(0,0,0,0);
+}
+#boardMap button:hover{
+   background-color: #8676A1;
+   color: #F7F4ED;
+}
+
+
+
+/*카카오맵*/
+.wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
+
+.wrap * {padding: 0;margin: 0;}
+
+.wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+
+.wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+
+.info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
+
+.info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+
+.info .close:hover {cursor: pointer;}
+
+.info .body {position: relative;overflow: hidden;}
+
+.info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+
+.desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap; padding:0;}
+
+.desc .jibun {font-size: 11px;color: #888;margin-top: -2px; padding:0;}
+
+.info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+/*.info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}*/
+
+.info .link {color: #5085BB;}
+
+
+/*
+-----------------------
+    반응형
+-----------------------
+*/
+@media (min-width: 765px) and (max-width: 1024px) {
+  .event .card{ width:45%; }
+}
+@media (max-width: 764px){
+  /* 이벤트 */
+  .event{ display: block; justify-content: none; height: 55%; margin-top:7%; }
+  .event .card{ width:100%; display: flex; margin-top:30px;}
+  .event div img{ width: 100%; height:100%; object-fit: cover;  }
+  .event div div{ height:260px; padding: 0 20px; text-align: left; }
+  .event div div a{ top:auto; bottom:20px; }
+
+  /* 보드 */
+  #board{ display: block; padding: 100px 0;}
+  .boardBox , .mapBox{ width: 100%; }
+  #ms5{ height: auto;}
+
+}

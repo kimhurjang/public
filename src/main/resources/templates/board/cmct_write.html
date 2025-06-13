@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <style>
+    .left {text-align: left;}
+  </style>
+</th:block>
+<body>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/cmct}"><h1>커뮤니티 글쓰기</h1></a>
+  <div id="content" class="content">
+    <form name="cmct_write_proc" method="post" action="/board/cmct_write_proc" enctype="multipart/form-data" th:object="${commonForm}">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="memberIdx" th:value="${member.idx}">
+
+      <!--유효성 검사 통과용-->
+      <input type="hidden" name="email" th:value="${member.email}" />
+      <input type="hidden" name="name" th:value="${member.name}" />
+      <input type="hidden" name="userid" th:value="${member.userid}" />
+      <input type="hidden" name="pwd" th:value="${member.pwd}" />
+
+      <table>
+        <tr>
+          <td>작성자</td>
+          <td><input type="text" name="name" th:value="${member.name != null ? member.name : '익명'}" readonly></td>
+          <!--로그인 기능 구현 후 수정-->
+        </tr>
+        <tr>
+          <td>제목</td>
+          <td>
+            <input type="text" th:field="*{title}" name="title" required placeholder="제목을 입력해주세요.">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="display: none;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>작성 날짜</td>
+          <td><input type="date" name="createdAt" id="createdAt" th:value="${today}" readonly></td>
+        </tr>
+        <tr>
+          <td>본문</td>
+          <td>
+            <textarea name="content" th:field="*{content}" cols="70" rows="10" required placeholder="본문을 입력해주세요."></textarea>
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="display: none;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>첨부 파일</td>
+          <td class="left pd10"><input type="file" id="inputFile" name="attachment"></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="btn_group mt20">
+              <button type="button" onclick="goBack()">뒤로가기</button>
+              <button type="submit" class="color2">작성하기</button>
+              <button type="reset">초기화</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div th:if="${errors}">
+        <ul>
+          <li th:each="error : ${errors}">
+            <span th:text="${error.defaultMessage}"></span>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </div><!--E content-->
+</section><!--E container-->
+<th:block layout:fragment="script">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const MAX_SIZE = 1000 * 1024 * 1024; // 1000MB
+      const input = document.getElementById('inputFile');
+
+      if (!input) return;
+
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        if (file.size > MAX_SIZE) {
+          alert('첨부파일은 최대 1000MB(1GB)까지만 업로드할 수 있습니다.');
+          this.value = ''; // 파일 입력 초기화
+        }
+      });
+    });
+  </script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/event.css">
+  <style>
+    .left {text-align: left !important;}
+    .line35 {line-height: 35px}
+  </style>
+</th:block>
+<body>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/event}"><h1>이벤트</h1></a>
+  <div id="content" class="content">
+
+    <div class="event header mb20"><h2 th:text="${board.title}"></h2></div>
+    <div th:if="${board.attachment != null}">
+      <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-img"/>
+    </div>
+    <div class="event at">
+      <b>진행 기간</b>
+      <div class="left pd10">
+        <span th:text="${#dates.format(board.startAt, 'yyyy년 MM월 dd일')} + ' ~ ' + ${#dates.format(board.closedAt, 'yyyy년 MM월 dd일')}"></span>
+        <br>
+        <!-- 이벤트 시작 여부 -->
+        <span th:if="${!isStarted}" class="tag">
+          준비중
+        </span>
+        <!-- 이벤트 종료 여부 -->
+        <span th:if="${isStarted} and ${isClosed}" class="tag">
+          종료
+        </span>
+        <span th:if="${isStarted} and ${!isClosed}" class="tag red">
+          진행중
+        </span>
+    </div>
+    </div>
+    <div id="eventContent">
+      <pre th:text="${board.content}" class="pd10"></pre>
+    </div>
+    <div class="event view">
+      <span th:text="'작성일 ' + ${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span>
+      <span th:text="'조회수 '+${board.viewCnt}"></span>
+    </div>
+    <div class="btn_group mt20">
+      <a th:href="@{/board/event}">
+        <button type="button" class="small">목록으로</button>
+      </a>
+      <div th:if="${member != null and member.grade == 10}">
+        <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${1}, comments_idx=${0})}"><button class="small color1">[관리자]삭제</button></a>
+        <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx},commentsIdx=0)}"><button type="button" class="color2 small">[관리자]수정</button></a>
+      </div>
+    </div>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

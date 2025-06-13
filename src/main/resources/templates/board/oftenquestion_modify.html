@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/common.css"></th:block><!--넣고자 하는 css 이름 변경-->
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/oftenquestion}"><h1>자주 묻는 질문</h1></a>
+  <div id="content" class="content">
+    <form name="oftenquestion" method="post" action="/board/modify_proc" enctype="multipart/form-data">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="boardIdx"        th:value="${board.idx}" />
+      <input type="hidden" name="memberIdx"       th:value="${member.idx}" />
+      <input type="file" name="attachment" style="visibility: hidden"/>
+      <input type="hidden" name="comments_idx" value="0"/>
+
+      <table>
+        <tr>
+          <td colspan="2">현재 페이지는 관리자 전용 페이지입니다.</td>
+        </tr>
+        <tr>
+          <th>질문 제목</th>
+          <td><input type="text" name="title" th:value="${board.title}" required placeholder="제목을 입력해주세요."></td>
+        </tr>
+        <tr>
+          <th>질문 내용</th>
+          <td><textarea type="text" name="content" th:text="${board.content}" required placeholder="본문을 입력해주세요."></textarea></td>
+        </tr>
+        <tr>
+      </table>
+      <table>
+        <th>답변 제목</th>
+        <td><input type="text" name="requestTitle" th:value="${board.requestTitle}" required placeholder="제목을 입력해주세요."></td>
+        </tr>
+        <tr>
+          <th>답변 내용</th>
+          <td><textarea type="text" name="requestContent" th:text="${board.requestContent}" th:value="${board.answerContent}" required placeholder="본문을 입력해주세요."></textarea></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="btn_group mt20">
+              <button type="button" onclick="goBack()" class="small">뒤로가기</button>
+              <button type="submit" class="color2">작성하기</button>
+              <button type="reset" class="small">초기화</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</section><!--E container-->
+</body>
+</html>

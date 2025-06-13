@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+
+<body>
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/login.css" />
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+</th:block>
+
+<section layout:fragment="content" id="container" class="sub login-page">
+  <div class="login-container">
+    <div class="login_box">
+
+      <!-- 제목 영역 -->
+      <h1 id="form-title" th:text="${pwError} == null ? '아이디 찾기' : '비밀번호 찾기'">아이디 찾기</h1>
+
+      <!-- 아이디 찾기 폼 -->
+      <form id="find-id-form" method="POST" action="/api/member/find-id"
+            th:style="${pwError} != null ? 'display:none;' : 'display:block;'">
+        <div class="input_group">
+          <label for="name_input1">이름</label>
+          <input type="text" id="name_input1" name="name" required placeholder="이름을 입력하세요" />
+        </div>
+
+        <div class="input_group">
+          <label for="mobile_input1">전화번호</label><br />
+          <input type="text" id="mobile_input1" name="mobile1" maxlength="3" required placeholder="010" style="width: 70px;" /> -
+          <input type="text" id="mobile_input2" name="mobile2" maxlength="4" required placeholder="1234" style="width: 80px;" /> -
+          <input type="text" id="mobile_input3" name="mobile3" maxlength="4" required placeholder="5678" style="width: 80px;" />
+        </div>
+
+        <p th:if="${message}" th:text="${message}" style="color: green; margin-top: 10px;"></p>
+        <p th:if="${error}" th:text="${error}" style="color: red; margin-top: 10px;"></p>
+
+        <!-- 버튼 -->
+        <div style="margin-top: 10px;">
+          <button type="submit" class="login_button" th:if="${message == null}">아이디 찾기</button>
+          <button class="login_button" type="button" onclick="location.href='/api/member/login'" th:if="${message != null}">로그인</button>
+        </div>
+
+        <!-- 링크 -->
+        <div class="links" style="margin-top: 15px; margin-bottom: 20px;">
+          <a href="#" class="link-find-id" th:style="${pwError} == null ? 'font-weight: bold;' : 'font-weight: normal;'">아이디 찾기</a> |
+          <a href="#" class="link-find-pw" th:style="${pwError} != null ? 'font-weight: bold;' : 'font-weight: normal;'">비밀번호 찾기</a> |
+          <a href="/api/member/join">회원가입</a>
+        </div>
+      </form>
+
+      <!-- 비밀번호 찾기 폼 -->
+      <form id="find-pw-form" action="/api/member/find-password" method="post"
+            th:style="${pwError} != null ? 'display:block;' : 'display:none;'">
+        <div class="input_group">
+          <label for="id_input">아이디</label>
+          <input type="text" id="id_input" name="id" placeholder="아이디" required />
+        </div>
+
+        <div class="input_group">
+          <label for="name_input2">이름</label>
+          <input type="text" id="name_input2" name="name" placeholder="이름" required />
+        </div>
+
+        <!-- 오류 메시지 -->
+        <p th:if="${pwError}" th:text="${pwError}" style="color: red; margin-top: 10px;"></p>
+
+        <!-- 버튼 -->
+        <div style="margin-top: 10px;">
+          <button type="submit" class="login_button">비밀번호 찾기</button>
+        </div>
+
+        <!-- 링크 -->
+        <div class="links" style="margin-top: 15px; margin-bottom: 20px;">
+          <a href="#" class="link-find-id" th:style="${pwError} == null ? 'font-weight: bold;' : 'font-weight: normal;'">아이디 찾기</a> |
+          <a href="#" class="link-find-pw" th:style="${pwError} != null ? 'font-weight: bold;' : 'font-weight: normal;'">비밀번호 찾기</a> |
+          <a href="/api/member/join">회원가입</a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+<th:block layout:fragment="js">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const linkFindIdList = document.querySelectorAll('.link-find-id');
+      const linkFindPwList = document.querySelectorAll('.link-find-pw');
+      const formTitle = document.getElementById('form-title');
+      const findIdForm = document.getElementById('find-id-form');
+      const findPwForm = document.getElementById('find-pw-form');
+
+      function activateLink(selected) {
+        if(selected === 'id') {
+          formTitle.textContent = '아이디 찾기';
+          findIdForm.style.display = 'block';
+          findPwForm.style.display = 'none';
+          linkFindIdList.forEach(el => el.style.fontWeight = 'bold');
+          linkFindPwList.forEach(el => el.style.fontWeight = 'normal');
+          window.location.hash = '#tab1';
+        } else {
+          formTitle.textContent = '비밀번호 찾기';
+          findIdForm.style.display = 'none';
+          findPwForm.style.display = 'block';
+          linkFindIdList.forEach(el => el.style.fontWeight = 'normal');
+          linkFindPwList.forEach(el => el.style.fontWeight = 'bold');
+          window.location.hash = '#tab2';
+        }
+      }
+
+      // 페이지 로드 시 해시 읽어서 탭 활성화
+      if(window.location.hash === '#tab2') {
+        activateLink('pw');
+      } else {
+        activateLink('id');
+      }
+
+      linkFindIdList.forEach(el => el.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateLink('id');
+      }));
+
+      linkFindPwList.forEach(el => el.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateLink('pw');
+      }));
+
+      // ✅ 전화번호 유효성 검사 추가
+      findIdForm.addEventListener('submit', function(e) {
+        const m1 = document.getElementById('mobile_input1').value.trim();
+        const m2 = document.getElementById('mobile_input2').value.trim();
+        const m3 = document.getElementById('mobile_input3').value.trim();
+
+        const isValid = m1.length === 3 && m2.length === 4 && m3.length === 4;
+
+        if (!isValid) {
+          e.preventDefault();
+          Swal.fire({
+            icon: 'warning',
+            title: '전화번호 형식 오류',
+            text: '전화번호는 3자리-4자리-4자리 형식으로 입력해주세요.',
+            confirmButtonText: '확인'
+          });
+        }
+      });
+    });
+  </script>
+
+</th:block>
+
+</body>
+</html>

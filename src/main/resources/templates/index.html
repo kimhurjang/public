@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{fragment/layout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/kakaoMap.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bxslider@4.2.17/dist/jquery.bxslider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+
+                $(".slider").bxSlider({
+                    mode : 'fade',
+                    auto: true,
+                    autoControls: true,
+                    stopAutoOnClick: true,
+                    pager: false,
+                    controls: false,  // 좌우 화살표 숨김
+                    speed: 1500,
+                    pause: 5000,
+                    adaptiveHeight : true
+                });
+
+                var subSlider = $(".subSlider").bxSlider({
+                    auto: true,
+                    autoControls: true,
+                    stopAutoOnClick: true,
+                    pager: false,
+                    controls: false,
+                    speed: 1000
+                });
+                $('.sub-left').on('click', function () {
+                    subSlider.stopAuto();
+                    subSlider.goToPrevSlide();
+                    subSlider.startAuto();
+                });
+                $('.sub-right').on('click', function () {
+                    subSlider.stopAuto();
+                    subSlider.goToNextSlide();
+                    subSlider.startAuto();
+                });
+
+
+                $('.gallerySlider .gaSlider').bxSlider({
+                    slideWidth: 900,
+                    minSlides: 1,
+                    maxSlides: 2,
+                    moveSlides: 1,
+                    slideMargin: 10,
+                    slideWidth: 750,
+                    infiniteLoop: true,
+                    startSlide: 1,
+                    auto: false,
+                    pager: false,
+
+                    controls: true,
+                    prevSelector: '.gallerySlider .ga-prev',
+                    nextSelector: '.gallerySlider .ga-next',
+                    prevText: '<i class="xi-angle-left"></i>',
+                    nextText: '<i class="xi-angle-right"></i>'
+
+                });
+        });
+
+    </script>
+</th:block>
+
+<body>
+<section layout:fragment="content" class="main">
+
+
+    <div id="ms1" class="container bg-holder" data-width="1200" data-height="700">
+
+        <div class="name">
+            <div class="letter">M</div>
+            <div class="letter">a</div>
+            <div class="letter">n</div>
+            <div class="letter">H</div>
+            <div class="letter">w</div>
+            <div class="letter">a</div>
+            <div class="letter">B</div>
+            <div class="letter">a</div>
+            <div class="letter">n</div>
+            <div class="letter">g</div>
+            <div class="letter">C</div>
+            <div class="letter">h</div>
+            <div class="letter">o</div>
+        </div>
+        <div class="subtitle">
+            <span class="phrase">꽃과 </span>
+            <span class="phrase">향기가 </span>
+            <span class="phrase">머무는 </span>
+            <span class="phrase">정원</span>
+        </div>
+
+        <!--메인 이미지 캐러셀-->
+        <div class="slider">
+            <div class="slide slide1">
+                <img src="./image/7.jfif">
+            </div>
+            <div class="slide slide3">
+                <img src="./image/wedding3.jpg">
+            </div>
+            <div class="slide slide3">
+                <img src="./image/wedding13.jpg">
+            </div>
+            <div class="slide slide3">
+                <img src="./image/wedding14.jpg">
+            </div>
+        </div>
+    </div>
+
+    <div id="ms2" class="container bg-holder" data-width="1200" data-height="700">
+        <!--서브 캐러셀-->
+        <article class="subSlider">
+
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="./image/4.jfif" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/6.jfif" alt="서브 이미지">
+                    </div>
+                    <h3>수국길의 시작, 돌하르방의 인사</h3>
+                    <p>계절을 품은 수국과 묵묵히 자리를 지키는 돌하르방</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                    </div>
+                    </div>
+                </div>
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="/image/9.jfif" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/10.jfif" alt="서브 이미지">
+                    </div>
+                    <h3>당신의 순간이 머무는 곳</h3>
+                    <p>소중한 사람들과 함께, 조용히 흐르는 시간 속 따스한 추억을 담아보세요.</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subSlideWrapper">
+                <!-- 왼쪽 큰 이미지 -->
+                <div class="mainImage">
+                    <img src="./image/16.jpg" alt="메인 이미지">
+                </div>
+
+                <!-- 오른쪽: 서브 이미지 + 설명 -->
+                <div class="sideContent">
+                    <div class="subImage">
+                        <img src="./image/18.jpg" alt="서브 이미지">
+                    </div>
+                    <h3>자연 속 작은 친구들과의 만남</h3>
+                    <p>풀밭을 뛰노는 강아지와 귀여운 토끼가 반겨주는 정원 속 휴식 공간.</p>
+                    <div class="buttons">
+                        <button class="btn sub-left"><i class="xi-angle-left"></i></button>
+                        <button class="btn sub-right"><i class="xi-angle-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+
+        </article>
+    </div>
+
+    <div id="ms3" class="container bg-holder" data-width="1200" data-height="700">
+        <!--이벤트-->
+
+        <!--중간 배너-->
+        <div id="banner">
+            <div>
+                <p>EVENT</p>
+                <p>만화방초에서 진행되는 다양한 이벤트</p>
+                <a href="/board/event"><button>보러가기</button></a>
+            </div>
+        </div>
+
+        <article class="event">
+
+            <div th:if="${#lists.size(event) == 0}" id="nullEvent">
+                <h2>현재 진행 중인 이벤트가 없습니다.</h2>
+            </div>
+
+            <div th:each="event : ${event}"  data-aos="fade-down" data-aos-delay="200" class="card">
+                <div style="overflow:hidden;">
+                    <img th:if="${event.attachment != null}" th:src="@{|/data/${event.attachment.filePath}|}">
+                </div>
+                <div>
+                    <span>
+                        <sub th:text="${#dates.format(event.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(event.closedAt, 'yyyy-MM-dd')}"></sub>
+                    </span>
+                    <h3 th:text="${event.title}"></h3>
+                    <p th:text="${event.content.length() > 30} ? ${#strings.substring(event.content, 0, 30) + '...'} : ${event.content}"></p>
+                    <a th:href="@{/board/event_view(group_idx=${event.group.groupIdx}, board_type=${event.group.boardType}, idx=${event.idx})}"><button class="xi-arrow-right"></button></a>
+                </div>
+            </div>
+
+        </article>
+    </div>
+
+    <div id="ms4" class="container bg-holder" data-width="1200" data-height="700">
+        <!--갤러리-->
+        <h2>Gallery</h2>
+        <div class="gallerySlider" data-aos="fade-down" data-aos-delay="200">
+            <div class="ga-prev"></div>
+            <ul class="gaSlider">
+                <li><a th:href="@{/board/gallery_view(idx=${325}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/12.jfif')" title="갤러리 이미지 1"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${326}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/13.jpg')" title="갤러리 이미지 2"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${327}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/16.jfif')" title="갤러리 이미지 3"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${328}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/18.jpg')" title="갤러리 이미지 4"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${329}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/img.jpg')" title="갤러리 이미지 5"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${330}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/kuk202306110112.680x.0.jpg')" title="갤러리 이미지 6"></a></li>
+                <li><a th:href="@{/board/gallery_view(idx=${331}, board_type=${1}, group_idx=${4})}" style="background-image:url('/image/L7940277.jfif')" title="갤러리 이미지 7"></a></li>
+            </ul>
+
+            <div class="ga-next"></div>
+
+        </div>
+    </div>
+
+    <div id="ms5" class="container bg-holder" data-width="1200" data-height="700">
+        <!--게시판 / 오시는 길-->
+        <article id="board">
+
+            <div data-aos="fade-right" data-aos-delay="200" class="boardBox">
+                <div class="board boards">
+                    <h2>게시판</h2>
+                    <a href="/board/notice"><button class="btn more">더 보기</button></a>
+                </div>
+
+                <div class="board contents">
+                    <div class="board content" th:each="board : ${board}">
+                        <p th:text="${board.title}"></p><br>
+                        <sub th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일 a hh:mm')}"></sub><br>
+                        <p th:text="${board.content.length() > 15} ? ${#strings.substring(board.content, 0, 15) + '...'} : ${board.content}"></p>
+                        <a th:href="@{/board/notice_view(group_idx=${board.group.groupIdx}, board_type=${board.group.boardType}, idx=${board.idx})}"><button class="xi-arrow-right"></button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mapBox" data-aos="fade-left" data-aos-delay="200">
+                <div id="map"></div><!--맵스-->
+                <div id="boardMap">
+                    <h3>오시는 길</h3>
+                    <p>경남 고성군 거류면 은황길 82-91</p>
+                    <a href="/page/map"><button>자세히</button></a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <th:block layout:fragment="js">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/animejs/1.0.0/anime.min.js'></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3bf69ce9275feb61004f536b17f363b9"></script>
+        <script src="/js/main.js"></script>
+        <!--패럴렉스 스크롤링 라이브러리 임폴트-->
+        <script src="/js/jquery.parallax-scroll.min.js"></script>
+        <!--휠 효과 임폴트-->
+        <script src="/js/wheel.js"></script>
+        <!--카카오맵 메인페이지 전용-->
+        <script>
+            //카카오 맵
+             (function() {
+                 var kakaoMapContainer = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+                 var kakaoMapOptions = { // 지도를 생성할 때 필요한 기본 옵션
+                   center: new kakao.maps.LatLng(34.960922, 128.385499), // 지도의 중심좌표.
+                   level: 3 // 지도의 레벨(확대, 축소 정도)
+                 };
+
+                 var kakaoMapInstance = new kakao.maps.Map(kakaoMapContainer, kakaoMapOptions);
+
+                 // 마커 이미지 설정
+                 var kakaoImageSrc = '/image/marker.png'; // 마커이미지의 주소입니다
+                 var kakaoImageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
+                 var kakaoImageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지 옵션
+
+                 var kakaoMarkerImage = new kakao.maps.MarkerImage(kakaoImageSrc, kakaoImageSize, kakaoImageOption);
+                 var kakaoMarkerPosition = new kakao.maps.LatLng(34.960378, 128.385466); // 마커가 표시될 위치입니다
+
+                 var kakaoMarker = new kakao.maps.Marker({
+                   position: kakaoMarkerPosition,
+                   image: kakaoMarkerImage
+                 });
+                 kakaoMarker.setMap(kakaoMapInstance);
+
+                 // 커스텀 오버레이 내용
+                 var kakaoOverlayContent = `
+                   <div class="customOverlayWrap">
+                     <div class="customOverlayInfo">
+                       <div class="customOverlayTitle">
+                         만화방초
+                         <div class="customOverlayClose" onclick="kakaoOverlayClose()" title="닫기"></div>
+                       </div>
+                       <div class="customOverlayBody">
+                         <div class="customOverlayImg">
+                           <img src="/image/logo_1-2_mo.png" width="73" height="70">
+                         </div>
+                         <div class="customOverlayDesc">
+                           <div class="ellipsis">경남 고성군 거류면 은황길 82-91</div>
+                           <div class="jibun linkBox">
+                             <div class="jibun ellipsis">(지번)거류면 은월리 17-5</div>
+                             <a href="https://kko.kakao.com/-eU_FnkAY7" target="_blank" class="link"><i class="xi-search"></i></a>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 `;
+
+                 var kakaoOverlayPosition = new kakao.maps.LatLng(34.960394, 128.385516);
+                 var kakaoCustomOverlay = new kakao.maps.CustomOverlay({
+                   map: kakaoMapInstance,
+                   position: kakaoOverlayPosition,
+                   content: kakaoOverlayContent,
+                   yAnchor: 1
+                 });
+
+                 // 지도 타입 변경 함수
+                 window.setMapType = function(maptype) {
+                   var roadmapControl = document.getElementById('btnRoadmap');
+                   var skyviewControl = document.getElementById('btnSkyview');
+                   if (maptype === 'roadmap') {
+                     kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                     roadmapControl.className = 'selected_btn';
+                     skyviewControl.className = 'btn';
+                   } else {
+                     kakaoMapInstance.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                     skyviewControl.className = 'selected_btn';
+                     roadmapControl.className = 'btn';
+                   }
+                 };
+
+                 // 확대, 축소 함수
+                 window.zoomIn = function() {
+                   kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() - 1);
+                 };
+                 window.zoomOut = function() {
+                   kakaoMapInstance.setLevel(kakaoMapInstance.getLevel() + 1);
+                 };
+
+                 window.kakaoOverlayClose = function() {
+                   kakaoCustomOverlay.setMap(null);
+                 };
+
+                 kakao.maps.event.addListener(kakaoMarker, 'click', function() {
+                   kakaoCustomOverlay.setMap(kakaoMapInstance);
+                 });
+                 kakaoMapContainer.addEventListener('wheel', function(e) {
+                   e.stopPropagation(); // 버블링 방지
+                 }, { passive: false });
+                     kakaoMapContainer.addEventListener('mouseenter', function() {
+                     document.body.style.overflow = 'hidden';
+                   });
+                   kakaoMapContainer.addEventListener('mouseleave', function() {
+                     document.body.style.overflow = '';
+                   });
+               })();
+        </script>
+    </th:block>
+</section>
+</body>
+</html><!--E contents-->

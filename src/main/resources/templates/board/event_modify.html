@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/event.css">
+</th:block>
+<body>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname">
+  <a th:href="@{/board/event}"><h1>이벤트</h1></a>
+  <div id="content" class="content">
+    <form name="modify"
+          method="post"
+          action="/board/modify_proc"
+          enctype="multipart/form-data">
+
+      <!-- 1) 삭제 의도 전달용 hidden 필드 -->
+      <input type="hidden" id="deleteAttachmentFlag" name="deleteAttachmentFlag" value="N"/>
+
+      <!-- 2) 기타 hidden 필드들 -->
+      <input type="hidden" name="boardIdx" th:value="${board.idx}">
+      <input type="hidden" name="memberIdx" th:value="${member.idx}">
+      <input type="hidden" name="group_idx" th:value="${groupIdx}">
+      <input type="hidden" name="board_type" th:value="${boardType}">
+      <input type="hidden" name="comments_idx" value="0">
+      <table>
+        <tr class="event header">
+          <th>제목</th>
+          <td>
+            <input type="text"
+                   name="title"
+                   th:value="${board.title}"
+                   required
+                   placeholder="제목 입력은 필수입니다.">
+          </td>
+        </tr>
+          <!-- attachmentRow 하나만 사용. th:if로 서버 상태에 따라 보여주는 내용이 달라짐 -->
+          <tr id="attachmentRow">
+            <th>첨부 파일<br><sub style="gray">권장 사이즈 : 600*380px</sub></th>
+            <td class="tl">
+              <!-- A) 서버에 기존 파일이 있을 때 -->
+              <span th:if="${board.attachment != null}"
+                    id="existingFilename"
+                    th:text="${board.attachment.fileName}">
+                      파일명
+                    </span>
+              <button th:if="${board.attachment != null}"
+                      type="button"
+                      onclick="removeAttachment()">
+                삭제
+              </button>
+
+              <!-- B) 서버에 기존 파일이 없을 때 -->
+              <input th:if="${board.attachment == null}"
+                     type="file"
+                     name="attachment"
+                     id="newAttachmentInput"
+                     required
+                     accept="image/*"
+                     placeholder="첨부파일을 선택하세요.">
+              <div th:if="${board.attachment == null and #fields.hasErrors('attachment')}"
+                   th:errors="*{attachment}"
+                   style="color:red;"></div>
+            </td>
+          </tr>
+          <tr class="event at">
+            <th>시작일</th>
+            <td>
+              <input type="date"
+                     name="startAt"
+                     id="startAt"
+                     th:value="${#dates.format(board.startAt, 'yyyy-MM-dd')}">
+            </td>
+          </tr>
+          <tr>
+            <th>종료일</th>
+            <td>
+              <input type="date"
+                     name="closedAt"
+                     id="closedAt"
+                     th:value="${#dates.format(board.closedAt, 'yyyy-MM-dd')}">
+            </td>
+          </tr>
+        <tr id="eventContent">
+          <th>본문</th>
+          <td>
+              <textarea name="content"
+                        cols="70"
+                        rows="10"
+                        th:text="${board.content}"
+                        required
+                        placeholder="본문 입력은 필수입니다."></textarea>
+          </td>
+        </tr>
+      </table>
+      <div class="btn_group mt20">
+        <button type="button" onclick="goBack()">뒤로가기</button>
+        <button type="submit" class="color2">작성하기</button>
+        <button type="reset">초기화</button>
+      </div>
+
+    </form>
+  </div>
+</section>
+<th:block layout:fragment="script">
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+     const startInput = document.getElementById("startAt");
+     const endInput = document.getElementById("closedAt");
+
+     if (!startInput || !endInput) return;
+
+     startInput.addEventListener("change", function () {
+       const startDate = new Date(this.value + "T00:00:00");
+       const today = new Date();
+       today.setHours(0, 0, 0, 0);
+
+       if (startDate < today) {
+         alert("시작일은 당일 이후만 가능합니다.");
+         this.value = "";
+         this.focus();
+         return;
+       }
+
+       const endValue = endInput.value;
+       if (endValue) {
+         const endDate = new Date(endValue + "T00:00:00");
+         if (endDate < startDate) {
+           alert("종료일은 시작일 이후여야 합니다.");
+           endInput.value = "";
+           endInput.focus();
+         }
+       }
+     });
+
+     endInput.addEventListener("change", function () {
+       const endDate = new Date(this.value + "T00:00:00");
+       const startValue = startInput.value;
+
+       if (!startValue) {
+         alert("먼저 시작일을 선택해주세요.");
+         this.value = "";
+         this.focus();
+         return;
+       }
+
+       const startDate = new Date(startValue + "T00:00:00");
+       if (endDate < startDate) {
+         alert("종료일은 시작일 이후여야 합니다.");
+         this.value = "";
+         this.focus();
+       }
+     });
+   });
+ function removeAttachment() {
+   document.getElementById('deleteAttachmentFlag').value = 'Y';
+
+   const attachmentRow = document.getElementById('attachmentRow');
+   if (!attachmentRow) return;
+
+   attachmentRow.innerHTML = `
+     <th>첨부 파일</th>
+     <td class="tl">
+       <input type="file"
+              name="attachment"
+              id="newAttachmentInput"
+              required
+              accept="image/*"
+              placeholder="첨부파일을 선택하세요.">
+       <div id="attachmentError" style="color:red;"></div>
+     </td>
+   `;
+   const input = document.getElementById('newAttachmentInput');
+
+   input.addEventListener('change', () => {
+     const file = input.files[0];
+     if (!file) return;
+
+     if (!file.type.startsWith('image/')) {
+       alert('해당 페이지는 이미지 파일만 업로드할 수 있습니다.');
+       input.value = ''; // 선택 초기화
+     }
+   });
+ }
+</script>
+</th:block>
+</body>
+</html>

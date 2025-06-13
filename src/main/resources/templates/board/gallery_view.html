@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/gallery.css">
+</th:block>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/gallery}"><h1>갤러리</h1></a>
+  <div id="content" class="content">
+
+    <div class="mb20"><h2 th:text="${board.title}"></h2></div>
+    <div th:if="${board.attachment != null}">
+      <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지" class="card-imgView"/>
+    </div>
+    <div><pre th:text="${board.content}" class="pd10"></pre></div>
+    <div>
+      <div>작성일 : <span th:text="${#dates.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span></div>
+      <div>조회수 : <span th:text="${board.viewCnt}"></span></div>
+    </div>
+    <div class="btn_group mt20">
+      <a th:href="@{/board/gallery}">
+        <button type="button" class="small">목록으로</button>
+      </a>
+      <div th:if="${member != null and member.grade == 10}">
+        <a th:if="${board.idx != 326 and board.idx != 327 and board.idx != 328 and board.idx != 329 and board.idx != 330 and board.idx != 331}"
+           th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, memberIdx=${member.idx}, comments_idx=${0})}">
+          <button class="color1 small">[관리자]삭제</button>
+        </a>
+        <a th:href="@{/board/modify(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx},commentsIdx=0)}"><button type="button" class="color2 small">[관리자]수정</button></a>
+      </div>
+    </div>
+    <!--sec:authorize="hasRole('ADMIN')"-->
+    <!-- 삭제 불가능한 경우 - 관리자만 보기 -->
+    <p th:if="${(board.idx == 326 or board.idx == 327 or board.idx == 328 or board.idx == 329 or board.idx == 330 or board.idx == 331) and member != null and member.grade == 10}"
+       style="font-size: 0.8em; color: #999; margin-top: 10px;">
+      이 게시물은 삭제가 불가능합니다.
+    </p>
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

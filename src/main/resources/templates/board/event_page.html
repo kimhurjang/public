@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragment/layout}">
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/event.css">
+</th:block>
+<body>
+<section layout:fragment="content" id="container" class="sub pagename pageSubname"> <!--안내페이지는 sub 붙여야함(크키 및 쉐도우가 다름)-->
+  <a th:href="@{/board/event}"><h1>이벤트</h1></a>
+
+  <div th:if="${member != null and member.grade == 10}">
+    <a th:href="@{/board/event_write(board_type=${boardType}, group_idx=${groupIdx})}" sec:authorize="hasRole('ADMIN')"><button class="small mb15">[관리자]글쓰기</button></a>
+  </div>
+
+  <div id="content" class="content event">
+    <!-- 게시물이 없는 경우 -->
+    <div th:if="${#lists.isEmpty(boardList)}" style="text-align: center; padding: 20px; COLOR: gray;">
+      등록된 게시물이 없습니다.
+    </div>
+    <a th:if="${groupIdx == 3}" th:each="board : ${boardList}" th:href="@{/board/event_view(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx})}" class="event board">
+      <div class="event card">
+        <div th:if="${board.attachment != null}" class="card-img">
+          <img th:src="@{|/data/${board.attachment.filePath}|}" alt="첨부 이미지"/>
+        </div>
+
+        <div th:text="${board.title}" class="event title"></div>
+
+        <div><sub th:text="${#dates.format(board.startAt, 'yyyy-MM-dd')}+' ~ '+${#dates.format(board.closedAt, 'yyyy-MM-dd')}"></sub></div>
+          <div><sub th:text="'작성일 : ' + ${#dates.format(board.createdAt, 'yy.MM.dd')}"></sub></div>
+        <!-- 이벤트 시작 전 -->
+        <span th:if="${!board.started}" class="tag">
+          준비중
+        </span>
+
+        <!-- 이벤트 진행 중 (시작했지만 종료 안된 상태) -->
+        <span th:if="${board.started} and not ${board.closed}" class="tag red">
+          진행중
+        </span>
+
+        <!-- 이벤트 종료 -->
+        <span th:if="${board.closed}" class="tag">
+          종료
+        </span>
+          <div class="xi-step-forward"></div>
+      </div>
+    </a>
+
+  </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

@@ -31,13 +31,40 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+	/*runtimeOnly 'com.oracle.database.jdbc:ojdbc11'*/
+	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+  implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+  implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+  testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'jakarta.validation:jakarta.validation-api:2.0.2'
+	implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+	implementation 'org.glassfish:javax.el:3.0.0'
+
+	//runtimeOnly 'org.postgresql:postgresql'
+
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'com.example.exam.ExamApplication'
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+jar {
+	manifest {
+		attributes 'Main-Class': 'com.example.exam.ExamApplication'
+	}
 }

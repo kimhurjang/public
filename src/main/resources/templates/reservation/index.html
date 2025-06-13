@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/layout}">
+<body>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" href="/css/reservation.css">
+  <script src="/js/index.global.6.1.17.min.js"></script>
+  <style>
+    .fc .fc-toolbar.fc-header-toolbar {margin-bottom:7px;}
+    .fc .fc-toolbar-title {font-size:1.65em; color:#7768ae;}
+    .fc .fc-button {padding:0.2em 0.5em;}
+    .fc .fc-button-primary {background:#fff;}
+    .fc .fc-button-primary:hover {background:#ccc;}
+    .fc .fc-today-button {background:#2C3E50;}
+    .fc .fc-button-primary:focus {box-shadow: none;}
+    .fc-toolbar-chunk:nth-child(2) {margin-left:-150px;}
+    .fc-h-event {border:none; background:#b1deff; cursor:pointer;}
+    .fc-h-event * {font-size:13px;}
+    .disabled-event {cursor:not-allowed!important; opacity:0.9; background:#ededed; pointer-events:auto;}
+    .fc .fc-daygrid-day-events {display:flex; flex-wrap:wrap;}
+    .fc .fc-daygrid-event-harness {flex:1 1 50%; max-width:50%;}
+    .fc .fc-daygrid-event-harness.all-blocked {flex:1 1 100%; max-width:100%;}
+  </style>
+</th:block>
+<section layout:fragment="content" id="container" class="reservation list">
+    <h1>상담예약</h1>
+    <div id="content" class="content">
+
+      <section class="process_section">
+        <div class="process_steps">
+          <div class="step">
+            <div class="icon">1</div>
+            <p class="step_title">상담신청</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">2</div>
+            <p class="step_title">1차 전화상담</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">3</div>
+            <p class="step_title">2차 방문상담</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">4</div>
+            <p class="step_title">결제 및 확정</p>
+          </div>
+          <i class="xi-angle-right arrow"></i>
+          <div class="step">
+            <div class="icon">5</div>
+            <p class="step_title">행사진행</p>
+          </div>
+        </div>
+
+        <div class="process_guide">
+          <dl>
+            <dt>1. 상담신청</dt>
+            <dd>홈페이지를 통해 상담 신청서를 작성해 주세요.</dd>
+          </dl>
+          <dl>
+            <dt>2. 1차 전화상담</dt>
+            <dd>담당 플래너가 전화 또는 이메일로 연락드립니다.</dd>
+          </dl>
+          <dl>
+            <dt>3. 2차 방문상담</dt>
+            <dd>직접 방문하여 예식 또는 행사에 대한 구체적인 상담을 진행합니다.</dd>
+          </dl>
+          <dl>
+            <dt>4. 결제 및 확정</dt>
+            <dd>상담 내용에 동의하시면 결제를 통해 예약을 확정합니다.</dd>
+          </dl>
+          <dl>
+            <dt>5. 행사진행</dt>
+            <dd>예정된 날짜에 맞춰 아름다운 예식 및 행사을 진행합니다.</dd>
+          </dl>
+        </div>
+      </section>
+      <h2 style="font-size:1.85em">예약가능한 날 선택</h2>
+      <section class="calender mt15">
+        <div id="calendar"></div>
+        <!-- 예약불가 시간대 정보 (JS Map에 저장) -->
+        <script th:inline="javascript">
+          const blockedMap = new Map();
+          /*[# th:each="b : ${blocks}"]*/
+            blockedMap.set(
+              [[${#dates.format(b.eventDate, 'yyyy-MM-dd') + '_' + b.timeSlot}]],
+              [[${b.reason != null ? b.reason : '불가'}]]
+            );
+          /*[/]*/
+        </script>
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+              height: 'auto',
+              initialView: 'dayGridMonth',
+              locale: 'ko',
+              selectable: true,
+              events: generateWeekendEvents(), // 이벤트 배열 직접 설정
+              dayCellContent: info => info.date.getDate(),
+              eventDidMount: function(info) {
+                const { tooltip, reason } = info.event.extendedProps;
+
+                if (reason) info.event.setProp("title", `${reason}`);
+                if (tooltip) info.el.setAttribute('title', tooltip);
+
+                // ALL 차단일 경우, 부모 요소에 all-blocked 클래스 추가
+                if (tooltip === 'ALL') {
+                  setTimeout(() => {
+                    const harness = info.el.closest('.fc-daygrid-event-harness');
+                    if (harness && !harness.classList.contains('all-blocked')) {
+                      harness.classList.add('all-blocked');
+                      console.log('👀 ALL 부모 클래스 적용:', harness);
+                    }
+                  }, 0);
+                }
+
+
+                if (info.event.classNames.includes('disabled-event')) {
+                  info.el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  });
+                }
+              }
+            });
+
+            calendar.render();
+
+            // 주말(토/일) 예약 가능 시간대 생성
+            function generateWeekendEvents() {
+              const today = new Date();
+              const events = [];
+              const existingEventKeys = new Set();
+              const year = today.getFullYear();
+              const month = today.getMonth();
+              const nextMonth = new Date(year, month + 2, 0);
+              let current = new Date(year, month, 1);
+
+              while (current <= nextMonth) {
+                const ymd = current.toISOString().slice(0, 10);
+                const isPast = current < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const day = current.getDay();
+                const isTooSoon = (current - today) / (1000 * 60 * 60 * 24) < 14;
+
+                if (day === 0 || day === 1) {
+                  const allKey = `${ymd}_ALL`;
+                  const isAllBlocked = blockedMap.has(allKey);
+
+                  ['10시', '12시', '14시', '16시'].forEach(time => {
+                    // ALL 차단된 날은 10시에만 하나 표시
+                    if (isAllBlocked) {
+                      if (time !== '10시') return;
+                      const reason = blockedMap.get(allKey);
+                      events.push({
+                        title: reason,
+                        date: ymd,
+                        url: null,
+                        classNames: ['disabled-event'],
+                        extendedProps: {
+                          tooltip: 'ALL',
+                          reason: reason
+                        }
+                      });
+                      //console.log("ALL 차단 처리됨:", ymd, reason); // 디버깅용
+                      return;
+                    }
+
+                    // 개별 시간 차단 처리
+                    const key = `${ymd}_${time}`;
+                    const rawReason = blockedMap.get(key);
+                    const isBlocked = rawReason != null && rawReason.trim() !== '';
+                    const reason = isBlocked ? rawReason : null;
+                    const isDisabled = isPast || isTooSoon || isBlocked;
+
+                    events.push({
+                      title: isDisabled ? (isBlocked ? reason : '불가') : '가능',
+                      date: ymd,
+                      url: isDisabled ? null : `/reservation/form?date=${ymd}&time=${time}`,
+                      classNames: isDisabled ? ['disabled-event'] : ['available-event'],
+                      extendedProps: {
+                        tooltip: time,
+                        reason: reason
+                      }
+                    });
+
+                    existingEventKeys.add(key);
+                  });
+                }
+
+                current.setDate(current.getDate() + 1);
+              }
+
+              return events;
+            }
+
+          });
+        </script>
+      </section>
+      <p style="margin-top:10px; color:#c00; font-size:14px;">
+        ※ 행사 예정일은 오늘로부터 최소 2주 이후만 예약 가능합니다.
+      </p>
+
+    </div><!--E content-->
+</section><!--E container-->
+</body>
+</html>

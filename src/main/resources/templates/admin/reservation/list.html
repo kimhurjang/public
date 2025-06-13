@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/fragment/layout}">
+<body>
+
+<section layout:fragment="content" id="container" class="reservation list">
+  <h2>예약 현황</h2>
+  <div id="content" class="content">
+    <form th:action="@{/admin/reservation/list}" method="get" class="search_form" autocomplete="off">
+      <div class="form_row">
+        <div class="form_group horizontal">
+          <label>검색조건</label>
+          <select name="searchType">
+            <option value="userid" th:selected="${searchType} == 'userid'">회원id</option>
+            <option value="name" th:selected="${searchType} == 'name'">예약자</option>
+            <option value="mobile" th:selected="${searchType} == 'mobile'">예약자 전화번호</option>
+          </select>
+          <input type="text" name="keyword" th:value="${keyword}" placeholder="검색어 입력">
+        </div>
+      </div>
+
+      <div class="form_row">
+        <div class="form_group horizontal">
+          <label>행사일자</label>
+          <div class="date_range">
+            <input type="date" name="startDate" th:value="${startDate}">
+            <span>~</span>
+            <input type="date" name="endDate" th:value="${endDate}">
+          </div>
+        </div>
+      </div>
+
+      <div class="form_row">
+        <div class="form_group horizontal">
+          <label>상태</label>
+          <div class="checkbox_group">
+            <label><input type="checkbox" id="statusAll"> 전체</label>
+            <label><input type="checkbox" name="status" value="상담대기" class="status"
+                     th:checked="${status != null and status.contains('상담대기')}"> 상담대기
+            </label>
+            <label><input type="checkbox" name="status" value="예약확정" class="status"
+                     th:checked="${status != null and status.contains('예약확정')}"> 예약확정
+            </label>
+            <label><input type="checkbox" name="status" value="보류" class="status"
+                     th:checked="${status != null and status.contains('보류')}"> 보류
+            </label>
+            <label><input type="checkbox" name="status" value="취소" class="status"
+                     th:checked="${status != null and status.contains('취소')}"> 취소
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form_row">
+        <div class="form_group horizontal">
+          <label>홀 선택</label>
+          <div class="checkbox_group">
+            <label><input type="checkbox" id="hallAll"> 전체</label>
+            <!--
+            <label><input type="checkbox" name="hallIdx" value="1" class="hall"
+                     th:checked="${hallIdx != null and hallIdx.contains('1')}"> 리시안셔스홀
+            </label>
+            <label><input type="checkbox" name="hallIdx" value="2" class="hall"
+                     th:checked="${hallIdx != null and hallIdx.contains('2')}"> 라넌큘러스홀
+            </label>
+            <label><input type="checkbox" name="hallIdx" value="3" class="hall"
+                     th:checked="${hallIdx != null and hallIdx.contains('3')}"> 아네모네홀
+            </label>
+            -->
+            <label th:each="hall : ${hallList}">
+              <input type="checkbox" name="hallIdx"
+                     th:value="${hall.idx}" class="hall"
+                     th:checked="${hallIdx != null and hallIdx.contains(#strings.toString(hall.idx))}">
+              <th:block th:text="${hall.name}">홀 이름</th:block>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form_row">
+        <div class="form_group horizontal">
+          <button type="submit" class="btn color1">검색</button>
+          <a href="/admin/reservation/list" class="btn">초기화</a>
+        </div>
+      </div>
+    </form>
+    <script>
+      // 상태 전체 선택
+      document.getElementById('statusAll')?.addEventListener('change', function () {
+        const checked = this.checked;
+        document.querySelectorAll('input.status[type="checkbox"]').forEach(cb => cb.checked = checked);
+      });
+
+      // 홀 전체 선택
+      document.getElementById('hallAll')?.addEventListener('change', function () {
+        const checked = this.checked;
+        document.querySelectorAll('input.hall[type="checkbox"]').forEach(cb => cb.checked = checked);
+      });
+
+    </script>
+
+    <style>
+      .tbl_type_s01 {table-layout:revert;}
+      .tbl_type_s01 th:last-child, td:last-child {width:130px;}
+    </style>
+    <form th:action="@{/admin/reservation/status}" method="post" id="statusForm">
+      <small>전체 수 : <th:block th:text="${paging.totalElements}"></th:block></small>
+      <div class="is_wlong_box">
+        <table class="tbl_type_s01">
+          <colgroup>
+            <col style="width:45px">
+            <col style="width:60px">
+            <col>
+          </colgroup>
+          <thead>
+          <tr>
+            <th>No</th>
+            <th>회원번호</th>
+            <!--th>회원id</th-->
+            <th>예약자</th>
+            <th>연락가능한 시간</th>
+            <th>행사종류</th>
+            <th>행사 예정일</th>
+            <th>홀</th>
+            <th>인원</th>
+            <th>꽃</th>
+            <th>식사</th>
+            <th>게시일</th>
+            <th>관리</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:if="${paging.content.isEmpty()}">
+            <td colspan="13">검색 결과가 없습니다.</td>
+          </tr>
+          <tr th:each="r, stat : ${paging}">
+            <td th:if="${paging != null and pagination.offset < paging.size}"
+                th:text="${pagination.totalCount - (pagination.offset + stat.index)}">
+            </td>
+            <td th:text="${r.memberIdx}">101</td>
+            <!--td th:text="${r.userid}">user002</td-->
+            <td th:text="${r.name}">홍길동</td>
+            <td th:text="${r.contactTime}">25.05.04 / 오후</td>
+            <td th:text="${r.eventType}">예식</td>
+            <td th:text="${r.eventTimeSelect != null and !r.eventTimeSelect.isEmpty() ? r.eventDate + ' ' + r.eventTimeSelect + '시' : r.eventDate}">25.06.12 10시</td>
+            <td th:text="${r.hallName}">리시안셔스</td>
+            <td th:text="${r.guestCnt}">100</td>
+            <td th:text="${r.flower}">생화</td>
+            <td th:text="${r.mealType}">도시락</td>
+            <td th:text="${#dates.format(r.createdAt, 'yy.MM.dd HH:mm')}">24.03.09 13:02</td>
+            <td>
+              <input type="hidden" name="statuses" th:id="'status_' + ${r.idx}" th:value="${r.status}">
+              <button type="button" class="btn status_btn small"
+                      th:data-idx="${r.idx}"
+                      th:data-status="${r.status}"
+                      th:text="${r.status}"
+                      th:classappend="${r.status == '예약확정' ? 'color1' : (r.status == '취소' ? 'disabled2' : '')}">
+              </button>
+              <a th:href="@{/admin/reservation/view(idx=${r.idx})}" class="btn small">보기</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+
+    <button type="button" id="saveStatusesBtn" class="btn color2 mt20">상태변경 저장</button>
+    <div th:if="${pagination != null}" th:replace="~{admin/fragment/paging :: paging}"></div>
+
+    <script>
+      const statusOrder = ["상담대기", "보류", "예약확정", "취소"];
+      const statusMap = new Map();
+
+      document.querySelectorAll(".status_btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const current = btn.dataset.status;
+          const next = statusOrder[(statusOrder.indexOf(current) + 1) % statusOrder.length];
+          btn.textContent = next;
+          btn.dataset.status = next;
+          statusMap.set(btn.dataset.idx, next);
+        });
+      });
+
+      document.getElementById("saveStatusesBtn").addEventListener("click", () => {
+        if (statusMap.size === 0) return alert("변경된 상태가 없습니다.");
+
+        const updates = [...statusMap].map(([idx, status]) => ({ idx, status }));
+
+        fetch("/admin/reservation/status/ajax", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates)
+        })
+        .then(async res => {
+          const msg = await res.text();
+          if (!res.ok) throw new Error(msg); // 백엔드에서 온 에러 메시지를 throw
+          alert(msg);
+          location.reload();
+          //window.location.href = '/admin/reservation/list';
+          //console.log("aaa");
+        })
+        .catch(err => {
+          alert(err.message || "상태 변경 실패");
+          location.reload();
+        });
+      });
+    </script>
+
+  </div><!--E content-->
+</section><!--E container-->
+
+</body>
+</html>
