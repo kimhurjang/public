@@ -332,7 +332,6 @@ public class MemberController {
         boolean exists = memberRepository.existsByUserid(userid);
         return exists ? "Y" : "N";
     }
-
     // 전화번호 중복 체크
     @GetMapping("/mobilecheck")
     @ResponseBody
@@ -381,7 +380,7 @@ public class MemberController {
         // 가입 후 로그인 페이지로 리다이렉트
         return "redirect:/api/member/login";
     }
-    @GetMapping("/api/member/nicknamecheck")
+    @GetMapping("/nicknamecheck")
     @ResponseBody
     public String checkNickname(@RequestParam String nickname) {
         boolean exists = memberRepository.existsByNickname(nickname);
@@ -493,14 +492,6 @@ public class MemberController {
         model.addAttribute("keyword", keyword);
 
         return "member/adminuser";
-    }
-
-
-
-    @PostMapping("/adminuser/delete-multiple")
-    public String deleteMultipleMembers(@RequestParam("idxList") List<Long> idxList) {
-        idxList.forEach(memberRepository::deleteById);
-        return "redirect:/api/member/adminuser";
     }
 
     @GetMapping("/adminuserinfo")
