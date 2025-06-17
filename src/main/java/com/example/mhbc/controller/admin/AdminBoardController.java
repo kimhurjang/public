@@ -40,7 +40,7 @@ public class AdminBoardController {
 
         model.addAttribute("webtitle", "게시물관리 | 리스트");
 
-        return "/admin/board/list";
+        return "admin/board/list";
     }
 
     @RequestMapping("/group_list")
@@ -48,7 +48,7 @@ public class AdminBoardController {
 
         model.addAttribute("page" , 1);
         model.addAttribute("webtitle", "게시물관리 | 리스트");
-        return "/admin/board/group_list";
+        return "admin/board/group_list";
     }
 
     @PostMapping("/group_list_select")
@@ -135,7 +135,7 @@ public class AdminBoardController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("protectedIds", List.of(325L,326L, 327L, 328L, 329L, 330L, 331L));
 
-        return "/admin/board/group_list";
+        return "admin/board/group_list";
     }
 
 
@@ -199,7 +199,7 @@ public class AdminBoardController {
         model.addAttribute("board" , board);
         model.addAttribute("groupIdx" , groupIdx);
         model.addAttribute("idx" , boardIdx);
-        return "/admin/board/group_view";
+        return "admin/board/group_view";
     }
 
     @RequestMapping("/modify")

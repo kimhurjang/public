@@ -136,7 +136,7 @@ public class AdminReservationController {
   @GetMapping("/view")
   public String reservationView(@RequestParam Long idx, Model model) {
     model.addAttribute("reservation", adminReservationService.findById(idx));
-    return "/admin/reservation/view";
+    return "admin/reservation/view";
   }
   /*
   @GetMapping("/edit")

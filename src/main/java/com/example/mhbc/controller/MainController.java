@@ -51,25 +51,25 @@ public class MainController {
     @RequestMapping("/admin/admin_index")
     public String admin_index() {
         System.out.println(">>>>>>>>>>admin admin_index page<<<<<<<<<<");
-        return "/admin/admin_index";
+        return "admin/admin_index";
     }
 
     @RequestMapping("/page/about")
     public String about(){
         System.out.println(">>>>>>>>>>about page<<<<<<<<<<");
-        return "/page/about";
+        return "page/about";
     }
     @RequestMapping("/page/map")
     public String map(){
-        return "/page/map";
+        return "page/map";
     }
     @RequestMapping("/page/place")
     public String place(){
-        return "/page/place";
+        return "page/place";
     }
     @RequestMapping("/page/rental")
     public String rental(){
-        return "/page/rental";
+        return "page/rental";
     }
 
 }

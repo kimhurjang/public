@@ -31,7 +31,7 @@ public class AdminScheduleController {
   @GetMapping({"", "/"})
   public String schedule() {
     System.out.println(">>>>>>>>>>admin schedule page<<<<<<<<<<");
-    return "/admin/schedule/list";
+    return "admin/schedule/list";
   }
 
   // 등록폼 진입
