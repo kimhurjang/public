@@ -10,6 +10,13 @@
   </div>
   <div id="content" class="content">
     <table th:if="${groupIdx == 1}">
+          <thead>
+                  <tr>
+                        <th>NO</th>
+                        <th>제목</th>
+                        <th>작성일</th>
+                  </tr>
+          </thead>
       <!-- 게시물이 없을 때 -->
       <tbody th:if="${paging.empty}">
       <tr>
