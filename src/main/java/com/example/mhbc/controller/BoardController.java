@@ -758,8 +758,8 @@ public class BoardController {
     }
     @PostMapping("/cmct_write_proc")
     public String cmct_write_proc(@Valid CommonForm form,
+                                   BindingResult result,
                                   @ModelAttribute BoardEntity board,
-                                  BindingResult result,
                                   @RequestParam("attachment") MultipartFile attachment,
                                   @RequestParam("group_idx") Long groupIdx,
                                   @RequestParam("board_type") Long boardType,
