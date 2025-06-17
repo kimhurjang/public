@@ -347,7 +347,7 @@ public class BoardController {
         Utility.Pagination pagination = new Utility.Pagination(page, itemsPerPage, totalCount, groupSize,"link");
 
         model.addAttribute("paging", paging);
-        model.addAttribute("link","/board/oftenquestion_page");
+        model.addAttribute("link","board/oftenquestion_page");
         model.addAttribute("pagination", pagination);
         model.addAttribute("webtitle", "만화방초 | 자주 묻는 질문");
         model.addAttribute("boardType", boardType);
@@ -391,7 +391,7 @@ public class BoardController {
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("today", today);
 
-        return "/board/oftenquestion_write";
+        return "board/oftenquestion_write";
     }
     @GetMapping("oftenquestion_write_proc")
     public String oftenquestion_write_proc(@Valid CommonForm form,
@@ -494,7 +494,7 @@ public class BoardController {
         model.addAttribute("webtitle", "만화방초 | 내가 작성한 게시글");
         model.addAttribute("boardList", boardList);
 
-        return "/board/myboard_page";
+        return "board/myboard_page";
     }
 
     @PostMapping("/pq_proc")
@@ -536,7 +536,7 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
         model.addAttribute("board", board);
 
-        return "/board/personalquestion_view";
+        return "board/personalquestion_view";
 
     }
 
@@ -588,7 +588,7 @@ public class BoardController {
         model.addAttribute("paging", paging);
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
-        return "/board/notice_page";
+        return "board/notice_page";
     }
     @RequestMapping("/notice_view")
     public String notice_view(Model model,
@@ -612,7 +612,7 @@ public class BoardController {
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
 
-        return"/board/notice_view";
+        return"board/notice_view";
     }
     @RequestMapping("/notice_write")
     public String notice_write(Model model,
@@ -705,7 +705,7 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
-        return"/board/cmct_page";
+        return"board/cmct_page";
     }
     @RequestMapping("/cmct_view")
     public String cmct_view(@RequestParam("group_idx") Long groupIdx,
@@ -734,7 +734,7 @@ public class BoardController {
         model.addAttribute("boardType", boardType);
         model.addAttribute("groupIdx", groupIdx);
 
-        return "/board/cmct_view";
+        return "board/cmct_view";
     }
     @RequestMapping("/cmct_write")
     public String cmct_write(Model model,
@@ -931,7 +931,7 @@ public class BoardController {
         model.addAttribute("isSearch", true);
         model.addAttribute("paging", resultPage);
         model.addAttribute("keyword", keyword); // 검색어 유지
-        return "/board/cmct_page";
+        return "board/cmct_page";
     }
 
     @RequestMapping("/modify")
@@ -963,15 +963,15 @@ public class BoardController {
         if(comments != null && comments > 0){
             commentsRepository.findById(comments).ifPresent(c -> model.addAttribute("editingComment", c));
             model.addAttribute("comments", comments);
-            return "/board/cmct_view";
+            return "board/cmct_view";
         }
 
         String viewName = switch (groupIdx.intValue()) {
-            case 1 -> "/board/notice_modify";
-            case 2 -> "/board/cmct_modify";
-            case 3 -> "/board/event_modify";
-            case 4 -> "/board/gallery_modify";
-            case 5 -> "/board/oftenquestion_modify";
+            case 1 -> "board/notice_modify";
+            case 2 -> "board/cmct_modify";
+            case 3 -> "board/event_modify";
+            case 4 -> "board/gallery_modify";
+            case 5 -> "board/oftenquestion_modify";
             default -> "redirect:/";
         };
 
