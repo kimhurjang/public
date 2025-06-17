@@ -62,7 +62,7 @@ public class BoardController {
 
 
     /*갤러리*/
-    @RequestMapping("/gallery")
+    @GetMapping("/gallery")
     public String gallery() {
         System.out.println(">>>>>>>>>>gallery page<<<<<<<<<<");
         Long boardType = 1L;
@@ -175,7 +175,7 @@ public class BoardController {
 
 
     /*이벤트*/
-    @RequestMapping("/event")
+    @GetMapping("/event")
     public String event() {
         System.out.println(">>>>>>>>>>event page<<<<<<<<<<");
         Long boardType = 1L;
@@ -313,7 +313,7 @@ public class BoardController {
 
 
     /*자주 질문*/
-    @RequestMapping("/oftenquestion")
+    @GetMapping("/oftenquestion")
     public String oftenquestion() {
         System.out.println(">>>>>>>>>>oftenquestion page<<<<<<<<<<");
         Long boardType = 2L;
@@ -419,7 +419,7 @@ public class BoardController {
     }
 
     /*1대1문의*/
-    @RequestMapping("/personalquestion")
+    @GetMapping("/personalquestion")
     public String personalquestion_page(Model model) {
         System.out.println(">>>>>>>>>>personalquestionpage page<<<<<<<<<<");
 
@@ -543,7 +543,7 @@ public class BoardController {
 
 
     /*공지사항*/
-    @RequestMapping("/notice")
+    @GetMapping("/notice")
     public String notice(){
         System.out.println(">>>>>>>>>>notice page<<<<<<<<<<");
 
@@ -660,7 +660,7 @@ public class BoardController {
 
 
     /*커뮤니티*/
-    @RequestMapping("/cmct")
+    @GetMapping("/cmct")
     public String cmct(Model model){
 
         Long boardType = 0L;
