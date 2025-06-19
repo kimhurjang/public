@@ -559,10 +559,22 @@ div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
   .event div div{ height:260px; padding: 0 20px; text-align: left; }
   .event div div a{ top:auto; bottom:20px; right:220px;}
 
-
   /* 보드 */
   #board{ display: block; padding: 100px 0;}
   .boardBox , .mapBox{ width: 100%; }
   #ms5{ height: auto;}
+}
 
+@media screen and (max-width: 400px) {
+  body { font-size:15px; }
+  .subtitle {top:52%;}
+  #ms5.bg-holder { height: auto;overflow: visible;}
+  #board, #ms2, #ms4 {padding-top:20px;}
+  #ms4 h2 {font-size:3rem;margin-bottom:0;}
+
+  .subSlideWrapper {gap:1rem;height:80%;}
+  .mainImage {height:initial; }
+
+  .event div div {height:180px;}
+  .event div p {display:none;}
 }
