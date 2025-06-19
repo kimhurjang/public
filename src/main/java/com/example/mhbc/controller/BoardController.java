@@ -405,11 +405,11 @@ public class BoardController {
         /*유효성 검사*/
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
-            return "redirect:/board/cmct_write";
+            return "redirect:/board/oftenquestion_write";
         }
-            board.setCreatedAt(new Date());
-            board.setRequest(0);
-            boardService.saveBoard(board,groupIdx);
+        board.setCreatedAt(new Date());
+        board.setRequest(0);
+        boardService.saveBoard(board,groupIdx);
 
         model.addAttribute("groupIdx", groupIdx);
         model.addAttribute("boardType", boardType);
@@ -758,7 +758,7 @@ public class BoardController {
     }
     @PostMapping("/cmct_write_proc")
     public String cmct_write_proc(@Valid CommonForm form,
-                                   BindingResult result,
+                                  BindingResult result,
                                   @ModelAttribute BoardEntity board,
                                   @RequestParam("attachment") MultipartFile attachment,
                                   @RequestParam("group_idx") Long groupIdx,
