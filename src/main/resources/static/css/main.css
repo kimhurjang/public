@@ -565,7 +565,7 @@ div#ms4 { padding-top: 130px; background-color:#f9f9f9;}
   #ms5{ height: auto;}
 }
 
-@media screen and (max-width: 400px) {
+@media (max-width: 400px) {
   body { font-size:15px; }
   .subtitle {top:52%;}
   #ms5.bg-holder { height: auto;overflow: visible;}
