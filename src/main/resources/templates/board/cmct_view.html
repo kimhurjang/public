@@ -93,7 +93,7 @@
                                 <a th:href="@{/board/cmct_view(idx=${board.idx}, group_idx=${groupIdx}, board_type=${boardType}, editingCommentId=${comments.idx})}">
                                     <button type="button" class="small"><i class="xi-pen"></i></button>
                                 </a>
-                                <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, comments_idx=${comments.idx}, memberIdx=${member.idx})}">
+                                <a th:href="@{/board/delete(group_idx=${groupIdx}, board_type=${boardType}, idx=${board.idx}, comments_idx=${comments.idx}, memberIdx=${member.idx})}"  onclick="return confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.');">
                                     <button type="button" class="small"><i class="xi-trash-o"></i></button>
                                 </a>
                             </div>
